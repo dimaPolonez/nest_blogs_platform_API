@@ -6,8 +6,8 @@ import { UserQueryRepository } from './userQuery.repository';
 @Controller('users')
 export class UserController {
   constructor(
-    protected UserService: UserService,
-    protected UserQueryRepository: UserQueryRepository,
+    protected userService: UserService,
+    protected userQueryRepository: UserQueryRepository,
   ) {}
   @Post()
   createUser(@Body() userBody: createUserBodyType) {

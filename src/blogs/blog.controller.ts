@@ -3,30 +3,35 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
   Param,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
-import {
-  createBlogBodyType,
-  createPostOfBlogBodyType,
-  updateBlogBodyType,
-} from './blog.model';
+import { createPostOfBlogBodyType } from './blog.model';
 import { BlogService } from './blog.service';
 import { BlogQueryRepository } from './blogQuery.repository';
+import { BlogReqDTO } from './dto/blog.dto';
+import { mongoID } from '../app.model';
+import { BlogQueryAll } from './dto/getQueryBlog.dto';
 
 @Controller('blogs')
 export class BlogController {
   constructor(
-    protected BlogService: BlogService,
-    protected BlogQueryRepository: BlogQueryRepository,
+    protected blogService: BlogService,
+    protected blogQueryRepository: BlogQueryRepository,
   ) {}
   @Post()
-  createBlog(@Body() blogBody: createBlogBodyType) {
-    return 'hello';
+  @HttpCode(201)
+  async createBlog(@Body() blogDTO: BlogReqDTO) {
+    const newBlogID: mongoID = await this.blogService.createBlog(blogDTO);
+
+    return await this.blogQueryRepository.findBlogById(newBlogID);
   }
 
   @Post(':id/posts')
+  @HttpCode(201)
   createPostOfBlog(
     @Param('id') blogID: string,
     @Body() postBody: createPostOfBlogBodyType,
@@ -35,27 +40,29 @@ export class BlogController {
   }
 
   @Put(':id')
-  updateBlog(
-    @Param('id') blogID: string,
-    @Body() blogBody: updateBlogBodyType,
-  ) {
-    return 'hello';
+  @HttpCode(204)
+  async updateBlog(@Param('id') blogID: string, @Body() blogDTO: BlogReqDTO) {
+    await this.blogService.updateBlog(blogID, blogDTO);
   }
 
   @Delete(':id')
-  deleteBlog(@Param('id') blogID: string) {
-    return 'hello';
+  @HttpCode(204)
+  async deleteBlog(@Param('id') blogID: string) {
+    await this.blogService.deleteBlog(blogID);
   }
   @Get()
-  getAllBlogs() {
-    return 'hello';
+  @HttpCode(200)
+  async getAllBlogs(@Query() queryAll: BlogQueryAll) {
+    return await this.blogQueryRepository.getAllBlogs(queryAll);
   }
   @Get(':id')
-  getOneBlog(@Param('id') blogID: string) {
-    return 'hello';
+  @HttpCode(200)
+  async getOneBlog(@Param('id') blogID: string) {
+    return await this.blogQueryRepository.findBlogById(blogID);
   }
 
   @Get(':id/posts')
+  @HttpCode(200)
   getAllPostsOfBlog(@Param('id') blogID: string) {
     return 'hello';
   }

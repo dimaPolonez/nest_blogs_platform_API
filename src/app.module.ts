@@ -9,23 +9,34 @@ import { UserAuthController } from './users/userAuth.controller';
 import { UserGuardController } from './users/userSession.controller';
 import { BlogService } from './blogs/blog.service';
 import { BlogRepository } from './blogs/blog.repository';
-import { BlogEntity } from './blogs/blog.entity';
+import { BlogModel, BlogModelSchema } from './blogs/blog.entity';
 import { BlogQueryRepository } from './blogs/blogQuery.repository';
 import { PostService } from './posts/post.service';
 import { PostRepository } from './posts/post.repository';
 import { PostQueryRepository } from './posts/postQuery.repository';
-import { PostEntity } from './posts/post.entity';
+import { PostModel, PostModelSchema } from './posts/post.entity';
 import { CommentService } from './comments/comment.service';
 import { CommentRepository } from './comments/comment.repository';
 import { CommentQueryRepository } from './comments/commentQuery.repository';
-import { CommentEntity } from './comments/comment.entity';
+import { CommentModel, CommentModelSchema } from './comments/comment.entity';
 import { UserService } from './users/user.service';
 import { UserRepository } from './users/user.repository';
 import { UserQueryRepository } from './users/userQuery.repository';
-import { UserEntity } from './users/user.entity';
+import { UserModel, UserModelSchema } from './users/user.entity';
+import { MongooseModule } from '@nestjs/mongoose';
 
 @Module({
-  imports: [],
+  imports: [
+    MongooseModule.forRoot(
+      'mongodb+srv://admin:m2hYzhEYKsGPkdB4@cluster0.yl1ygpd.mongodb.net/?retryWrites=true&w=majority',
+    ),
+    MongooseModule.forFeature([
+      { name: BlogModel.name, schema: BlogModelSchema },
+      { name: PostModel.name, schema: PostModelSchema },
+      { name: CommentModel.name, schema: CommentModelSchema },
+      { name: UserModel.name, schema: UserModelSchema },
+    ]),
+  ],
   controllers: [
     AppController,
     BlogController,
@@ -39,20 +50,16 @@ import { UserEntity } from './users/user.entity';
     AppService,
     BlogService,
     BlogRepository,
-    BlogEntity,
     BlogQueryRepository,
     PostService,
     PostRepository,
     PostQueryRepository,
-    PostEntity,
     CommentService,
     CommentRepository,
     CommentQueryRepository,
-    CommentEntity,
     UserService,
     UserRepository,
     UserQueryRepository,
-    UserEntity,
   ],
 })
 export class AppModule {}

@@ -6,8 +6,8 @@ import { CommentQueryRepository } from './commentQuery.repository';
 @Controller('comments')
 export class CommentController {
   constructor(
-    protected CommentService: CommentService,
-    protected CommentQueryRepository: CommentQueryRepository,
+    protected commentService: CommentService,
+    protected commentQueryRepository: CommentQueryRepository,
   ) {}
   @Put(':id')
   updateComment(

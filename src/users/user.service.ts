@@ -1,9 +1,12 @@
 import { UserRepository } from './user.repository';
-import { UserEntity } from './user.entity';
+import { UserModel, UserModelType } from './user.entity';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 
 export class UserService {
   constructor(
-    protected UserRepository: UserRepository,
-    protected UserEntity: UserEntity,
+    protected userRepository: UserRepository,
+    @InjectModel(UserModel.name)
+    private readonly UserModel: Model<UserModelType>,
   ) {}
 }

@@ -20,8 +20,8 @@ import { PostQueryRepository } from './postQuery.repository';
 @Controller('posts')
 export class PostController {
   constructor(
-    protected PostService: PostService,
-    protected PostQueryRepository: PostQueryRepository,
+    protected postService: PostService,
+    protected postQueryRepository: PostQueryRepository,
   ) {}
   @Post()
   createPost(@Body() postBody: createPostBodyType) {

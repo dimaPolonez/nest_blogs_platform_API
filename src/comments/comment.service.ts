@@ -1,11 +1,14 @@
 import { CommentRepository } from './comment.repository';
-import { CommentEntity } from './comment.entity';
+import { CommentModel, CommentModelType } from './comment.entity';
 import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class CommentService {
   constructor(
-    protected CommentRepository: CommentRepository,
-    protected CommentEntity: CommentEntity,
+    protected commentRepository: CommentRepository,
+    @InjectModel(CommentModel.name)
+    private readonly CommentModel: Model<CommentModelType>,
   ) {}
 }
