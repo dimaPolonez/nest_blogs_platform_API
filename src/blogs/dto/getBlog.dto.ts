@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-export class GetBlogResDTO {
+export class GetBlogDTO {
   id: mongoose.Types.ObjectId;
   name: string;
   description: string;

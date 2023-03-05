@@ -9,22 +9,23 @@ import {
   Put,
   Query,
 } from '@nestjs/common';
-import { createPostOfBlogBodyType } from './blog.model';
-import { BlogService } from './blog.service';
-import { BlogQueryRepository } from './blogQuery.repository';
-import { BlogReqDTO } from './dto/blog.dto';
+import { BlogsService } from './blogs.service';
+import { BlogsQueryRepository } from './blogs.query-repository';
 import { mongoID } from '../app.model';
-import { BlogQueryAll } from './dto/getQueryBlog.dto';
+import { CreateBlogDTO } from './dto/createBlog.dto';
+import { UpdateBlogDTO } from './dto/updateBlog.dto';
+import { GetAllBlogsDTO } from './dto/getAllBlogs.dto';
+import { QueryBlogDTO } from './dto/queryBlog.dto';
 
 @Controller('blogs')
-export class BlogController {
+export class BlogsController {
   constructor(
-    protected blogService: BlogService,
-    protected blogQueryRepository: BlogQueryRepository,
+    protected blogService: BlogsService,
+    protected blogQueryRepository: BlogsQueryRepository,
   ) {}
   @Post()
   @HttpCode(201)
-  async createBlog(@Body() blogDTO: BlogReqDTO) {
+  async createBlog(@Body() blogDTO: CreateBlogDTO) {
     const newBlogID: mongoID = await this.blogService.createBlog(blogDTO);
 
     return await this.blogQueryRepository.findBlogById(newBlogID);
@@ -34,14 +35,17 @@ export class BlogController {
   @HttpCode(201)
   createPostOfBlog(
     @Param('id') blogID: string,
-    @Body() postBody: createPostOfBlogBodyType,
+    //   @Body() postBody: createPostOfBlogBodyType,
   ) {
     return 'hello';
   }
 
   @Put(':id')
   @HttpCode(204)
-  async updateBlog(@Param('id') blogID: string, @Body() blogDTO: BlogReqDTO) {
+  async updateBlog(
+    @Param('id') blogID: string,
+    @Body() blogDTO: UpdateBlogDTO,
+  ) {
     await this.blogService.updateBlog(blogID, blogDTO);
   }
 
@@ -52,7 +56,7 @@ export class BlogController {
   }
   @Get()
   @HttpCode(200)
-  async getAllBlogs(@Query() queryAll: BlogQueryAll) {
+  async getAllBlogs(@Query() queryAll: QueryBlogDTO) {
     return await this.blogQueryRepository.getAllBlogs(queryAll);
   }
   @Get(':id')

@@ -1,13 +1,16 @@
 import { Body, Controller, Delete, Get, Param, Put } from '@nestjs/common';
-import { likeCommentBodyType, updateCommentBodyType } from './comment.model';
-import { CommentService } from './comment.service';
-import { CommentQueryRepository } from './commentQuery.repository';
+import {
+  likeCommentBodyType,
+  updateCommentBodyType,
+} from './models/comments.model';
+import { CommentsService } from './comments.service';
+import { CommentsQueryRepository } from './comments.query-repository';
 
 @Controller('comments')
-export class CommentController {
+export class CommentsController {
   constructor(
-    protected commentService: CommentService,
-    protected commentQueryRepository: CommentQueryRepository,
+    protected commentService: CommentsService,
+    protected commentQueryRepository: CommentsQueryRepository,
   ) {}
   @Put(':id')
   updateComment(

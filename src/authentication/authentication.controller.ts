@@ -6,7 +6,7 @@ import {
   newPassBodyType,
   registrationBodyType,
   updatePassBodyType,
-} from './user.model';
+} from '../users/model/users.model';
 
 @Controller('auth')
 export class UserAuthController {

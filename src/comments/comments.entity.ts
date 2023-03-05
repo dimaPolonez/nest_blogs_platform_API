@@ -3,7 +3,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import {
   ExtendedLikesInfo,
   ExtendedLikesInfoSchema,
-} from '../posts/post.entity';
+} from '../posts/posts.entity';
 
 export type CommentModelType = HydratedDocument<CommentModel>;
 

@@ -1,13 +1,14 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import mongoose, { Model } from 'mongoose';
-import { BlogModel, BlogModelType } from './blog.entity';
+import { Model } from 'mongoose';
+import { BlogModel, BlogModelType } from './blogs.entity';
 import { mongoID } from '../app.model';
-import { GetBlogResDTO } from './dto/getBlog.dto';
-import { BlogGetAllRes, BlogQueryAll } from './dto/getQueryBlog.dto';
+import { GetBlogDTO } from './dto/getBlog.dto';
+import { GetAllBlogsDTO } from './dto/getAllBlogs.dto';
+import { QueryBlogDTO } from './dto/queryBlog.dto';
 
 @Injectable()
-export class BlogQueryRepository {
+export class BlogsQueryRepository {
   constructor(
     @InjectModel(BlogModel.name)
     private readonly BlogModel: Model<BlogModelType>,
@@ -19,14 +20,14 @@ export class BlogQueryRepository {
   skippedObject(pageNum: number, pageSize: number) {
     return (pageNum - 1) * pageSize;
   }
-  async findBlogById(blogID: mongoID | string): Promise<GetBlogResDTO> {
+  async findBlogById(blogID: mongoID | string): Promise<GetBlogDTO> {
     const findBlogSmart = await this.BlogModel.findById(blogID);
 
     if (!findBlogSmart) {
       throw new HttpException('Blog not found', HttpStatus.NOT_FOUND);
     }
 
-    const findBlogDTO: GetBlogResDTO = {
+    const findBlogDTO: GetBlogDTO = {
       id: findBlogSmart._id,
       name: findBlogSmart.name,
       description: findBlogSmart.description,
@@ -37,8 +38,8 @@ export class BlogQueryRepository {
     return findBlogDTO;
   }
 
-  async getAllBlogs(queryAll: BlogQueryAll): Promise<BlogGetAllRes> {
-    const queryAllDTO: BlogQueryAll = {
+  async getAllBlogs(queryAll: QueryBlogDTO): Promise<GetAllBlogsDTO> {
+    const queryAllDTO: QueryBlogDTO = {
       searchNameTerm: queryAll.searchNameTerm ? queryAll.searchNameTerm : '',
       sortBy: queryAll.sortBy ? queryAll.sortBy : 'createdAt',
       sortDirection: queryAll.sortDirection ? queryAll.sortDirection : 'desc',
@@ -55,7 +56,7 @@ export class BlogQueryRepository {
         [queryAllDTO.sortBy]: this.sortObject(queryAllDTO.sortDirection),
       });
 
-    const allMapsBlog: GetBlogResDTO[] = allBlogs.map((field) => {
+    const allMapsBlog: GetBlogDTO[] = allBlogs.map((field) => {
       return {
         id: field._id,
         name: field.name,

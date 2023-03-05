@@ -1,6 +1,6 @@
 import { HydratedDocument } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { BlogReqDTO } from './dto/blog.dto';
+import { UpdateBlogDTO } from './dto/updateBlog.dto';
 
 export type BlogModelType = HydratedDocument<BlogModel>;
 
@@ -20,7 +20,7 @@ export class BlogModel {
   @Prop({ required: true, default: false })
   isMembership: boolean;
 
-  updateBlog(blogDTO: BlogReqDTO) {
+  updateBlog(blogDTO: UpdateBlogDTO) {
     this.name = blogDTO.name;
     this.description = blogDTO.description;
     this.websiteUrl = blogDTO.websiteUrl;

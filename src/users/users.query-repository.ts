@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { UserRepository } from './user.repository';
+import { UsersRepository } from './users.repository';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { UserModel, UserModelType } from './user.entity';
+import { UserModel, UserModelType } from './users.entity';
 
 @Injectable()
-export class UserQueryRepository {
+export class UsersQueryRepository {
   constructor(
-    protected userRepository: UserRepository,
+    protected userRepository: UsersRepository,
     @InjectModel(UserModel.name)
     private readonly UserModel: Model<UserModelType>,
   ) {}

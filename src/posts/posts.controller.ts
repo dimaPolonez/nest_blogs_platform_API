@@ -13,15 +13,15 @@ import {
   createPostBodyType,
   likePostBodyType,
   updatePostBodyType,
-} from './post.model';
-import { PostService } from './post.service';
-import { PostQueryRepository } from './postQuery.repository';
+} from './model/posts.model';
+import { PostsService } from './posts.service';
+import { PostsQueryRepository } from './posts.query-repository';
 
 @Controller('posts')
-export class PostController {
+export class PostsController {
   constructor(
-    protected postService: PostService,
-    protected postQueryRepository: PostQueryRepository,
+    protected postService: PostsService,
+    protected postQueryRepository: PostsQueryRepository,
   ) {}
   @Post()
   createPost(@Body() postBody: createPostBodyType) {
