@@ -1,5 +1,5 @@
-import { Controller, Get } from '@nestjs/common';
-import { AppService } from './app.service';
+import { Controller, Delete, Get } from '@nestjs/common';
+import { AppService } from '../services';
 
 @Controller()
 export class AppController {
@@ -8,5 +8,10 @@ export class AppController {
   @Get()
   getHello(): string {
     return this.appService.getHello();
+  }
+
+  @Delete('testing/all-data')
+  testingAllDelete() {
+    return 'delete';
   }
 }
