@@ -1,9 +1,9 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { BlogModel, BlogModelType } from '../core/entities';
 import { mongoID } from '../core/models';
-import { GetAllBlogsDto, GetBlogDto, QueryBlogDto } from '../core/dtos';
+import { GetAllBlogsDto, GetBlogDto, QueryDto } from '../core/dtos';
 
 @Injectable()
 export class BlogsQueryRepository {
@@ -36,22 +36,14 @@ export class BlogsQueryRepository {
     return findBlogDTO;
   }
 
-  async getAllBlogs(queryAll: QueryBlogDto): Promise<GetAllBlogsDto> {
-    const queryAllDTO: QueryBlogDto = {
-      searchNameTerm: queryAll.searchNameTerm ? queryAll.searchNameTerm : '',
-      sortBy: queryAll.sortBy ? queryAll.sortBy : 'createdAt',
-      sortDirection: queryAll.sortDirection ? queryAll.sortDirection : 'desc',
-      pageNumber: queryAll.pageNumber ? +queryAll.pageNumber : 1,
-      pageSize: queryAll.pageSize ? +queryAll.pageSize : 10,
-    };
-
+  async getAllBlogs(queryAll: QueryDto): Promise<GetAllBlogsDto> {
     const allBlogs: BlogModelType[] = await this.BlogModel.find({
-      name: new RegExp(queryAllDTO.searchNameTerm, 'gi'),
+      name: new RegExp(queryAll.searchNameTerm, 'gi'),
     })
-      .skip(this.skippedObject(queryAllDTO.pageNumber, queryAllDTO.pageSize))
-      .limit(queryAllDTO.pageSize)
+      .skip(this.skippedObject(queryAll.pageNumber, queryAll.pageSize))
+      .limit(queryAll.pageSize)
       .sort({
-        [queryAllDTO.sortBy]: this.sortObject(queryAllDTO.sortDirection),
+        [queryAll.sortBy]: this.sortObject(queryAll.sortDirection),
       });
 
     const allMapsBlog: GetBlogDto[] = allBlogs.map((field) => {
@@ -66,14 +58,14 @@ export class BlogsQueryRepository {
     });
 
     const allCount: number = await this.BlogModel.countDocuments({
-      name: new RegExp(queryAllDTO.searchNameTerm, 'gi'),
+      name: new RegExp(queryAll.searchNameTerm, 'gi'),
     });
-    const pagesCount: number = Math.ceil(allCount / queryAllDTO.pageSize);
+    const pagesCount: number = Math.ceil(allCount / queryAll.pageSize);
 
     return {
       pagesCount: pagesCount,
-      page: queryAllDTO.pageNumber,
-      pageSize: queryAllDTO.pageSize,
+      page: queryAll.pageNumber,
+      pageSize: queryAll.pageSize,
       totalCount: allCount,
       items: allMapsBlog,
     };

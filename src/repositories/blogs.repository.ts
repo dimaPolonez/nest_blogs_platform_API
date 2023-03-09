@@ -19,6 +19,10 @@ export class BlogsRepository {
     await this.BlogModel.deleteOne({ _id: blogID });
   }
 
+  async deleteAllBlogs() {
+    await this.BlogModel.deleteMany();
+  }
+
   async save(model: BlogModelType) {
     return await model.save();
   }

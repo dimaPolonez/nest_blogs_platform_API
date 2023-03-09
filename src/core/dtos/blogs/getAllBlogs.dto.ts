@@ -1,4 +1,4 @@
-import { mongoID } from '../../models/app.model';
+import { mongoID } from '../../models';
 
 export class GetBlogDto {
   id: mongoID;

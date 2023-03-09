@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { BlogModel, BlogModelType } from 'src/core/entities';
@@ -27,7 +27,7 @@ export class BlogsService {
       await this.blogRepository.findBlogById(blogID);
 
     if (!findBlog) {
-      throw new HttpException('Blog not found', HttpStatus.NOT_FOUND);
+      throw new NotFoundException();
     }
 
     await findBlog.updateBlog(blogDTO);
@@ -40,7 +40,7 @@ export class BlogsService {
       await this.blogRepository.findBlogById(blogID);
 
     if (!findBlog) {
-      throw new HttpException('Blog not found', HttpStatus.NOT_FOUND);
+      throw new NotFoundException();
     }
 
     await this.blogRepository.deleteBlog(blogID);
