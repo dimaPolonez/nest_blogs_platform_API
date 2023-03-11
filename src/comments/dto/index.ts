@@ -1,0 +1,1 @@
+export * from './getAllComments.dto';
