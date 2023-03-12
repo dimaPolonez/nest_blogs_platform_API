@@ -82,7 +82,7 @@ export class BlogsService {
     const blogName: string | null = await this.findBlogName(blogID);
 
     if (!blogName) {
-      throw NotFoundException;
+      throw new NotFoundException();
     }
 
     const newPostDTO: CreatePostDto = {
