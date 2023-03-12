@@ -19,10 +19,10 @@ export class LikesInfo {
 
 @Schema()
 export class CommentatorInfo {
-  @Prop({ required: true })
+  @Prop({ default: 'none' })
   userId: string;
 
-  @Prop({ required: true })
+  @Prop({ default: 'none' })
   userLogin: string;
 }
 

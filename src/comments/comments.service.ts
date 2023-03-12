@@ -1,14 +1,31 @@
 import { CommentsRepository } from './repository/comments.repository';
 import { CommentModel, CommentModelType } from './entity/comments.entity';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  forwardRef,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { UpdateCommentDto } from './dto/updateComment.dto';
+import {
+  CreateCommentOfPostDto,
+  GetAllCommentsDto,
+  GetCommentDto,
+  QueryCommentDto,
+  UpdateCommentDto,
+} from './dto';
+import { PostsService } from '../posts/posts.service';
+import { CommentsQueryRepository } from './repository/comments.query-repository';
+import { GetAllPostsDto, QueryPostDto } from '../posts/dto';
 
 @Injectable()
 export class CommentsService {
   constructor(
     protected commentRepository: CommentsRepository,
+    protected commentQueryRepository: CommentsQueryRepository,
+    @Inject(forwardRef(() => PostsService))
+    protected postsService: PostsService,
     @InjectModel(CommentModel.name)
     private readonly CommentModel: Model<CommentModelType>,
   ) {}
@@ -39,5 +56,30 @@ export class CommentsService {
 
   async deleteAllComments() {
     await this.commentRepository.deleteAllComments();
+  }
+
+  async createCommentOfPost(
+    postID: string,
+    commentDTO: CreateCommentOfPostDto,
+  ): Promise<GetCommentDto> {
+    const newCommentDto = {
+      content: commentDTO.content,
+      postId: postID,
+    };
+
+    const createCommentSmart: CommentModelType = await new this.CommentModel(
+      newCommentDto,
+    );
+
+    await this.commentRepository.save(createCommentSmart);
+
+    return this.commentQueryRepository.findCommentById(createCommentSmart._id);
+  }
+
+  async getAllCommentsOfPost(
+    postID: string,
+    queryAll: QueryCommentDto,
+  ): Promise<GetAllCommentsDto> {
+    return this.commentQueryRepository.getAllCommentsOfPost(postID, queryAll);
   }
 }

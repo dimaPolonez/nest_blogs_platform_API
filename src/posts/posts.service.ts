@@ -19,6 +19,13 @@ import {
 } from './dto';
 import { PostsQueryRepository } from './repository/posts.query-repository';
 import { BlogsService } from '../blogs/blogs.service';
+import { CreateCommentOfPostDto } from '../comments/dto/createCommentOfPost.dto';
+import { CommentsService } from '../comments/comments.service';
+import {
+  GetAllCommentsDto,
+  GetCommentDto,
+  QueryCommentDto,
+} from '../comments/dto';
 
 @Injectable()
 export class PostsService {
@@ -27,6 +34,8 @@ export class PostsService {
     protected postQueryRepository: PostsQueryRepository,
     @Inject(forwardRef(() => BlogsService))
     protected blogService: BlogsService,
+    @Inject(forwardRef(() => CommentsService))
+    protected commentsService: CommentsService,
     @InjectModel(PostModel.name)
     private readonly PostModel: Model<PostModelType>,
   ) {}
@@ -101,5 +110,21 @@ export class PostsService {
     queryAll: QueryPostDto,
   ): Promise<GetAllPostsDto> {
     return this.postQueryRepository.getAllPosts(queryAll, blogID);
+  }
+
+  async createCommentOfPost(
+    postID: string,
+    commentDTO: CreateCommentOfPostDto,
+  ): Promise<GetCommentDto> {
+    return await this.commentsService.createCommentOfPost(postID, commentDTO);
+  }
+
+  async getAllCommentsOfPost(
+    postID: string,
+    queryAll: QueryCommentDto,
+  ): Promise<GetAllCommentsDto> {
+    await this.postQueryRepository.findPostById(postID);
+
+    return await this.commentsService.getAllCommentsOfPost(postID, queryAll);
   }
 }

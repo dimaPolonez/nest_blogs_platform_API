@@ -22,6 +22,12 @@ import {
   QueryPostDto,
   UpdatePostDto,
 } from './dto';
+import {
+  GetCommentDto,
+  QueryCommentDto,
+  CreateCommentOfPostDto,
+  GetAllCommentsDto,
+} from '../comments/dto';
 
 @Controller('posts')
 export class PostsController {
@@ -71,15 +77,25 @@ export class PostsController {
     return await this.postQueryRepository.getAllPosts(queryAll);
   }
 
-  /*  @Post(':id/comments')
-  createCommentOfPost(
+  @Post(':id/comments')
+  @HttpCode(HttpStatus.CREATED)
+  async createCommentOfPost(
     @Param('id') postID: string,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    @Body() commentBody: createCommentOfPostBodyType,
-  ) {
-    return 'hello';
+    @Body() commentDTO: CreateCommentOfPostDto,
+  ): Promise<GetCommentDto> {
+    return await this.postService.createCommentOfPost(postID, commentDTO);
   }
 
+  @Get(':id/comments')
+  @HttpCode(HttpStatus.OK)
+  async getAllCommentsOfPost(
+    @Param('id') postID: string,
+    @Query() queryAll: QueryCommentDto,
+  ): Promise<GetAllCommentsDto> {
+    return await this.postService.getAllCommentsOfPost(postID, queryAll);
+  }
+
+  /*
   @Put(':id/like-status')
   likeStatusPost(
     @Param('id') postID: string,
@@ -87,9 +103,5 @@ export class PostsController {
   ) {
     return 'hello';
   }
-
-  @Get(':id/comments')
-  getAllCommentsOfPost(@Param('id') postID: string) {
-    return 'hello';
-  }*/
+*/
 }
