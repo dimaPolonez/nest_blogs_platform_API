@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   HttpCode,
+  HttpStatus,
   Param,
   Post,
   Query,
@@ -21,7 +22,7 @@ export class UsersController {
   ) {}
 
   @Post()
-  @HttpCode(201)
+  @HttpCode(HttpStatus.CREATED)
   async createUser(@Body() userDTO: CreateUserDto): Promise<GetUserDto> {
     const newUserID: mongoID = await this.userService.createUser(userDTO);
 
@@ -29,13 +30,13 @@ export class UsersController {
   }
 
   @Delete(':id')
-  @HttpCode(204)
+  @HttpCode(HttpStatus.NO_CONTENT)
   async deleteUser(@Param('id') userID: string) {
     await this.userService.deleteUser(userID);
   }
 
   @Get()
-  @HttpCode(200)
+  @HttpCode(HttpStatus.OK)
   async getAllUsers(@Query() queryAll: QueryUserDto): Promise<GetAllUsersDto> {
     return await this.userQueryRepository.getAllUsers(queryAll);
   }

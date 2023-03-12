@@ -9,7 +9,6 @@ import { GetAllUsersDto, GetUserDto, QueryUserDto } from '../dto';
 @Injectable()
 export class UsersQueryRepository {
   constructor(
-    protected userRepository: UsersRepository,
     @InjectModel(UserModel.name)
     private readonly UserModel: Model<UserModelType>,
   ) {}
@@ -29,17 +28,17 @@ export class UsersQueryRepository {
 
     return {
       id: findUserSmart._id,
-      login: findUserSmart.infUser.login,
-      email: findUserSmart.infUser.email,
-      createdAt: findUserSmart.infUser.createdAt,
+      login: findUserSmart.login,
+      email: findUserSmart.email,
+      createdAt: findUserSmart.createdAt,
     };
   }
 
   async getAllUsers(queryAll: QueryUserDto): Promise<GetAllUsersDto> {
     const allUsers: UserModelType[] = await this.UserModel.find({
       $or: [
-        { 'infUser.login': new RegExp(queryAll.searchLoginTerm, 'gi') },
-        { 'infUser.email': new RegExp(queryAll.searchEmailTerm, 'gi') },
+        { login: new RegExp(queryAll.searchLoginTerm, 'gi') },
+        { email: new RegExp(queryAll.searchEmailTerm, 'gi') },
       ],
     })
       .skip(this.skippedObject(queryAll.pageNumber, queryAll.pageSize))
@@ -49,16 +48,16 @@ export class UsersQueryRepository {
     const allMapsUsers: GetUserDto[] = allUsers.map((field) => {
       return {
         id: field._id,
-        login: field.infUser.login,
-        email: field.infUser.email,
-        createdAt: field.infUser.createdAt,
+        login: field.login,
+        email: field.email,
+        createdAt: field.createdAt,
       };
     });
 
     const allCount: number = await this.UserModel.countDocuments({
       $or: [
-        { 'infUser.login': new RegExp(queryAll.searchLoginTerm, 'gi') },
-        { 'infUser.email': new RegExp(queryAll.searchEmailTerm, 'gi') },
+        { login: new RegExp(queryAll.searchLoginTerm, 'gi') },
+        { email: new RegExp(queryAll.searchEmailTerm, 'gi') },
       ],
     });
     const pagesCount: number = Math.ceil(allCount / queryAll.pageSize);

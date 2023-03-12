@@ -7,21 +7,18 @@ export type PostModelType = HydratedDocument<PostModel>;
 
 @Schema()
 export class ExtendedLikesInfo {
-  @Prop({ required: true, default: 0 })
+  @Prop({ default: 0 })
   likesCount: number;
 
-  @Prop({ required: true, default: 0 })
+  @Prop({ default: 0 })
   dislikesCount: number;
 
-  @Prop({ required: true, enum: myLikeStatus, default: myLikeStatus.None })
+  @Prop({ enum: myLikeStatus, default: myLikeStatus.None })
   myStatus: myLikeStatus;
 
-  @Prop({ required: true, default: [] })
+  @Prop({ default: [] })
   newestLikes: [];
 }
-
-export const ExtendedLikesInfoSchema =
-  SchemaFactory.createForClass(ExtendedLikesInfo);
 
 @Schema()
 export class PostModel {
@@ -40,10 +37,14 @@ export class PostModel {
   @Prop({ required: true })
   blogName: string;
 
-  @Prop({ required: true, default: new Date().toISOString() })
+  @Prop({
+    default: () => {
+      return new Date().toISOString();
+    },
+  })
   createdAt: string;
 
-  @Prop({ required: true, schema: ExtendedLikesInfoSchema })
+  @Prop({ default: () => ({}) })
   extendedLikesInfo: ExtendedLikesInfo;
 
   updatePost(postDTO: UpdatePostDto) {

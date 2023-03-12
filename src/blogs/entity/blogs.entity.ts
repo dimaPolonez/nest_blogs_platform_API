@@ -15,9 +15,13 @@ export class BlogModel {
   @Prop({ required: true })
   websiteUrl: string;
 
-  @Prop({ required: true, default: new Date().toISOString() })
+  @Prop({
+    default: () => {
+      return new Date().toISOString();
+    },
+  })
   createdAt: string;
-  @Prop({ required: true, default: false })
+  @Prop({ default: false })
   isMembership: boolean;
 
   updateBlog(blogDTO: UpdateBlogDto) {

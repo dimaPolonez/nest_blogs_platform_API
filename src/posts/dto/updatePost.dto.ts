@@ -1,6 +1,5 @@
 import { trim } from '../../helpers';
-import { IsNotEmpty, Length } from 'class-validator';
-import { isMongo } from '../../helpers/isMongoDecorator';
+import { IsMongoId, IsNotEmpty, Length } from 'class-validator';
 
 export class UpdatePostDto {
   @trim()
@@ -19,7 +18,7 @@ export class UpdatePostDto {
   content: string;
 
   @trim()
-  @isMongo()
+  @IsMongoId()
   @Length(24, 24)
   @IsNotEmpty()
   blogId: string;

@@ -4,65 +4,61 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 export type UserModelType = HydratedDocument<UserModel>;
 
 @Schema()
-export class InfUser {
+export class ActivateUser {
+  @Prop({ default: 'Activated' })
+  codeActivated: string;
+
+  @Prop({ default: 'Activated' })
+  lifeTimeCode: string;
+
+  @Prop({ default: true })
+  confirm: string;
+}
+
+@Schema()
+export class SessionsUser {
+  @Prop({ default: null })
+  sessionID: string;
+
+  @Prop({ default: null })
+  ip: string;
+
+  @Prop({ default: null })
+  title: string;
+
+  @Prop({ default: null })
+  expiresTime: string;
+
+  @Prop({
+    default: () => {
+      return new Date().toISOString();
+    },
+  })
+  lastActivateTime: string;
+}
+
+@Schema()
+export class UserModel {
   @Prop({ required: true })
   login: string;
 
-  @Prop({ required: true })
+  @Prop({ default: 'pass' })
   hushPass: string;
 
   @Prop({ required: true })
   email: string;
 
-  @Prop({ required: true, default: new Date().toISOString() })
+  @Prop({
+    default: () => {
+      return new Date().toISOString();
+    },
+  })
   createdAt: string;
-}
 
-export const InfUserSchema = SchemaFactory.createForClass(InfUser);
-
-@Schema()
-export class ActivateUser {
-  @Prop({ required: true, default: 'Activated' })
-  codeActivated: string;
-
-  @Prop({ required: true, default: 'Activated' })
-  lifeTimeCode: string;
-
-  @Prop({ required: true, default: true })
-  confirm: string;
-}
-
-export const ActivateUserSchema = SchemaFactory.createForClass(ActivateUser);
-
-@Schema()
-export class SessionsUser {
-  @Prop({ required: true })
-  sessionID: string;
-
-  @Prop({ required: true })
-  ip: string;
-
-  @Prop({ required: true })
-  title: string;
-
-  @Prop({ required: true })
-  expiresTime: string;
-
-  @Prop({ required: true, default: new Date().toISOString() })
-  lastActivateTime: string;
-}
-
-export const SessionsUserSchema = SchemaFactory.createForClass(SessionsUser);
-
-@Schema()
-export class UserModel {
-  @Prop({ required: true, type: InfUserSchema })
-  infUser: InfUser;
-
-  @Prop({ required: true, type: ActivateUserSchema })
+  @Prop({ default: () => ({}) })
   activateUser: ActivateUser;
 
-  @Prop({ required: true, type: SessionsUserSchema })
+  @Prop({ default: () => ({}) })
   sessionsUser: SessionsUser;
 }
 

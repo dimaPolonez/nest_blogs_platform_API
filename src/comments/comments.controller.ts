@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   HttpCode,
+  HttpStatus,
   NotFoundException,
   Param,
   Put,
@@ -21,7 +22,7 @@ export class CommentsController {
   ) {}
 
   @Get(':id')
-  @HttpCode(200)
+  @HttpCode(HttpStatus.OK)
   async getOneComment(@Param('id') commentID: string): Promise<GetCommentDto> {
     const findComment: GetCommentDto | null =
       await this.commentQueryRepository.findCommentById(commentID);
@@ -34,7 +35,7 @@ export class CommentsController {
   }
 
   @Put(':id')
-  @HttpCode(204)
+  @HttpCode(HttpStatus.NO_CONTENT)
   async updateComment(
     @Param('id') commentID: string,
     @Body() commentDTO: UpdateCommentDto,
@@ -43,7 +44,7 @@ export class CommentsController {
   }
 
   @Delete(':id')
-  @HttpCode(204)
+  @HttpCode(HttpStatus.NO_CONTENT)
   async deleteComment(@Param('id') commentID: string) {
     await this.commentService.deleteComment(commentID);
   }

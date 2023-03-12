@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { mongoID } from '../models';
@@ -22,7 +26,7 @@ export class PostsService {
     );
 
     if (!findBlogName) {
-      throw new NotFoundException();
+      throw new BadRequestException();
     }
 
     const newPostDTO = { ...postDTO, blogName: findBlogName };
@@ -38,12 +42,16 @@ export class PostsService {
     const findPost: PostModelType | null =
       await this.postRepository.findPostById(postID);
 
+    if (!findPost) {
+      throw new NotFoundException();
+    }
+
     const findBlogName: null | string = await this.blogService.findBlogName(
       postDTO.blogId,
     );
 
-    if (!findPost || !findBlogName) {
-      throw new NotFoundException();
+    if (!findBlogName) {
+      throw new BadRequestException();
     }
 
     const newPostDTO = { ...postDTO, blogName: findBlogName };

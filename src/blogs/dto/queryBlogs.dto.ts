@@ -1,14 +1,14 @@
-import { Transform } from 'class-transformer';
+import { Type } from 'class-transformer';
+import { Min } from 'class-validator';
 
 export class QueryBlogsDto {
-  @Transform(({ value }) => (value ? value : ''))
-  searchNameTerm?: string;
-  @Transform(({ value }) => (value ? value : 'createdAt'))
-  sortBy?: string;
-  @Transform(({ value }) => (value ? value : 'desc'))
-  sortDirection?: string;
-  @Transform(({ value }) => (value ? Number(value) : 1))
-  pageNumber?: number;
-  @Transform(({ value }) => (value ? Number(value) : 10))
-  pageSize?: number;
+  searchNameTerm = '';
+  sortBy = 'createdAt';
+  sortDirection = 'desc';
+  @Min(1)
+  @Type(() => Number)
+  pageNumber = 1;
+  @Min(1)
+  @Type(() => Number)
+  pageSize = 10;
 }

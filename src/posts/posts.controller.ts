@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   HttpCode,
+  HttpStatus,
   NotFoundException,
   Param,
   Post,
@@ -29,7 +30,7 @@ export class PostsController {
     protected postQueryRepository: PostsQueryRepository,
   ) {}
   @Post()
-  @HttpCode(201)
+  @HttpCode(HttpStatus.CREATED)
   async createPost(@Body() postDTO: CreatePostDto): Promise<GetPostDto> {
     const newPostID: mongoID = await this.postService.createPost(postDTO);
 
@@ -37,7 +38,7 @@ export class PostsController {
   }
 
   @Put(':id')
-  @HttpCode(204)
+  @HttpCode(HttpStatus.NO_CONTENT)
   async updatePost(
     @Param('id') postID: string,
     @Body() postDTO: UpdatePostDto,
@@ -46,13 +47,13 @@ export class PostsController {
   }
 
   @Delete(':id')
-  @HttpCode(204)
+  @HttpCode(HttpStatus.NO_CONTENT)
   async deletePost(@Param('id') postID: string) {
     await this.postService.deletePost(postID);
   }
 
   @Get(':id')
-  @HttpCode(200)
+  @HttpCode(HttpStatus.OK)
   async getOnePost(@Param('id') postID: string): Promise<GetPostDto> {
     const findPost: GetPostDto | null =
       await this.postQueryRepository.findPostById(postID);
@@ -65,7 +66,7 @@ export class PostsController {
   }
 
   @Get()
-  @HttpCode(200)
+  @HttpCode(HttpStatus.OK)
   async getAllPosts(@Query() queryAll: QueryPostDto): Promise<GetAllPostsDto> {
     return await this.postQueryRepository.getAllPosts(queryAll);
   }
