@@ -1,4 +1,4 @@
-import { Controller, Delete, Get } from '@nestjs/common';
+import { Controller, Delete, Get, HttpCode, HttpStatus } from '@nestjs/common';
 import { AppService } from './app.service';
 import { BlogsService } from './blogs/blogs.service';
 import { PostsService } from './posts/posts.service';
@@ -15,11 +15,13 @@ export class AppController {
     protected readonly userService: UsersService,
   ) {}
 
+  @HttpCode(HttpStatus.OK)
   @Get()
   getHello(): string {
     return this.appService.getHello();
   }
 
+  @HttpCode(HttpStatus.NO_CONTENT)
   @Delete('testing/all-data')
   async testingAllDelete() {
     await this.blogService.deleteAllBlogs();
