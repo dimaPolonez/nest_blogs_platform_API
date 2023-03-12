@@ -16,11 +16,13 @@ import { BlogsService } from './blogs.service';
 import { BlogsQueryRepository } from './repository/blogs.query-repository';
 import {
   CreateBlogDto,
+  CreatePostOfBlogDto,
   GetAllBlogsDto,
   GetBlogDto,
   UpdateBlogDto,
 } from './dto';
 import { QueryBlogsDto } from './dto';
+import { GetAllPostsDto, GetPostDto, QueryPostDto } from '../posts/dto';
 
 @Controller('blogs')
 export class BlogsController {
@@ -69,18 +71,20 @@ export class BlogsController {
     return await this.blogQueryRepository.getAllBlogs(queryAll);
   }
 
-  /*  @Post(':id/posts')
-  @HttpCode(201)
-  createPostOfBlog(
+  @Post(':id/posts')
+  @HttpCode(HttpStatus.CREATED)
+  async createPostOfBlog(
     @Param('id') blogID: string,
-    //   @Body() postBody: createPostOfBlogBodyType,
-  ) {
-    return 'hello';
+    @Body() postDTO: CreatePostOfBlogDto,
+  ): Promise<GetPostDto> {
+    return await this.blogService.createPostOfBlog(blogID, postDTO);
   }
-
   @Get(':id/posts')
-  @HttpCode(200)
-  getAllPostsOfBlog(@Param('id') blogID: string) {
-    return 'hello';
-  }*/
+  @HttpCode(HttpStatus.OK)
+  async getAllPostsOfBlog(
+    @Param('id') blogID: string,
+    @Query() queryAll: QueryPostDto,
+  ): Promise<GetAllPostsDto> {
+    return await this.blogService.getAllPostsOfBlog(blogID, queryAll);
+  }
 }

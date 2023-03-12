@@ -1,5 +1,7 @@
 import {
   BadRequestException,
+  forwardRef,
+  Inject,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -8,13 +10,22 @@ import { Model } from 'mongoose';
 import { mongoID } from '../models';
 import { PostModel, PostModelType } from './entity/posts.entity';
 import { PostsRepository } from './repository/posts.repository';
-import { CreatePostDto, UpdatePostDto } from './dto';
+import {
+  CreatePostDto,
+  GetAllPostsDto,
+  GetPostDto,
+  QueryPostDto,
+  UpdatePostDto,
+} from './dto';
+import { PostsQueryRepository } from './repository/posts.query-repository';
 import { BlogsService } from '../blogs/blogs.service';
 
 @Injectable()
 export class PostsService {
   constructor(
     protected postRepository: PostsRepository,
+    protected postQueryRepository: PostsQueryRepository,
+    @Inject(forwardRef(() => BlogsService))
     protected blogService: BlogsService,
     @InjectModel(PostModel.name)
     private readonly PostModel: Model<PostModelType>,
@@ -75,5 +86,20 @@ export class PostsService {
 
   async deleteAllPosts() {
     await this.postRepository.deleteAllPosts();
+  }
+
+  async createPostOfBlog(newPostDTO: CreatePostDto): Promise<GetPostDto> {
+    const createPostSmart = await new this.PostModel(newPostDTO);
+
+    await this.postRepository.save(createPostSmart);
+
+    return await this.postQueryRepository.findPostById(createPostSmart._id);
+  }
+
+  async getAllPostsOfBlog(
+    blogID: string,
+    queryAll: QueryPostDto,
+  ): Promise<GetAllPostsDto> {
+    return this.postQueryRepository.getAllPosts(queryAll, blogID);
   }
 }

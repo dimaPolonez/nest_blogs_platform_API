@@ -43,8 +43,17 @@ export class PostsQueryRepository {
     };
   }
 
-  async getAllPosts(queryAll: QueryPostDto): Promise<GetAllPostsDto> {
-    const allPosts: PostModelType[] = await this.PostModel.find({})
+  async getAllPosts(
+    queryAll: QueryPostDto,
+    blogID?: string,
+  ): Promise<GetAllPostsDto> {
+    let findObject: object = {};
+
+    if (blogID) {
+      findObject = { blogId: blogID };
+    }
+
+    const allPosts: PostModelType[] = await this.PostModel.find(findObject)
       .skip(this.skippedObject(queryAll.pageNumber, queryAll.pageSize))
       .limit(queryAll.pageSize)
       .sort({ [queryAll.sortBy]: this.sortObject(queryAll.sortDirection) });
@@ -67,7 +76,7 @@ export class PostsQueryRepository {
       };
     });
 
-    const allCount: number = await this.PostModel.countDocuments({});
+    const allCount: number = await this.PostModel.countDocuments(findObject);
     const pagesCount: number = Math.ceil(allCount / queryAll.pageSize);
 
     return {
