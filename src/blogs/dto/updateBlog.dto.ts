@@ -5,15 +5,15 @@ export class UpdateBlogDto {
   @trim()
   @Length(1, 15)
   @IsNotEmpty()
-  name: string;
+  readonly name: string;
 
   @trim()
   @Length(1, 500)
   @IsNotEmpty()
-  description: string;
+  readonly description: string;
 
   @trim()
   @Length(1, 100)
   @IsNotEmpty()
-  websiteUrl: string;
+  readonly websiteUrl: string;
 }

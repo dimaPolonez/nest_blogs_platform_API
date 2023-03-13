@@ -5,23 +5,23 @@ export class UpdatePostDto {
   @trim()
   @Length(1, 30)
   @IsNotEmpty()
-  title: string;
+  readonly title: string;
 
   @trim()
   @Length(1, 100)
   @IsNotEmpty()
-  shortDescription: string;
+  readonly shortDescription: string;
 
   @trim()
   @Length(1, 1000)
   @IsNotEmpty()
-  content: string;
+  readonly content: string;
 
   @trim()
   @IsMongoId()
   @Length(24, 24)
   @IsNotEmpty()
-  blogId: string;
+  readonly blogId: string;
 
   blogName?: string;
 }

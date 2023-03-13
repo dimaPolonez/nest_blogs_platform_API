@@ -4,7 +4,6 @@ import { Model } from 'mongoose';
 import { CommentModel, CommentModelType } from '../entity/comments.entity';
 import { mongoID } from '../../models';
 import { GetAllCommentsDto, GetCommentDto, QueryCommentDto } from '../dto';
-import { GetAllPostsDto } from '../../posts/dto';
 
 @Injectable()
 export class CommentsQueryRepository {

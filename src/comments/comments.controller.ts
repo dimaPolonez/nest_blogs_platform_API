@@ -5,14 +5,12 @@ import {
   Get,
   HttpCode,
   HttpStatus,
-  NotFoundException,
   Param,
   Put,
 } from '@nestjs/common';
 import { CommentsService } from './comments.service';
 import { CommentsQueryRepository } from './repository/comments.query-repository';
-import { GetCommentDto } from './dto';
-import { UpdateCommentDto } from './dto/updateComment.dto';
+import { GetCommentDto, UpdateCommentDto } from './dto';
 
 @Controller('comments')
 export class CommentsController {
@@ -24,14 +22,7 @@ export class CommentsController {
   @Get(':id')
   @HttpCode(HttpStatus.OK)
   async getOneComment(@Param('id') commentID: string): Promise<GetCommentDto> {
-    const findComment: GetCommentDto | null =
-      await this.commentQueryRepository.findCommentById(commentID);
-
-    if (!findComment) {
-      throw new NotFoundException();
-    }
-
-    return findComment;
+    return await this.commentQueryRepository.findCommentById(commentID);
   }
 
   @Put(':id')

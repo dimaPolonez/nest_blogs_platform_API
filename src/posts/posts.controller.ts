@@ -5,7 +5,6 @@ import {
   Get,
   HttpCode,
   HttpStatus,
-  NotFoundException,
   Param,
   Post,
   Put,
@@ -61,14 +60,7 @@ export class PostsController {
   @Get(':id')
   @HttpCode(HttpStatus.OK)
   async getOnePost(@Param('id') postID: string): Promise<GetPostDto> {
-    const findPost: GetPostDto | null =
-      await this.postQueryRepository.findPostById(postID);
-
-    if (!findPost) {
-      throw new NotFoundException();
-    }
-
-    return findPost;
+    return await this.postQueryRepository.findPostById(postID);
   }
 
   @Get()

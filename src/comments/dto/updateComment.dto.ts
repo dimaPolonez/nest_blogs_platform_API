@@ -5,5 +5,5 @@ export class UpdateCommentDto {
   @trim()
   @Length(20, 300)
   @IsNotEmpty()
-  content: string;
+  readonly content: string;
 }

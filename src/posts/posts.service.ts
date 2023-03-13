@@ -19,12 +19,12 @@ import {
 } from './dto';
 import { PostsQueryRepository } from './repository/posts.query-repository';
 import { BlogsService } from '../blogs/blogs.service';
-import { CreateCommentOfPostDto } from '../comments/dto/createCommentOfPost.dto';
 import { CommentsService } from '../comments/comments.service';
 import {
   GetAllCommentsDto,
   GetCommentDto,
   QueryCommentDto,
+  CreateCommentOfPostDto,
 } from '../comments/dto';
 
 @Injectable()

@@ -17,7 +17,6 @@ import {
 } from './dto';
 import { PostsService } from '../posts/posts.service';
 import { CommentsQueryRepository } from './repository/comments.query-repository';
-import { GetAllPostsDto, QueryPostDto } from '../posts/dto';
 
 @Injectable()
 export class CommentsService {

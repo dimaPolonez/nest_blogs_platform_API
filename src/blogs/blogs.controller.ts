@@ -5,7 +5,6 @@ import {
   Get,
   HttpCode,
   HttpStatus,
-  NotFoundException,
   Param,
   Post,
   Put,
@@ -20,8 +19,8 @@ import {
   GetAllBlogsDto,
   GetBlogDto,
   UpdateBlogDto,
+  QueryBlogsDto,
 } from './dto';
-import { QueryBlogsDto } from './dto';
 import { GetAllPostsDto, GetPostDto, QueryPostDto } from '../posts/dto';
 
 @Controller('blogs')
@@ -56,14 +55,7 @@ export class BlogsController {
   @Get(':id')
   @HttpCode(HttpStatus.OK)
   async getOneBlog(@Param('id') blogID: string): Promise<GetBlogDto> {
-    const findBlog: GetBlogDto | null =
-      await this.blogQueryRepository.findBlogById(blogID);
-
-    if (!findBlog) {
-      throw new NotFoundException();
-    }
-
-    return findBlog;
+    return await this.blogQueryRepository.findBlogById(blogID);
   }
   @Get()
   @HttpCode(HttpStatus.OK)

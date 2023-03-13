@@ -3,9 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { mongoID } from '../../models';
 import { BlogModel, BlogModelType } from '../entity/blogs.entity';
-import { GetAllBlogsDto, GetBlogDto } from '../dto';
-import { QueryBlogsDto } from '../dto';
-
+import { GetAllBlogsDto, GetBlogDto, QueryBlogsDto } from '../dto';
 @Injectable()
 export class BlogsQueryRepository {
   constructor(
