@@ -7,3 +7,12 @@ export enum myLikeStatus {
   Like = 'Like',
   Dislike = 'Dislike',
 }
+
+export type testObject = {
+  basic: string;
+  accessToken: string;
+  refreshToken: string;
+  userID: string;
+  blogID: string;
+  postID: string;
+};
