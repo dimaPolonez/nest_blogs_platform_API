@@ -121,6 +121,24 @@ export function startFlow(): testObject {
           })
       );
     });
+    /*    it('post aut user and get tokens status 200 (POST /auth/login)', () => {
+      return request(app.getHttpServer())
+        .post('/auth/login')
+        .send({
+          loginOrEmail: 'Polonez',
+          password: 'pass1234',
+        })
+        .expect(200)
+        .expect((res) => {
+          testObject.accessToken = res.body['accessToken'];
+          testObject.refreshToken = res.headers['set-cookie'][0];
+          /!*        const validAccess: any = jwt.verify(
+            testObject.accessToken,
+            settings.JWT_SECRET,
+          );
+          testObject.userID = validAccess.userId;*!/
+        });
+    });*/
   });
   return testObject;
 }
