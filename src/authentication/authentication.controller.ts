@@ -1,18 +1,26 @@
-/*
-import { Body, Controller, Get, Post } from '@nestjs/common';
 import {
-  authBodyType,
-  mailConfirmBodyType,
-  mailResendingBodyType,
-  newPassBodyType,
-  registrationBodyType,
-  updatePassBodyType,
-} from '../models';
+  Body,
+  Controller,
+  Headers,
+  Get,
+  Ip,
+  Post,
+  HttpCode,
+  HttpStatus,
+} from '@nestjs/common';
+import { CreateUserMailDto, LoginDto } from './dto';
+import { UsersService } from '../users/users.service';
+import { CodeConfirmDto } from './dto/codeConfirm.dto';
 
 @Controller('auth')
 export class UserAuthController {
+  constructor(protected userService: UsersService) {}
   @Post('login')
-  userAuthorization(@Body() userAuthBody: authBodyType) {
+  userAuthorization(
+    @Body() loginDTO: LoginDto,
+    @Ip() userIP: string,
+    @Headers('user-agent') nameDevice: string,
+  ) {
     return 'hello';
   }
 
@@ -22,27 +30,30 @@ export class UserAuthController {
   }
 
   @Post('password-recovery')
-  userCreateNewPass(@Body() UserAuthBody: newPassBodyType) {
+  userCreateNewPass(@Body() UserAuthBody) {
     return 'hello';
   }
 
   @Post('new-password')
-  userUpdateNewPass(@Body() userAuthBody: updatePassBodyType) {
+  userUpdateNewPass(@Body() userAuthBody) {
     return 'hello';
   }
 
+  @HttpCode(HttpStatus.NO_CONTENT)
   @Post('registration-confirmation')
-  userRegistrationConfirm(@Body() userAuthBody: mailConfirmBodyType) {
-    return 'hello';
+  async userRegistrationConfirm(@Body() codeConfirm: CodeConfirmDto) {
+    await this.userService.confirmEmail(codeConfirm);
   }
 
+  @HttpCode(HttpStatus.NO_CONTENT)
   @Post('registration')
-  userRegistration(@Body() userAuthBody: registrationBodyType) {
-    return 'hello';
+  async userRegistration(@Body() userRegDTO: CreateUserMailDto) {
+    await this.userService.registrationUser(userRegDTO);
   }
 
+  @HttpCode(HttpStatus.NO_CONTENT)
   @Post('registration-email-resending')
-  userRegistrationResending(@Body() userAuthBody: mailResendingBodyType) {
+  userRegistrationResending(@Body() userAuthBody) {
     return 'hello';
   }
 
@@ -56,4 +67,3 @@ export class UserAuthController {
     return 'hello';
   }
 }
-*/

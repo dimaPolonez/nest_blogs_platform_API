@@ -42,7 +42,7 @@ export class UserModel {
   @Prop({ required: true })
   login: string;
 
-  @Prop({ default: 'pass' })
+  @Prop({ required: true })
   hushPass: string;
 
   @Prop({ required: true })
