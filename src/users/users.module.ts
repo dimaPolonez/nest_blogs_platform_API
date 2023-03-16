@@ -5,7 +5,7 @@ import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
 import { UsersRepository } from './repository/users.repository';
 import { UsersQueryRepository } from './repository/users.query-repository';
-import { UserAuthController } from '../authentication/authentication.controller';
+import { UserAuthController } from '../auth/auth.controller';
 import { BcryptApp, MailerApp } from '../applications';
 import { ActiveCodeApp } from '../applications/activateCode.app';
 

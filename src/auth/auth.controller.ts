@@ -8,9 +8,15 @@ import {
   HttpCode,
   HttpStatus,
 } from '@nestjs/common';
-import { CreateUserMailDto, LoginDto } from './dto';
+import {
+  CreateUserMailDto,
+  LoginDto,
+  CodeConfirmDto,
+  emailResendDto,
+  emailRecPassDto,
+  newPassDto,
+} from './dto';
 import { UsersService } from '../users/users.service';
-import { CodeConfirmDto } from './dto/codeConfirm.dto';
 
 @Controller('auth')
 export class UserAuthController {
@@ -30,19 +36,19 @@ export class UserAuthController {
   }
 
   @Post('password-recovery')
-  userCreateNewPass(@Body() UserAuthBody) {
-    return 'hello';
+  async userCreateNewPass(@Body() userEmailDTO: emailRecPassDto) {
+    await this.userService.passwordRecovery(userEmailDTO.email);
   }
 
   @Post('new-password')
-  userUpdateNewPass(@Body() userAuthBody) {
-    return 'hello';
+  async userUpdateNewPass(@Body() newPassDTO: newPassDto) {
+    await this.userService.createNewPassword(newPassDTO);
   }
 
   @HttpCode(HttpStatus.NO_CONTENT)
   @Post('registration-confirmation')
   async userRegistrationConfirm(@Body() codeConfirm: CodeConfirmDto) {
-    await this.userService.confirmEmail(codeConfirm);
+    await this.userService.confirmEmail(codeConfirm.code);
   }
 
   @HttpCode(HttpStatus.NO_CONTENT)
@@ -53,8 +59,8 @@ export class UserAuthController {
 
   @HttpCode(HttpStatus.NO_CONTENT)
   @Post('registration-email-resending')
-  userRegistrationResending(@Body() userAuthBody) {
-    return 'hello';
+  async userRegistrationResending(@Body() userEmailDTO: emailResendDto) {
+    await this.userService.emailResending(userEmailDTO.email);
   }
 
   @Post('logout')

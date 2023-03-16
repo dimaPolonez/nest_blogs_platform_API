@@ -4,9 +4,9 @@ import { IsNotEmpty, Length } from 'class-validator';
 export class LoginDto {
   @trim()
   @IsNotEmpty()
-  loginOrEmail: string;
+  readonly loginOrEmail: string;
   @trim()
   @Length(6, 20)
   @IsNotEmpty()
-  password: string;
+  readonly password: string;
 }

@@ -1,8 +1,9 @@
 import { trim } from '../../helpers';
-import { IsNotEmpty } from 'class-validator';
+import { IsNotEmpty, IsUUID } from 'class-validator';
 
 export class CodeConfirmDto {
   @trim()
   @IsNotEmpty()
-  code: string;
+  @IsUUID()
+  readonly code: string;
 }

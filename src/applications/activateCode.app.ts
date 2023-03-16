@@ -4,9 +4,9 @@ import { add } from 'date-fns';
 export class ActiveCodeApp {
   public async createCode() {
     const authParams = {
-      confirm: false,
       codeActivated: v4(),
       lifeTimeCode: await this.createTime(),
+      confirm: false,
     };
 
     return authParams;

@@ -24,7 +24,7 @@ export class BlogModel {
   @Prop({ default: false })
   isMembership: boolean;
 
-  updateBlog(blogDTO: UpdateBlogDto) {
+  async updateBlog(blogDTO: UpdateBlogDto) {
     this.name = blogDTO.name;
     this.description = blogDTO.description;
     this.websiteUrl = blogDTO.websiteUrl;

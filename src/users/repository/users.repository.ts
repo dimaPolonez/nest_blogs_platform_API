@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { UserModel, UserModelType } from '../entity/users.entity';
 import { mongoID } from '../../models';
+import { isAfter } from 'date-fns';
 
 @Injectable()
 export class UsersRepository {
@@ -21,6 +22,29 @@ export class UsersRepository {
 
   async deleteAllUsers() {
     await this.UserModel.deleteMany();
+  }
+
+  async findUserByCode(code: string): Promise<UserModelType | null> {
+    return this.UserModel.findOne({
+      'activateUser.codeActivated': code,
+    });
+  }
+  async checkedEmailAndLoginUnique(
+    email: string,
+    login: string,
+  ): Promise<UserModelType | null> {
+    return this.UserModel.findOne({
+      $or: [
+        {
+          login: login,
+        },
+        { email: email },
+      ],
+    });
+  }
+
+  async findUserEmailToBase(email: string): Promise<UserModelType | null> {
+    return this.UserModel.findOne({ email: email });
   }
 
   async save(model: UserModelType) {
