@@ -1,20 +1,20 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import * as process from 'process';
-import { CONFIGURATION } from './configuration';
 import { BadRequestException, ValidationPipe } from '@nestjs/common';
 import { HttpExceptionFilter } from './http-exception.filter';
+import cookieParser from 'cookie-parser';
+import { CONFIG } from './config/config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors();
+  app.use(cookieParser());
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
       stopAtFirstError: true,
       exceptionFactory: (errors) => {
         const errorsForResponse = [];
-
         errors.forEach((e) => {
           const constraintsKey = Object.keys(e.constraints);
           constraintsKey.forEach((key) => {
@@ -29,7 +29,7 @@ async function bootstrap() {
     }),
   );
   app.useGlobalFilters(new HttpExceptionFilter());
-  await app.listen(process.env.PORT);
-  console.log(`Start server on ${process.env.PORT} port`);
+  await app.listen(CONFIG.PORT);
+  console.log(`Start server on ${CONFIG.PORT} port`);
 }
 bootstrap();

@@ -5,29 +5,52 @@ import {
   Get,
   Ip,
   Post,
+  Request,
   HttpCode,
   HttpStatus,
+  UseGuards,
+  Res,
 } from '@nestjs/common';
 import {
   CreateUserMailDto,
-  LoginDto,
   CodeConfirmDto,
   emailResendDto,
   emailRecPassDto,
   newPassDto,
 } from './dto';
-import { UsersService } from '../users/users.service';
+import { LocalAuthGuard } from './guard/local-auth.guard';
+import { authObjectDTO, tokensDTO } from '../models';
+import { AuthService } from './auth.service';
+import { Response } from 'express';
 
 @Controller('auth')
-export class UserAuthController {
-  constructor(protected userService: UsersService) {}
+export class AuthController {
+  constructor(protected authService: AuthService) {}
+
+  @UseGuards(LocalAuthGuard)
   @Post('login')
-  userAuthorization(
-    @Body() loginDTO: LoginDto,
+  async userAuthorization(
+    @Request() req,
     @Ip() userIP: string,
     @Headers('user-agent') nameDevice: string,
+    @Res({ passthrough: true }) response: Response,
   ) {
-    return 'hello';
+    const authObjectDTO: authObjectDTO = {
+      ip: userIP,
+      nameDevice: nameDevice,
+      userID: req.user,
+    };
+
+    const tokensObject: tokensDTO = await this.authService.createTokens(
+      authObjectDTO,
+    );
+    response.cookie(
+      'refreshToken',
+      tokensObject.refreshToken,
+      tokensObject.optionsCookie,
+    );
+
+    return tokensObject.accessDTO;
   }
 
   @Post('refresh-token')
@@ -37,30 +60,30 @@ export class UserAuthController {
 
   @Post('password-recovery')
   async userCreateNewPass(@Body() userEmailDTO: emailRecPassDto) {
-    await this.userService.passwordRecovery(userEmailDTO.email);
+    await this.authService.passwordRecovery(userEmailDTO.email);
   }
 
   @Post('new-password')
   async userUpdateNewPass(@Body() newPassDTO: newPassDto) {
-    await this.userService.createNewPassword(newPassDTO);
+    await this.authService.createNewPassword(newPassDTO);
   }
 
   @HttpCode(HttpStatus.NO_CONTENT)
   @Post('registration-confirmation')
   async userRegistrationConfirm(@Body() codeConfirm: CodeConfirmDto) {
-    await this.userService.confirmEmail(codeConfirm.code);
+    await this.authService.confirmEmail(codeConfirm.code);
   }
 
   @HttpCode(HttpStatus.NO_CONTENT)
   @Post('registration')
   async userRegistration(@Body() userRegDTO: CreateUserMailDto) {
-    await this.userService.registrationUser(userRegDTO);
+    await this.authService.registrationUser(userRegDTO);
   }
 
   @HttpCode(HttpStatus.NO_CONTENT)
   @Post('registration-email-resending')
   async userRegistrationResending(@Body() userEmailDTO: emailResendDto) {
-    await this.userService.emailResending(userEmailDTO.email);
+    await this.authService.emailResending(userEmailDTO.email);
   }
 
   @Post('logout')

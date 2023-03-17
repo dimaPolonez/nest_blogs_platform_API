@@ -46,7 +46,7 @@ export class PostsService {
     );
 
     if (!findBlogName) {
-      throw new BadRequestException();
+      throw new BadRequestException('Incorrect blogId');
     }
 
     const newPostDTO = { ...postDTO, blogName: findBlogName };
@@ -71,7 +71,7 @@ export class PostsService {
     );
 
     if (!findBlogName) {
-      throw new BadRequestException();
+      throw new BadRequestException('Incorrect blogId');
     }
 
     const newPostDTO = { ...postDTO, blogName: findBlogName };

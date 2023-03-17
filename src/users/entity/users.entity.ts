@@ -1,7 +1,5 @@
 import { HydratedDocument } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { UpdateBlogDto } from '../../blogs/dto';
-import { BlogModel, BlogModelSchema } from '../../blogs/entity/blogs.entity';
 import { isAfter } from 'date-fns';
 import { confirmUser } from '../../models';
 

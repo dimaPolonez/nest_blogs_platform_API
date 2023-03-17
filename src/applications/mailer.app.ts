@@ -1,12 +1,13 @@
 import nodemailer from 'nodemailer';
+import { CONFIG } from '../config/config';
 
 export class MailerApp {
   private async options(objectMail: object) {
     const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
-        user: process.env.MAIL_URL_USER,
-        pass: process.env.MAIL_URL_PASS,
+        user: CONFIG.MAIL_URL_USER,
+        pass: CONFIG.MAIL_URL_PASS,
       },
     });
 

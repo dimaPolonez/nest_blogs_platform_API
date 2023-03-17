@@ -1,15 +1,13 @@
 import { UsersRepository } from './repository/users.repository';
-import { ActivateUser, UserModel, UserModelType } from './entity/users.entity';
+import { UserModel, UserModelType } from './entity/users.entity';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { confirmUser, mongoID } from '../models';
 import { CreateUserDto } from './dto';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { BcryptApp, MailerApp } from '../applications';
-import { CreateUserMailDto, emailRecPassDto, newPassDto } from '../auth/dto';
+import { CreateUserMailDto, newPassDto } from '../auth/dto';
 import { ActiveCodeApp } from '../applications/activateCode.app';
-import { CodeConfirmDto } from '../auth/dto/codeConfirm.dto';
-import { emailResendDto } from '../auth/dto/emailResend.dto';
 
 export class UsersService {
   constructor(
@@ -46,7 +44,7 @@ export class UsersService {
       );
 
     if (checkedUnique) {
-      throw new BadRequestException();
+      throw new BadRequestException('This user already exists');
     }
 
     const hushPass: string = await this.bcryptApp.hushGenerate(
@@ -78,13 +76,13 @@ export class UsersService {
       await this.userRepository.findUserByCode(codeConfirm);
 
     if (!findUserByCode) {
-      throw new BadRequestException();
+      throw new BadRequestException('Code is not valid');
     }
 
     const codeValid: boolean = await findUserByCode.checkedActivateCodeValid();
 
     if (!codeValid) {
-      throw new BadRequestException();
+      throw new BadRequestException('Code is not valid');
     }
 
     const newUserDTO: confirmUser = {
@@ -103,7 +101,7 @@ export class UsersService {
       await this.userRepository.findUserEmailToBase(userEmailDTO);
 
     if (findUserEmailToBase) {
-      throw new BadRequestException();
+      throw new BadRequestException('Incorrect email');
     }
 
     await this.mailer.sendMailCode(
@@ -117,7 +115,7 @@ export class UsersService {
       await this.userRepository.findUserEmailToBase(userEmail);
 
     if (findUserEmailToBase) {
-      throw new BadRequestException();
+      throw new BadRequestException('Incorrect email');
     }
 
     const authParams = await this.activeCodeApp.createCode();
@@ -137,13 +135,13 @@ export class UsersService {
       await this.userRepository.findUserByCode(newPassDTO.recoveryCode);
 
     if (!findUserByCode) {
-      throw new BadRequestException();
+      throw new BadRequestException('Code is not valid');
     }
 
     const codeValid: boolean = await findUserByCode.checkedActivateCodeValid();
 
     if (!codeValid) {
-      throw new BadRequestException();
+      throw new BadRequestException('Code is not valid');
     }
 
     const newUserDTO: confirmUser = {
@@ -171,6 +169,12 @@ export class UsersService {
     }
 
     await this.userRepository.deleteUser(userID);
+  }
+
+  async findUserByEmailOrLogin(
+    loginOrEmail: string,
+  ): Promise<UserModelType | null> {
+    return await this.userRepository.findUserByEmailOrLogin(loginOrEmail);
   }
 
   async deleteAllUsers() {

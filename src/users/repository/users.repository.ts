@@ -3,7 +3,6 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { UserModel, UserModelType } from '../entity/users.entity';
 import { mongoID } from '../../models';
-import { isAfter } from 'date-fns';
 
 @Injectable()
 export class UsersRepository {
@@ -39,6 +38,19 @@ export class UsersRepository {
           login: login,
         },
         { email: email },
+      ],
+    });
+  }
+
+  async findUserByEmailOrLogin(
+    loginOrEmail: string,
+  ): Promise<UserModelType | null> {
+    return this.UserModel.findOne({
+      $or: [
+        {
+          login: loginOrEmail,
+        },
+        { email: loginOrEmail },
       ],
     });
   }

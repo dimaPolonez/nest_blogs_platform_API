@@ -21,6 +21,14 @@ export class HttpExceptionFilter implements ExceptionFilter {
     if (status === 400) {
       const errors: any = exception.getResponse();
 
+      if (typeof errors.message === 'string') {
+        response.status(status).json({
+          errorsMessages: [
+            { message: errors.message, field: 'Data is not valid' },
+          ],
+        });
+        return;
+      }
       response.status(status).json({
         errorsMessages: errors.message.map((x) => {
           return { message: x.message, field: x.field };
