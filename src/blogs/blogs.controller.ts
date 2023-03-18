@@ -29,9 +29,10 @@ export class BlogsController {
     protected blogService: BlogsService,
     protected blogQueryRepository: BlogsQueryRepository,
   ) {}
+
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  async createBlog(@Body() blogDTO: CreateBlogDto): Promise<GetBlogDto> {
+  async createBlog(@Body() blogDTO: CreateBlogDto) /*: Promise<GetBlogDto>*/ {
     const newBlogID: mongoID = await this.blogService.createBlog(blogDTO);
 
     return await this.blogQueryRepository.findBlogById(newBlogID);

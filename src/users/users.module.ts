@@ -5,8 +5,7 @@ import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
 import { UsersRepository } from './repository/users.repository';
 import { UsersQueryRepository } from './repository/users.query-repository';
-import { BcryptApp, MailerApp } from '../applications';
-import { ActiveCodeApp } from '../applications/activateCode.app';
+import { BcryptApp, MailerApp, ActiveCodeApp } from '../applications';
 
 @Module({
   imports: [

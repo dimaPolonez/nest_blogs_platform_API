@@ -81,7 +81,7 @@ export class AuthService {
       { secret: CONFIG.JWT_ACCESS_SECRET, expiresIn: 540 },
     );
 
-    const tokensObject: tokensDTO = {
+    return {
       refreshToken: refreshToken,
       accessDTO: {
         accessToken: accessToken,
@@ -91,7 +91,5 @@ export class AuthService {
         secure: true,
       },
     };
-
-    return tokensObject;
   }
 }

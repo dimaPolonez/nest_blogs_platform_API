@@ -8,4 +8,6 @@ export const CONFIG = {
   MAIL_URL_PASS: process.env.MAIL_URL_PASS,
   JWT_ACCESS_SECRET: process.env.JWT_ACCESS_SECRET,
   JWT_REFRESH_SECRET: process.env.JWT_REFRESH_SECRET,
+  HTTP_BASIC_USER: process.env.HTTP_BASIC_USER,
+  HTTP_BASIC_PASS: process.env.HTTP_BASIC_PASS,
 };

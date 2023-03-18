@@ -5,9 +5,8 @@ import { Model } from 'mongoose';
 import { confirmUser, mongoID } from '../models';
 import { CreateUserDto } from './dto';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
-import { BcryptApp, MailerApp } from '../applications';
+import { BcryptApp, MailerApp, ActiveCodeApp } from '../applications';
 import { CreateUserMailDto, newPassDto } from '../auth/dto';
-import { ActiveCodeApp } from '../applications/activateCode.app';
 
 export class UsersService {
   constructor(

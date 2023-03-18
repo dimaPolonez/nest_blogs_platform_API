@@ -6,6 +6,11 @@ import { BlogsRepository } from './repository/blogs.repository';
 import { BlogsQueryRepository } from './repository/blogs.query-repository';
 import { BlogsController } from './blogs.controller';
 import { PostsModule } from '../posts/posts.module';
+import {
+  BasicStrategy,
+  JwtRefreshStrategy,
+  QuestJwtAccessStrategy,
+} from '../auth/strategies';
 
 @Module({
   imports: [
@@ -15,7 +20,14 @@ import { PostsModule } from '../posts/posts.module';
     forwardRef(() => PostsModule),
   ],
   controllers: [BlogsController],
-  providers: [BlogsService, BlogsRepository, BlogsQueryRepository],
+  providers: [
+    BlogsService,
+    BlogsRepository,
+    BlogsQueryRepository,
+    BasicStrategy,
+    JwtRefreshStrategy,
+    QuestJwtAccessStrategy,
+  ],
   exports: [BlogsService],
 })
 export class BlogsModule {}

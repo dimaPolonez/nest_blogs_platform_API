@@ -18,7 +18,7 @@ import {
   emailRecPassDto,
   newPassDto,
 } from './dto';
-import { LocalAuthGuard } from './guard/local-auth.guard';
+import { LocalAuthGuard } from './guard';
 import { authObjectDTO, tokensDTO } from '../models';
 import { AuthService } from './auth.service';
 import { Response } from 'express';
