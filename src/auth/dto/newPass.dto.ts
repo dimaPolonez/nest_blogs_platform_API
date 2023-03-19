@@ -1,4 +1,4 @@
-import { trim } from '../../helpers';
+import { trim } from '../../validation';
 import { IsNotEmpty, IsUUID, Length } from 'class-validator';
 
 export class newPassDto {

@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Strategy } from 'passport-jwt';
 import { CONFIG } from '../../config/config';
 import { PassportStrategy } from '@nestjs/passport';
-import { questAccessHelper } from '../../helpers';
+import { questAccessHelper } from '../request-handlers';
 
 @Injectable()
 export class QuestJwtAccessStrategy extends PassportStrategy(Strategy) {

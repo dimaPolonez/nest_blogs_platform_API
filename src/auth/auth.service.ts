@@ -1,18 +1,18 @@
 import { Injectable } from '@nestjs/common';
-import { UsersService } from '../users/users.service';
+import { UsersService } from '../features/users/users.service';
 import { authObjectDTO, tokensDTO } from '../models';
 import { JwtService } from '@nestjs/jwt';
 import { add } from 'date-fns';
-import { CreateUserMailDto, newPassDto } from './dto';
-import { UserModelType } from '../users/entity/users.entity';
-import { BcryptApp } from '../applications';
+import { CreateUserMailDto, LoginDto, newPassDto } from './dto';
+import { UserModelType } from '../features/users/entity/users.entity';
+import { BcryptAdapter } from '../adapters';
 import { CONFIG } from '../config/config';
 
 @Injectable()
 export class AuthService {
   constructor(
     protected userService: UsersService,
-    protected bcryptApp: BcryptApp,
+    protected bcryptAdapter: BcryptAdapter,
     protected jwtService: JwtService,
   ) {}
 
@@ -35,19 +35,16 @@ export class AuthService {
   async emailResending(email: string) {
     await this.userService.emailResending(email);
   }
-  async validateUser(
-    loginOrEmail: string,
-    password: string,
-  ): Promise<null | string> {
+  async validateUser(loginDTO: LoginDto): Promise<null | string> {
     const findUser: UserModelType | null =
-      await this.userService.findUserByEmailOrLogin(loginOrEmail);
+      await this.userService.findUserByEmailOrLogin(loginDTO.loginOrEmail);
 
     if (!findUser) {
       return null;
     }
 
-    const validPassword: boolean = await this.bcryptApp.hushCompare(
-      password,
+    const validPassword: boolean = await this.bcryptAdapter.hushCompare(
+      loginDTO.password,
       findUser.hushPass,
     );
 

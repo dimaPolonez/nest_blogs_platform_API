@@ -1,11 +1,16 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { PassportModule } from '@nestjs/passport';
 import { AuthService } from './auth.service';
-import { UsersModule } from '../users/users.module';
+import { UsersModule } from '../features/users/users.module';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { AuthController } from './auth.controller';
-import { BcryptApp } from '../applications';
-import { JwtAccessStrategy, LocalStrategy } from './strategies';
+import {
+  JwtAccessStrategy,
+  JwtRefreshStrategy,
+  LocalStrategy,
+} from './strategies';
+import { SessionsController } from './sessions.controller';
+import { BcryptAdapter } from '../adapters';
 @Module({
   imports: [forwardRef(() => UsersModule), PassportModule, JwtModule],
   providers: [
@@ -13,9 +18,10 @@ import { JwtAccessStrategy, LocalStrategy } from './strategies';
     LocalStrategy,
     JwtAccessStrategy,
     JwtService,
-    BcryptApp,
+    BcryptAdapter,
+    JwtRefreshStrategy,
   ],
-  controllers: [AuthController],
+  controllers: [AuthController, SessionsController],
   exports: [AuthService, UsersModule],
 })
 export class AuthModule {}

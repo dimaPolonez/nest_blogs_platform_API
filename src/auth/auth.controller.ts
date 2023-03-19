@@ -18,7 +18,7 @@ import {
   emailRecPassDto,
   newPassDto,
 } from './dto';
-import { LocalAuthGuard } from './guard';
+import { JwtAccessGuard, JwtRefreshGuard, LocalAuthGuard } from './guard';
 import { authObjectDTO, tokensDTO } from '../models';
 import { AuthService } from './auth.service';
 import { Response } from 'express';
@@ -53,8 +53,9 @@ export class AuthController {
     return tokensObject.accessDTO;
   }
 
+  @UseGuards(JwtRefreshGuard)
   @Post('refresh-token')
-  userRefreshToken() {
+  userRefreshToken(@Request() req) {
     return 'hello';
   }
 
@@ -86,13 +87,15 @@ export class AuthController {
     await this.authService.emailResending(userEmailDTO.email);
   }
 
+  @UseGuards(JwtRefreshGuard)
   @Post('logout')
-  userLogout() {
+  userLogout(@Request() req) {
     return 'hello';
   }
 
+  @UseGuards(JwtAccessGuard)
   @Get('me')
-  getUserInf() {
+  getUserInf(@Request() req) {
     return 'hello';
   }
 }

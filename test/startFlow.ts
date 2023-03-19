@@ -1,11 +1,11 @@
-import { myLikeStatus, testObject } from '../src/models';
 import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { AppModule } from '../src/app.module';
-import * as request from 'supertest';
+import request from 'supertest';
+import { TestObjectType } from './app.e2e-spec';
 
-export function startFlow(): testObject {
-  const testObject: testObject = {
+export function startFlow(): TestObjectType {
+  const testObject: TestObjectType = {
     basic: 'YWRtaW46cXdlcnR5',
     accessToken: ' ',
     refreshToken: ' ',
@@ -13,6 +13,12 @@ export function startFlow(): testObject {
     blogID: ' ',
     postID: ' ',
   };
+
+  enum MyLikeStatus {
+    None = 'None',
+    Like = 'Like',
+    Dislike = 'Dislike',
+  }
 
   let app: INestApplication;
   beforeEach(async () => {
@@ -114,7 +120,7 @@ export function startFlow(): testObject {
               extendedLikesInfo: {
                 likesCount: 0,
                 dislikesCount: 0,
-                myStatus: myLikeStatus.None,
+                myStatus: MyLikeStatus.None,
                 newestLikes: [],
               },
             });

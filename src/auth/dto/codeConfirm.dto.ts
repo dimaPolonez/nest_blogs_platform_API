@@ -1,4 +1,4 @@
-import { trim } from '../../helpers';
+import { trim } from '../../validation';
 import { IsNotEmpty, IsUUID } from 'class-validator';
 
 export class CodeConfirmDto {

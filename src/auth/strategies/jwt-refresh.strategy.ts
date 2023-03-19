@@ -2,7 +2,7 @@ import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-jwt';
 import { Injectable } from '@nestjs/common';
 import { CONFIG } from '../../config/config';
-import { RefreshCookieExtractor } from '../../helpers/refreshCookieExtractor';
+import { RefreshCookieExtractor } from '../request-handlers';
 
 @Injectable()
 export class JwtRefreshStrategy extends PassportStrategy(Strategy) {

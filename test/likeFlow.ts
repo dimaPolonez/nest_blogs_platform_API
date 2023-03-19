@@ -1,10 +1,10 @@
-import { testObject } from '../src/models';
 import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { AppModule } from '../src/app.module';
-import * as request from 'supertest';
+import request from 'supertest';
+import { TestObjectType } from './app.e2e-spec';
 
-export function likeFlow(testObject: testObject) {
+export function likeFlow(testObject: TestObjectType) {
   let app: INestApplication;
 
   beforeEach(async () => {

@@ -1,10 +1,10 @@
-import { testObject } from '../src/models';
 import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { AppModule } from '../src/app.module';
-import * as request from 'supertest';
+import { TestObjectType } from './app.e2e-spec';
+import request from 'supertest';
 
-export function commentFlow(testObject: testObject) {
+export function commentFlow(testObject: TestObjectType) {
   let app: INestApplication;
 
   beforeEach(async () => {
