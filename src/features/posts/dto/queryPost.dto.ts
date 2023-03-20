@@ -1,8 +1,8 @@
 import { Type } from 'class-transformer';
 import { Min } from 'class-validator';
-import { QueryType } from '../../../models/all.model';
+import { QueryPostType } from '../models';
 
-export class QueryPostDto implements QueryType {
+export class QueryPostDto implements QueryPostType {
   readonly sortBy = 'createdAt';
   readonly sortDirection = 'desc';
   @Min(1)

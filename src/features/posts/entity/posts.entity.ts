@@ -1,7 +1,6 @@
 import { HydratedDocument, Model } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { myLikeStatus } from '../../../models';
-import { UpdatePostDto } from '../dto';
+import { MyLikeStatus, UpdatePostType } from '../models';
 
 export type PostModelType = HydratedDocument<PostModel>;
 
@@ -13,8 +12,8 @@ export class ExtendedLikesInfo {
   @Prop({ default: 0 })
   dislikesCount: number;
 
-  @Prop({ enum: myLikeStatus, default: myLikeStatus.None })
-  myStatus: myLikeStatus;
+  @Prop({ enum: MyLikeStatus, default: MyLikeStatus.None })
+  myStatus: MyLikeStatus;
 
   @Prop({ default: [] })
   newestLikes: [];
@@ -47,7 +46,7 @@ export class PostModel {
   @Prop({ default: () => ({}) })
   extendedLikesInfo: ExtendedLikesInfo;
 
-  updatePost(postDTO: UpdatePostDto) {
+  updatePost(postDTO: UpdatePostType) {
     this.title = postDTO.title;
     this.shortDescription = postDTO.shortDescription;
     this.content = postDTO.content;

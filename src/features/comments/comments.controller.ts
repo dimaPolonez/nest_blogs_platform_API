@@ -12,8 +12,9 @@ import {
 } from '@nestjs/common';
 import { CommentsService } from './comments.service';
 import { CommentsQueryRepository } from './repository/comments.query-repository';
-import { GetCommentDto, UpdateCommentDto } from './dto';
+import { UpdateCommentDto } from './dto';
 import { JwtAccessGuard, QuestJwtAccessGuard } from '../../auth/guard';
+import { GetCommentType } from './models';
 
 @Controller('comments')
 export class CommentsController {
@@ -28,7 +29,7 @@ export class CommentsController {
   async getOneComment(
     @Request() req,
     @Param('id') commentID: string,
-  ): Promise<GetCommentDto> {
+  ): Promise<GetCommentType> {
     return await this.commentQueryRepository.findCommentById(commentID);
   }
 

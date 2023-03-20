@@ -2,8 +2,11 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CommentModel, CommentModelType } from '../entity/comments.entity';
-import { mongoID } from '../../../models';
-import { GetAllCommentsDto, GetCommentDto, QueryCommentDto } from '../dto';
+import {
+  GetAllCommentsType,
+  GetCommentType,
+  QueryCommentType,
+} from '../models';
 
 @Injectable()
 export class CommentsQueryRepository {
@@ -19,15 +22,15 @@ export class CommentsQueryRepository {
     return (pageNum - 1) * pageSize;
   }
 
-  async findCommentById(commentID: mongoID | string): Promise<GetCommentDto> {
+  async findCommentById(commentID: string): Promise<GetCommentType> {
     const findCommentSmart = await this.CommentModel.findById(commentID);
 
     if (!findCommentSmart) {
-      throw new NotFoundException();
+      throw new NotFoundException('comment not found');
     }
 
     return {
-      id: findCommentSmart._id,
+      id: findCommentSmart.id,
       content: findCommentSmart.content,
       commentatorInfo: {
         userId: findCommentSmart.commentatorInfo.userId,
@@ -44,8 +47,8 @@ export class CommentsQueryRepository {
 
   async getAllCommentsOfPost(
     postID: string,
-    queryAll: QueryCommentDto,
-  ): Promise<GetAllCommentsDto> {
+    queryAll: QueryCommentType,
+  ): Promise<GetAllCommentsType> {
     const allComments: CommentModelType[] = await this.CommentModel.find({
       postId: postID,
     })
@@ -53,9 +56,9 @@ export class CommentsQueryRepository {
       .limit(queryAll.pageSize)
       .sort({ [queryAll.sortBy]: this.sortObject(queryAll.sortDirection) });
 
-    const allMapsComments: GetCommentDto[] = allComments.map((field) => {
+    const allMapsComments: GetCommentType[] = allComments.map((field) => {
       return {
-        id: field._id,
+        id: field.id,
         content: field.content,
         commentatorInfo: {
           userId: field.commentatorInfo.userId,

@@ -2,8 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { PostModel, PostModelType } from '../entity/posts.entity';
-import { GetAllPostsDto, GetPostDto } from '../dto';
-import { QueryType } from '../../../models/all.model';
+import { GetAllPostsType, GetPostType, QueryPostType } from '../models';
 
 @Injectable()
 export class PostsQueryRepository {
@@ -19,7 +18,7 @@ export class PostsQueryRepository {
     return (pageNum - 1) * pageSize;
   }
 
-  async findPostById(postID: string): Promise<GetPostDto> {
+  async findPostById(postID: string): Promise<GetPostType> {
     const findPostSmart = await this.PostModel.findById(postID);
 
     if (!findPostSmart) {
@@ -27,7 +26,7 @@ export class PostsQueryRepository {
     }
 
     return {
-      id: findPostSmart._id,
+      id: findPostSmart.id,
       title: findPostSmart.title,
       shortDescription: findPostSmart.shortDescription,
       content: findPostSmart.content,
@@ -44,9 +43,9 @@ export class PostsQueryRepository {
   }
 
   async getAllPosts(
-    queryAll: QueryType,
+    queryAll: QueryPostType,
     blogID?: string,
-  ): Promise<GetAllPostsDto> {
+  ): Promise<GetAllPostsType> {
     let findObject: object = {};
 
     if (blogID) {
@@ -58,9 +57,9 @@ export class PostsQueryRepository {
       .limit(queryAll.pageSize)
       .sort({ [queryAll.sortBy]: this.sortObject(queryAll.sortDirection) });
 
-    const allMapsPosts: GetPostDto[] = allPosts.map((field) => {
+    const allMapsPosts: GetPostType[] = allPosts.map((field) => {
       return {
-        id: field._id,
+        id: field.id,
         title: field.title,
         shortDescription: field.shortDescription,
         content: field.content,

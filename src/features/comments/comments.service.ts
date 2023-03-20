@@ -8,15 +8,15 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import {
-  CreateCommentOfPostDto,
-  GetAllCommentsDto,
-  GetCommentDto,
-  QueryCommentDto,
-  UpdateCommentDto,
-} from './dto';
 import { PostsService } from '../posts/posts.service';
 import { CommentsQueryRepository } from './repository/comments.query-repository';
+import {
+  CreateCommentOfPostType,
+  GetAllCommentsType,
+  GetCommentType,
+  QueryCommentType,
+  UpdateCommentType,
+} from './models';
 
 @Injectable()
 export class CommentsService {
@@ -29,12 +29,12 @@ export class CommentsService {
     private readonly CommentModel: Model<CommentModelType>,
   ) {}
 
-  async updateComment(commentID: string, commentDTO: UpdateCommentDto) {
+  async updateComment(commentID: string, commentDTO: UpdateCommentType) {
     const findComment: CommentModelType | null =
       await this.commentRepository.findCommentById(commentID);
 
     if (!findComment) {
-      throw new NotFoundException();
+      throw new NotFoundException('comment not found');
     }
 
     await findComment.updateComment(commentDTO);
@@ -47,7 +47,7 @@ export class CommentsService {
       await this.commentRepository.findCommentById(commentID);
 
     if (!findComment) {
-      throw new NotFoundException();
+      throw new NotFoundException('comment not found');
     }
 
     await this.commentRepository.deleteComment(commentID);
@@ -59,8 +59,8 @@ export class CommentsService {
 
   async createCommentOfPost(
     postID: string,
-    commentDTO: CreateCommentOfPostDto,
-  ): Promise<GetCommentDto> {
+    commentDTO: CreateCommentOfPostType,
+  ): Promise<GetCommentType> {
     const newCommentDto = {
       content: commentDTO.content,
       postId: postID,
@@ -72,13 +72,13 @@ export class CommentsService {
 
     await this.commentRepository.save(createCommentSmart);
 
-    return this.commentQueryRepository.findCommentById(createCommentSmart._id);
+    return this.commentQueryRepository.findCommentById(createCommentSmart.id);
   }
 
   async getAllCommentsOfPost(
     postID: string,
-    queryAll: QueryCommentDto,
-  ): Promise<GetAllCommentsDto> {
+    queryAll: QueryCommentType,
+  ): Promise<GetAllCommentsType> {
     return this.commentQueryRepository.getAllCommentsOfPost(postID, queryAll);
   }
 }

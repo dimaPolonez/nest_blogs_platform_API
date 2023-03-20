@@ -1,7 +1,8 @@
 import { Type } from 'class-transformer';
 import { Min } from 'class-validator';
+import { QueryCommentType } from '../models';
 
-export class QueryCommentDto {
+export class QueryCommentDto implements QueryCommentType {
   readonly sortBy = 'createdAt';
   readonly sortDirection = 'desc';
   @Min(1)

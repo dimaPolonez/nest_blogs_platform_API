@@ -13,27 +13,26 @@ import {
   UseGuards,
 } from '@nestjs/common';
 
-import { mongoID } from '../../models';
 import { PostsService } from './posts.service';
 import { PostsQueryRepository } from './repository/posts.query-repository';
 import {
+  CreateCommentOfPostDto,
   CreatePostDto,
-  GetAllPostsDto,
-  GetPostDto,
   QueryPostDto,
   UpdatePostDto,
-} from './dto';
-import {
-  GetCommentDto,
   QueryCommentDto,
-  CreateCommentOfPostDto,
-  GetAllCommentsDto,
-} from '../comments/dto';
+} from './dto';
 import {
   BasicAuthGuard,
   JwtAccessGuard,
   QuestJwtAccessGuard,
 } from '../../auth/guard';
+import {
+  GetAllCommentsOfPostType,
+  GetAllPostsType,
+  GetCommentOfPostType,
+  GetPostType,
+} from './models';
 
 @Controller('posts')
 export class PostsController {
@@ -45,8 +44,8 @@ export class PostsController {
   @UseGuards(BasicAuthGuard)
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  async createPost(@Body() postDTO: CreatePostDto): Promise<GetPostDto> {
-    const newPostID: mongoID = await this.postService.createPost(postDTO);
+  async createPost(@Body() postDTO: CreatePostDto): Promise<GetPostType> {
+    const newPostID: string = await this.postService.createPost(postDTO);
 
     return await this.postQueryRepository.findPostById(newPostID);
   }
@@ -74,7 +73,7 @@ export class PostsController {
   async getOnePost(
     @Request() req,
     @Param('id') postID: string,
-  ): Promise<GetPostDto> {
+  ): Promise<GetPostType> {
     return await this.postQueryRepository.findPostById(postID);
   }
 
@@ -84,7 +83,7 @@ export class PostsController {
   async getAllPosts(
     @Request() req,
     @Query() queryAll: QueryPostDto,
-  ): Promise<GetAllPostsDto> {
+  ): Promise<GetAllPostsType> {
     return await this.postQueryRepository.getAllPosts(queryAll);
   }
 
@@ -95,7 +94,7 @@ export class PostsController {
     @Request() req,
     @Param('id') postID: string,
     @Body() commentDTO: CreateCommentOfPostDto,
-  ): Promise<GetCommentDto> {
+  ): Promise<GetCommentOfPostType> {
     return await this.postService.createCommentOfPost(postID, commentDTO);
   }
 
@@ -106,7 +105,7 @@ export class PostsController {
     @Request() req,
     @Param('id') postID: string,
     @Query() queryAll: QueryCommentDto,
-  ): Promise<GetAllCommentsDto> {
+  ): Promise<GetAllCommentsOfPostType> {
     return await this.postService.getAllCommentsOfPost(postID, queryAll);
   }
 

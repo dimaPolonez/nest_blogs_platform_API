@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   forwardRef,
   Inject,
   Injectable,
@@ -9,22 +8,20 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { PostModel, PostModelType } from './entity/posts.entity';
 import { PostsRepository } from './repository/posts.repository';
-import {
-  CreatePostDto,
-  GetAllPostsDto,
-  GetPostDto,
-  UpdatePostDto,
-} from './dto';
 import { PostsQueryRepository } from './repository/posts.query-repository';
 import { BlogsService } from '../blogs/blogs.service';
 import { CommentsService } from '../comments/comments.service';
 import {
-  GetAllCommentsDto,
-  GetCommentDto,
-  QueryCommentDto,
-  CreateCommentOfPostDto,
-} from '../comments/dto';
-import { QueryType } from '../../models/all.model';
+  CreateCommentOfPostType,
+  CreatePostType,
+  GetAllCommentsOfPostType,
+  GetAllPostsType,
+  GetCommentOfPostType,
+  GetPostType,
+  QueryCommentType,
+  QueryPostType,
+  UpdatePostType,
+} from './models';
 
 @Injectable()
 export class PostsService {
@@ -39,14 +36,10 @@ export class PostsService {
     private readonly PostModel: Model<PostModelType>,
   ) {}
 
-  async createPost(postDTO: CreatePostDto): Promise<string> {
-    const findBlogName: null | string = await this.blogService.findBlogName(
+  async createPost(postDTO: CreatePostType): Promise<string> {
+    const findBlogName: string = await this.blogService.findBlogName(
       postDTO.blogId,
     );
-
-    if (!findBlogName) {
-      throw new BadRequestException('Incorrect blogId');
-    }
 
     const newPostDTO = { ...postDTO, blogName: findBlogName };
 
@@ -57,21 +50,17 @@ export class PostsService {
     return createPostSmart.id;
   }
 
-  async updatePost(postID: string, postDTO: UpdatePostDto) {
+  async updatePost(postID: string, postDTO: UpdatePostType) {
     const findPost: PostModelType | null =
       await this.postRepository.findPostById(postID);
 
     if (!findPost) {
-      throw new NotFoundException();
+      throw new NotFoundException('post not found');
     }
 
-    const findBlogName: null | string = await this.blogService.findBlogName(
+    const findBlogName: string = await this.blogService.findBlogName(
       postDTO.blogId,
     );
-
-    if (!findBlogName) {
-      throw new BadRequestException('Incorrect blogId');
-    }
 
     const newPostDTO = { ...postDTO, blogName: findBlogName };
 
@@ -86,7 +75,7 @@ export class PostsService {
     );
 
     if (!findPost) {
-      throw new NotFoundException();
+      throw new NotFoundException('post not found');
     }
 
     await this.postRepository.deletePost(postID);
@@ -96,7 +85,7 @@ export class PostsService {
     await this.postRepository.deleteAllPosts();
   }
 
-  async createPostOfBlog(newPostDTO: CreatePostDto): Promise<GetPostDto> {
+  async createPostOfBlog(newPostDTO: CreatePostType): Promise<GetPostType> {
     const createPostSmart: PostModelType | null = await new this.PostModel(
       newPostDTO,
     );
@@ -108,22 +97,22 @@ export class PostsService {
 
   async getAllPostsOfBlog(
     blogID: string,
-    queryAll: QueryType,
-  ): Promise<GetAllPostsDto> {
+    queryAll: QueryPostType,
+  ): Promise<GetAllPostsType> {
     return this.postQueryRepository.getAllPosts(queryAll, blogID);
   }
 
   async createCommentOfPost(
     postID: string,
-    commentDTO: CreateCommentOfPostDto,
-  ): Promise<GetCommentDto> {
+    commentDTO: CreateCommentOfPostType,
+  ): Promise<GetCommentOfPostType> {
     return await this.commentsService.createCommentOfPost(postID, commentDTO);
   }
 
   async getAllCommentsOfPost(
     postID: string,
-    queryAll: QueryCommentDto,
-  ): Promise<GetAllCommentsDto> {
+    queryAll: QueryCommentType,
+  ): Promise<GetAllCommentsOfPostType> {
     await this.postQueryRepository.findPostById(postID);
 
     return await this.commentsService.getAllCommentsOfPost(postID, queryAll);

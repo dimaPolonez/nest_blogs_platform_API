@@ -1,27 +1,27 @@
-import { trim } from '../../../validation';
-import { IsMongoId, IsNotEmpty, Length } from 'class-validator';
+import { IsMongoId, IsNotEmpty, Length, Validate } from 'class-validator';
+import { findBlogClassValidate, trimDecorator } from '../../../validation';
+import { UpdatePostType } from '../models';
 
-export class UpdatePostDto {
-  @trim()
+export class UpdatePostDto implements UpdatePostType {
+  @trimDecorator()
   @Length(1, 30)
   @IsNotEmpty()
   readonly title: string;
 
-  @trim()
+  @trimDecorator()
   @Length(1, 100)
   @IsNotEmpty()
   readonly shortDescription: string;
 
-  @trim()
+  @trimDecorator()
   @Length(1, 1000)
   @IsNotEmpty()
   readonly content: string;
 
-  @trim()
+  @Validate(findBlogClassValidate)
+  @trimDecorator()
   @IsMongoId()
   @Length(24, 24)
   @IsNotEmpty()
   readonly blogId: string;
-
-  blogName?: string;
 }
