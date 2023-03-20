@@ -21,7 +21,10 @@ import {
   UpdateBlogDto,
   QueryPostOfBlogDto,
 } from './dto';
-import { BasicAuthGuard, QuestJwtAccessGuard } from '../../auth/guard';
+import {
+  BasicAuthGuard,
+  QuestJwtAccessGuard,
+} from '../../guards-handlers/guard';
 import {
   GetAllBlogsType,
   GetAllPostsOfBlogType,

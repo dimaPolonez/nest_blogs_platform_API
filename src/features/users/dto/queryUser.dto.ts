@@ -1,7 +1,8 @@
 import { Type } from 'class-transformer';
 import { Min } from 'class-validator';
+import { QueryUserType } from '../models';
 
-export class QueryUserDto {
+export class QueryUserDto implements QueryUserType {
   readonly searchLoginTerm = '';
   readonly searchEmailTerm = '';
   readonly sortBy = 'createdAt';

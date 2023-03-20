@@ -2,8 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { UserModel, UserModelType } from '../entity/users.entity';
-import { mongoID } from '../../../models';
-import { GetAllUsersDto, GetUserDto, QueryUserDto } from '../dto';
+import { GetAllUsersType, GetUserType, QueryUserType } from '../models';
 
 @Injectable()
 export class UsersQueryRepository {
@@ -18,22 +17,22 @@ export class UsersQueryRepository {
     return (pageNum - 1) * pageSize;
   }
 
-  async findUserById(userID: mongoID | string): Promise<GetUserDto> {
+  async findUserById(userID: string): Promise<GetUserType> {
     const findUserSmart = await this.UserModel.findById(userID);
 
     if (!findUserSmart) {
-      throw new NotFoundException();
+      throw new NotFoundException('user not found');
     }
 
     return {
-      id: findUserSmart._id,
+      id: findUserSmart.id,
       login: findUserSmart.login,
       email: findUserSmart.email,
       createdAt: findUserSmart.createdAt,
     };
   }
 
-  async getAllUsers(queryAll: QueryUserDto): Promise<GetAllUsersDto> {
+  async getAllUsers(queryAll: QueryUserType): Promise<GetAllUsersType> {
     const allUsers: UserModelType[] = await this.UserModel.find({
       $or: [
         { login: new RegExp(queryAll.searchLoginTerm, 'gi') },
@@ -44,9 +43,9 @@ export class UsersQueryRepository {
       .limit(queryAll.pageSize)
       .sort({ [queryAll.sortBy]: this.sortObject(queryAll.sortDirection) });
 
-    const allMapsUsers: GetUserDto[] = allUsers.map((field) => {
+    const allMapsUsers: GetUserType[] = allUsers.map((field) => {
       return {
-        id: field._id,
+        id: field.id,
         login: field.login,
         email: field.email,
         createdAt: field.createdAt,

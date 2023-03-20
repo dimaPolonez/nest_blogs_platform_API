@@ -13,7 +13,10 @@ import {
 import { CommentsService } from './comments.service';
 import { CommentsQueryRepository } from './repository/comments.query-repository';
 import { UpdateCommentDto } from './dto';
-import { JwtAccessGuard, QuestJwtAccessGuard } from '../../auth/guard';
+import {
+  JwtAccessGuard,
+  QuestJwtAccessGuard,
+} from '../../guards-handlers/guard';
 import { GetCommentType } from './models';
 
 @Controller('comments')

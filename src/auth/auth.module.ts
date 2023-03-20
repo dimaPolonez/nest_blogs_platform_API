@@ -8,9 +8,8 @@ import {
   JwtAccessStrategy,
   JwtRefreshStrategy,
   LocalStrategy,
-} from './strategies';
+} from '../guards-handlers/strategies';
 import { SessionsController } from './sessions.controller';
-import { BcryptAdapter } from '../adapters';
 @Module({
   imports: [forwardRef(() => UsersModule), PassportModule, JwtModule],
   providers: [
@@ -18,7 +17,6 @@ import { BcryptAdapter } from '../adapters';
     LocalStrategy,
     JwtAccessStrategy,
     JwtService,
-    BcryptAdapter,
     JwtRefreshStrategy,
   ],
   controllers: [AuthController, SessionsController],

@@ -1,7 +1,7 @@
 import { HydratedDocument } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { isAfter } from 'date-fns';
-import { confirmUser } from '../../../models';
+import { ConfirmUserType } from '../models';
 
 export type UserModelType = HydratedDocument<UserModel>;
 
@@ -73,14 +73,14 @@ export class UserModel {
     return false;
   }
 
-  async updateActivateUser(userActivateDTO: confirmUser) {
+  async updateActivateUser(userActivateDTO: ConfirmUserType) {
     this.activateUser.codeActivated = userActivateDTO.codeActivated;
     this.activateUser.lifeTimeCode = userActivateDTO.lifeTimeCode;
     this.activateUser.confirm = userActivateDTO.confirm;
   }
 
   async updateActivateUserAndPassword(
-    userActivateDTO: confirmUser,
+    userActivateDTO: ConfirmUserType,
     newPass: string,
   ) {
     this.hushPass = newPass;

@@ -12,9 +12,9 @@ import {
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UsersQueryRepository } from './repository/users.query-repository';
-import { mongoID } from '../../models';
-import { CreateUserDto, GetAllUsersDto, GetUserDto, QueryUserDto } from './dto';
-import { BasicAuthGuard } from '../../auth/guard';
+import { CreateUserDto, QueryUserDto } from './dto';
+import { BasicAuthGuard } from '../../guards-handlers/guard';
+import { GetAllUsersType, GetUserType } from './models';
 
 @Controller('users')
 export class UsersController {
@@ -26,8 +26,8 @@ export class UsersController {
   @UseGuards(BasicAuthGuard)
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  async createUser(@Body() userDTO: CreateUserDto): Promise<GetUserDto> {
-    const newUserID: mongoID = await this.userService.createUser(userDTO);
+  async createUser(@Body() userDTO: CreateUserDto): Promise<GetUserType> {
+    const newUserID: string = await this.userService.createUser(userDTO);
 
     return await this.userQueryRepository.findUserById(newUserID);
   }
@@ -41,7 +41,7 @@ export class UsersController {
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  async getAllUsers(@Query() queryAll: QueryUserDto): Promise<GetAllUsersDto> {
+  async getAllUsers(@Query() queryAll: QueryUserDto): Promise<GetAllUsersType> {
     return await this.userQueryRepository.getAllUsers(queryAll);
   }
 }

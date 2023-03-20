@@ -1,11 +1,13 @@
-import { trim } from '../../validation';
 import { IsNotEmpty, Length } from 'class-validator';
+import { trimDecorator } from '../../validation';
+import { LoginType } from '../models';
 
-export class LoginDto {
-  @trim()
+export class LoginDto implements LoginType {
+  @trimDecorator()
   @IsNotEmpty()
   readonly loginOrEmail: string;
-  @trim()
+
+  @trimDecorator()
   @Length(6, 20)
   @IsNotEmpty()
   readonly password: string;

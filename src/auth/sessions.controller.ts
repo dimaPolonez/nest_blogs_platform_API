@@ -6,7 +6,7 @@ import {
   Request,
   UseGuards,
 } from '@nestjs/common';
-import { JwtRefreshGuard } from './guard';
+import { JwtRefreshGuard } from '../guards-handlers/guard';
 
 @Controller('security')
 export class SessionsController {

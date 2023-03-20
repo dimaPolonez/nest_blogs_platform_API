@@ -1,5 +1,4 @@
 import {
-  ValidationArguments,
   ValidatorConstraint,
   ValidatorConstraintInterface,
 } from 'class-validator';
@@ -11,11 +10,11 @@ import { Injectable } from '@nestjs/common';
 export class findBlogClassValidate implements ValidatorConstraintInterface {
   constructor(protected blogService: BlogsService) {}
 
-  async validate(blogID: string, args: ValidationArguments) {
+  async validate(blogID: string) {
     return await this.blogService.checkBlog(blogID);
   }
 
-  defaultMessage(args: ValidationArguments) {
+  defaultMessage() {
     return 'Blog with id $value not found';
   }
 }

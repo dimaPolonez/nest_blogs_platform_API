@@ -2,15 +2,18 @@ import { UsersRepository } from './repository/users.repository';
 import { UserModel, UserModelType } from './entity/users.entity';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { confirmUser, mongoID } from '../../models';
-import { CreateUserDto } from './dto';
-import { BadRequestException, NotFoundException } from '@nestjs/common';
-import { CreateUserMailDto, newPassDto } from '../../auth/dto';
+import { NotFoundException } from '@nestjs/common';
 import {
   ActiveCodeAdapter,
   BcryptAdapter,
   MailerAdapter,
 } from '../../adapters';
+import {
+  ConfirmUserType,
+  CreateUserType,
+  LoginType,
+  NewPassType,
+} from './models';
 
 export class UsersService {
   constructor(
@@ -22,7 +25,7 @@ export class UsersService {
     private readonly UserModel: Model<UserModelType>,
   ) {}
 
-  async createUser(userDTO: CreateUserDto): Promise<mongoID> {
+  async createUser(userDTO: CreateUserType): Promise<string> {
     const hushPass: string = await this.bcryptAdapter.hushGenerate(
       userDTO.password,
     );
@@ -37,19 +40,9 @@ export class UsersService {
 
     await this.userRepository.save(createUserSmart);
 
-    return createUserSmart._id;
+    return createUserSmart.id;
   }
-  async registrationUser(userDTO: CreateUserMailDto) {
-    const checkedUnique: UserModelType | null =
-      await this.userRepository.checkedEmailAndLoginUnique(
-        userDTO.email,
-        userDTO.login,
-      );
-
-    if (checkedUnique) {
-      throw new BadRequestException('This user already exists');
-    }
-
+  async registrationUser(userDTO: CreateUserType) {
     const hushPass: string = await this.bcryptAdapter.hushGenerate(
       userDTO.password,
     );
@@ -78,20 +71,10 @@ export class UsersService {
   }
 
   async confirmEmail(codeConfirm: string) {
-    const findUserByCode: UserModelType | null =
+    const findUserByCode: UserModelType =
       await this.userRepository.findUserByCode(codeConfirm);
 
-    if (!findUserByCode) {
-      throw new BadRequestException('Code is not valid');
-    }
-
-    const codeValid: boolean = await findUserByCode.checkedActivateCodeValid();
-
-    if (!codeValid) {
-      throw new BadRequestException('Code is not valid');
-    }
-
-    const newUserDTO: confirmUser = {
+    const newUserDTO: ConfirmUserType = {
       codeActivated: 'Activated',
       lifeTimeCode: 'Activated',
       confirm: true,
@@ -103,12 +86,8 @@ export class UsersService {
   }
 
   async emailResending(userEmailDTO: string) {
-    const findUserEmailToBase: UserModelType | null =
+    const findUserEmailToBase: UserModelType =
       await this.userRepository.findUserEmailToBase(userEmailDTO);
-
-    if (findUserEmailToBase) {
-      throw new BadRequestException('Incorrect email');
-    }
 
     await this.mailerAdapter.sendMailCode(
       findUserEmailToBase.email,
@@ -117,14 +96,11 @@ export class UsersService {
   }
 
   async passwordRecovery(userEmail: string) {
-    const findUserEmailToBase: UserModelType | null =
+    const findUserEmailToBase: UserModelType =
       await this.userRepository.findUserEmailToBase(userEmail);
 
-    if (findUserEmailToBase) {
-      throw new BadRequestException('Incorrect email');
-    }
-
-    const authParams = await this.activeCodeAdapter.createCode();
+    const authParams: ConfirmUserType =
+      await this.activeCodeAdapter.createCode();
 
     await findUserEmailToBase.updateActivateUser(authParams);
 
@@ -136,21 +112,11 @@ export class UsersService {
     );
   }
 
-  async createNewPassword(newPassDTO: newPassDto) {
-    const findUserByCode: UserModelType | null =
+  async createNewPassword(newPassDTO: NewPassType) {
+    const findUserByCode: UserModelType =
       await this.userRepository.findUserByCode(newPassDTO.recoveryCode);
 
-    if (!findUserByCode) {
-      throw new BadRequestException('Code is not valid');
-    }
-
-    const codeValid: boolean = await findUserByCode.checkedActivateCodeValid();
-
-    if (!codeValid) {
-      throw new BadRequestException('Code is not valid');
-    }
-
-    const newUserDTO: confirmUser = {
+    const newUserDTO: ConfirmUserType = {
       codeActivated: 'Activated',
       lifeTimeCode: 'Activated',
       confirm: true,
@@ -171,19 +137,82 @@ export class UsersService {
     );
 
     if (!findUser) {
-      throw new NotFoundException();
+      throw new NotFoundException('user not found');
     }
 
     await this.userRepository.deleteUser(userID);
   }
 
-  async findUserByEmailOrLogin(
-    loginOrEmail: string,
-  ): Promise<UserModelType | null> {
-    return await this.userRepository.findUserByEmailOrLogin(loginOrEmail);
+  async findUserByEmailOrLogin(loginDTO: LoginType): Promise<string | null> {
+    const findUser: UserModelType | null =
+      await this.userRepository.findUserByEmailOrLogin(loginDTO.loginOrEmail);
+
+    if (!findUser) {
+      return null;
+    }
+
+    const validPassword: boolean = await this.bcryptAdapter.hushCompare(
+      loginDTO.password,
+      findUser.hushPass,
+    );
+
+    if (!validPassword) {
+      return null;
+    }
+
+    return findUser.id;
   }
 
   async deleteAllUsers() {
     await this.userRepository.deleteAllUsers();
+  }
+
+  async checkedConfirmCode(codeConfirm: string): Promise<boolean> {
+    const findUserByCode: UserModelType | null =
+      await this.userRepository.findUserByCode(codeConfirm);
+    if (!findUserByCode) {
+      return false;
+    }
+
+    const codeValid: boolean = await findUserByCode.checkedActivateCodeValid();
+
+    if (!codeValid) {
+      return false;
+    }
+
+    return true;
+  }
+
+  async checkedUniqueEmail(email: string): Promise<boolean> {
+    const checkedUniqueEmail: UserModelType | null =
+      await this.userRepository.checkedEmail(email);
+
+    if (checkedUniqueEmail) {
+      return false;
+    }
+
+    return true;
+  }
+
+  async checkedEmailToBase(email: string): Promise<boolean> {
+    const checkedEmailToBase: UserModelType | null =
+      await this.userRepository.checkedEmail(email);
+
+    if (!checkedEmailToBase) {
+      return false;
+    }
+
+    return true;
+  }
+
+  async checkedUniqueLogin(login: string): Promise<boolean> {
+    const checkedUniqueLogin: UserModelType | null =
+      await this.userRepository.checkedUniqueLogin(login);
+
+    if (checkedUniqueLogin) {
+      return false;
+    }
+
+    return true;
   }
 }

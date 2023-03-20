@@ -14,14 +14,18 @@ import {
 import {
   CreateUserMailDto,
   CodeConfirmDto,
-  emailResendDto,
-  emailRecPassDto,
-  newPassDto,
+  EmailRecPassDto,
+  NewPassDto,
+  EmailResendDto,
 } from './dto';
-import { JwtAccessGuard, JwtRefreshGuard, LocalAuthGuard } from './guard';
-import { authObjectDTO, tokensDTO } from '../models';
+import {
+  JwtAccessGuard,
+  JwtRefreshGuard,
+  LocalAuthGuard,
+} from '../guards-handlers/guard';
 import { AuthService } from './auth.service';
 import { Response } from 'express';
+import { AuthObjectType, TokensObjectType } from './models';
 
 @Controller('auth')
 export class AuthController {
@@ -35,13 +39,13 @@ export class AuthController {
     @Headers('user-agent') nameDevice: string,
     @Res({ passthrough: true }) response: Response,
   ) {
-    const authObjectDTO: authObjectDTO = {
+    const authObjectDTO: AuthObjectType = {
       ip: userIP,
       nameDevice: nameDevice,
       userID: req.user,
     };
 
-    const tokensObject: tokensDTO = await this.authService.createTokens(
+    const tokensObject: TokensObjectType = await this.authService.createTokens(
       authObjectDTO,
     );
     response.cookie(
@@ -60,12 +64,12 @@ export class AuthController {
   }
 
   @Post('password-recovery')
-  async userCreateNewPass(@Body() userEmailDTO: emailRecPassDto) {
+  async userCreateNewPass(@Body() userEmailDTO: EmailRecPassDto) {
     await this.authService.passwordRecovery(userEmailDTO.email);
   }
 
   @Post('new-password')
-  async userUpdateNewPass(@Body() newPassDTO: newPassDto) {
+  async userUpdateNewPass(@Body() newPassDTO: NewPassDto) {
     await this.authService.createNewPassword(newPassDTO);
   }
 
@@ -83,7 +87,7 @@ export class AuthController {
 
   @HttpCode(HttpStatus.NO_CONTENT)
   @Post('registration-email-resending')
-  async userRegistrationResending(@Body() userEmailDTO: emailResendDto) {
+  async userRegistrationResending(@Body() userEmailDTO: EmailResendDto) {
     await this.authService.emailResending(userEmailDTO.email);
   }
 

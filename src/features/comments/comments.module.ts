@@ -9,7 +9,7 @@ import { PostsModule } from '../posts/posts.module';
 import {
   JwtAccessStrategy,
   QuestJwtAccessStrategy,
-} from '../../auth/strategies';
+} from '../../guards-handlers/strategies';
 
 @Module({
   imports: [

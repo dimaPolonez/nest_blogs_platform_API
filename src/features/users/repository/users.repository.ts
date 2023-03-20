@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { UserModel, UserModelType } from '../entity/users.entity';
-import { mongoID } from '../../../models';
 
 @Injectable()
 export class UsersRepository {
@@ -11,11 +10,11 @@ export class UsersRepository {
     private readonly UserModel: Model<UserModelType>,
   ) {}
 
-  async findUserById(userID: mongoID | string): Promise<UserModelType | null> {
+  async findUserById(userID: string): Promise<UserModelType | null> {
     return this.UserModel.findById(userID);
   }
 
-  async deleteUser(userID: string | mongoID) {
+  async deleteUser(userID: string) {
     await this.UserModel.deleteOne({ _id: userID });
   }
 
@@ -28,18 +27,12 @@ export class UsersRepository {
       'activateUser.codeActivated': code,
     });
   }
-  async checkedEmailAndLoginUnique(
-    email: string,
-    login: string,
-  ): Promise<UserModelType | null> {
-    return this.UserModel.findOne({
-      $or: [
-        {
-          login: login,
-        },
-        { email: email },
-      ],
-    });
+  async checkedEmail(email: string): Promise<UserModelType | null> {
+    return this.UserModel.findOne({ email: email });
+  }
+
+  async checkedUniqueLogin(login: string): Promise<UserModelType | null> {
+    return this.UserModel.findOne({ login: login });
   }
 
   async findUserByEmailOrLogin(

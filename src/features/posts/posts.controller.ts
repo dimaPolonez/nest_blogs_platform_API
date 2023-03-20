@@ -26,7 +26,7 @@ import {
   BasicAuthGuard,
   JwtAccessGuard,
   QuestJwtAccessGuard,
-} from '../../auth/guard';
+} from '../../guards-handlers/guard';
 import {
   GetAllCommentsOfPostType,
   GetAllPostsType,
