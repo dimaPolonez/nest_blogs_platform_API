@@ -90,9 +90,16 @@ export class UsersService {
     const findUserEmailToBase: UserModelType =
       await this.userRepository.findUserEmailToBase(userEmailDTO);
 
+    const authParams: ConfirmUserType =
+      await this.activeCodeAdapter.createCode();
+
+    await findUserEmailToBase.updateActivateUser(authParams);
+
+    await this.userRepository.save(findUserEmailToBase);
+
     await this.mailerAdapter.sendMailCode(
       findUserEmailToBase.email,
-      findUserEmailToBase.activateUser.codeActivated,
+      authParams.codeActivated,
     );
   }
 
