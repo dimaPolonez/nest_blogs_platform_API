@@ -1,4 +1,4 @@
-import { forwardRef, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { PassportModule } from '@nestjs/passport';
 import { AuthService } from './auth.service';
 import { UsersModule } from '../features/users/users.module';
@@ -10,16 +10,28 @@ import {
   LocalStrategy,
 } from '../guards-handlers/strategies';
 import { SessionsController } from './sessions.controller';
+import {
+  CheckedConfirmCode,
+  CheckedEmailToBase,
+  CheckedUniqueEmail,
+  CheckedUniqueLogin,
+  findBlog,
+} from '../validation';
+
 @Module({
-  imports: [forwardRef(() => UsersModule), PassportModule, JwtModule],
+  imports: [UsersModule, PassportModule, JwtModule],
   providers: [
     AuthService,
     LocalStrategy,
     JwtAccessStrategy,
     JwtService,
     JwtRefreshStrategy,
+    CheckedUniqueLogin,
+    CheckedConfirmCode,
+    CheckedEmailToBase,
+    CheckedUniqueEmail,
   ],
   controllers: [AuthController, SessionsController],
-  exports: [AuthService, UsersModule],
+  exports: [AuthService],
 })
 export class AuthModule {}

@@ -7,13 +7,11 @@ import { UsersService } from '../features/users/users.service';
 
 @ValidatorConstraint()
 @Injectable()
-export class CheckedUniqueLoginClassValidate
-  implements ValidatorConstraintInterface
-{
+export class CheckedUniqueLogin implements ValidatorConstraintInterface {
   constructor(protected userService: UsersService) {}
 
-  async validate(login: string) {
-    return await this.userService.checkedUniqueLogin(login);
+  async validate(value: string): Promise<boolean> {
+    return await this.userService.checkedUniqueLogin(value);
   }
 
   defaultMessage() {

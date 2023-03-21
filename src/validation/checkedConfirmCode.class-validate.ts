@@ -7,13 +7,11 @@ import { UsersService } from '../features/users/users.service';
 
 @ValidatorConstraint()
 @Injectable()
-export class CheckedConfirmCodeClassValidate
-  implements ValidatorConstraintInterface
-{
+export class CheckedConfirmCode implements ValidatorConstraintInterface {
   constructor(protected userService: UsersService) {}
 
-  async validate(code: string) {
-    return await this.userService.checkedConfirmCode(code);
+  async validate(value: any) {
+    return await this.userService.checkedConfirmCode(value);
   }
 
   defaultMessage() {

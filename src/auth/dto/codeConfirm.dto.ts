@@ -1,12 +1,9 @@
 import { IsNotEmpty, IsUUID, Validate } from 'class-validator';
-import {
-  CheckedConfirmCodeClassValidate,
-  trimDecorator,
-} from '../../validation';
+import { CheckedConfirmCode, trimDecorator } from '../../validation';
 import { CodeConfirmType } from '../models';
 
 export class CodeConfirmDto implements CodeConfirmType {
-  @Validate(CheckedConfirmCodeClassValidate)
+  @Validate(CheckedConfirmCode)
   @trimDecorator()
   @IsNotEmpty()
   @IsUUID()

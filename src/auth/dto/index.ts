@@ -1,4 +1,3 @@
-export * from './login.dto';
 export * from './createUserMail.dto';
 export * from './emailResend.dto';
 export * from './codeConfirm.dto';

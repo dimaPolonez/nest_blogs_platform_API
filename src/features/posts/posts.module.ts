@@ -13,6 +13,7 @@ import {
   QuestJwtAccessStrategy,
 } from '../../guards-handlers/strategies';
 import { UsersModule } from '../users/users.module';
+import { findBlog } from '../../validation';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { UsersModule } from '../users/users.module';
     QuestJwtAccessStrategy,
     BasicStrategy,
     JwtAccessStrategy,
+    findBlog,
   ],
   exports: [PostsService],
 })

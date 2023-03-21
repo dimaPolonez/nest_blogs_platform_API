@@ -1,12 +1,9 @@
 import { IsNotEmpty, Matches, Validate } from 'class-validator';
 import { EmailRecPassType } from '../models';
-import {
-  CheckedEmailToBaseClassValidate,
-  trimDecorator,
-} from '../../validation';
+import { CheckedEmailToBase, trimDecorator } from '../../validation';
 
 export class EmailRecPassDto implements EmailRecPassType {
-  @Validate(CheckedEmailToBaseClassValidate)
+  @Validate(CheckedEmailToBase)
   @trimDecorator()
   @Matches(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/)
   @IsNotEmpty()

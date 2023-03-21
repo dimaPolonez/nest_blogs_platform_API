@@ -7,11 +7,11 @@ import { Injectable } from '@nestjs/common';
 
 @ValidatorConstraint()
 @Injectable()
-export class findBlogClassValidate implements ValidatorConstraintInterface {
+export class findBlog implements ValidatorConstraintInterface {
   constructor(protected blogService: BlogsService) {}
 
-  async validate(blogID: string) {
-    return await this.blogService.checkBlog(blogID);
+  async validate(value: string) {
+    return await this.blogService.checkBlog(value);
   }
 
   defaultMessage() {

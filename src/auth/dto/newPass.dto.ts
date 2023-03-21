@@ -1,8 +1,5 @@
 import { IsNotEmpty, IsUUID, Length, Validate } from 'class-validator';
-import {
-  CheckedConfirmCodeClassValidate,
-  trimDecorator,
-} from '../../validation';
+import { CheckedConfirmCode, trimDecorator } from '../../validation';
 import { NewPassType } from '../models';
 
 export class NewPassDto implements NewPassType {
@@ -11,7 +8,7 @@ export class NewPassDto implements NewPassType {
   @IsNotEmpty()
   readonly newPassword: string;
 
-  @Validate(CheckedConfirmCodeClassValidate)
+  @Validate(CheckedConfirmCode)
   @trimDecorator()
   @Length(6, 20)
   @IsUUID()

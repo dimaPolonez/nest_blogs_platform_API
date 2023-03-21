@@ -11,6 +11,7 @@ import {
   JwtRefreshStrategy,
   QuestJwtAccessStrategy,
 } from '../../guards-handlers/strategies';
+import { findBlog } from '../../validation';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import {
     BasicStrategy,
     JwtRefreshStrategy,
     QuestJwtAccessStrategy,
+    findBlog,
   ],
   exports: [BlogsService],
 })

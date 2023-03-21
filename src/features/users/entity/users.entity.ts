@@ -61,7 +61,7 @@ export class UserModel {
   activateUser: ActivateUser;
 
   @Prop({ default: () => ({}) })
-  sessionsUser: SessionsUser;
+  sessionsUser: SessionsUser[];
 
   async checkedActivateCodeValid(): Promise<boolean> {
     const dateExpiredCode = Date.parse(this.activateUser.lifeTimeCode);

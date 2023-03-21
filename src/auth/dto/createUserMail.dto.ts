@@ -1,13 +1,13 @@
 import { IsNotEmpty, Length, Matches, Validate } from 'class-validator';
 import {
-  CheckedUniqueLoginClassValidate,
-  CheckedUniqueEmailClassValidate,
   trimDecorator,
+  CheckedUniqueEmail,
+  CheckedUniqueLogin,
 } from '../../validation';
 import { CreateUserMailType } from '../models';
 
 export class CreateUserMailDto implements CreateUserMailType {
-  @Validate(CheckedUniqueLoginClassValidate)
+  @Validate(CheckedUniqueLogin)
   @trimDecorator()
   @Matches(/^[a-zA-Z0-9_-]*$/)
   @Length(3, 10)
@@ -19,7 +19,7 @@ export class CreateUserMailDto implements CreateUserMailType {
   @IsNotEmpty()
   readonly password: string;
 
-  @Validate(CheckedUniqueEmailClassValidate)
+  @Validate(CheckedUniqueEmail)
   @trimDecorator()
   @Matches(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/)
   @IsNotEmpty()

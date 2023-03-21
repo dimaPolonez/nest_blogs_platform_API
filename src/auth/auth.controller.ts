@@ -35,7 +35,8 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @Post('login')
   async userAuthorization(
-    @Request() req,
+    @Request()
+    req,
     @Ip() userIP: string,
     @Headers('user-agent') nameDevice: string,
     @Res({ passthrough: true }) response: Response,
