@@ -9,6 +9,7 @@ import {
   MailerAdapter,
 } from '../../adapters';
 import {
+  AboutMeType,
   ConfirmUserType,
   CreateUserType,
   LoginType,
@@ -143,6 +144,18 @@ export class UsersService {
     await this.userRepository.deleteUser(userID);
   }
 
+  async getUserInf(userID: string): Promise<AboutMeType> {
+    const findUser: UserModelType = await this.userRepository.findUserById(
+      userID,
+    );
+
+    return <AboutMeType>{
+      email: findUser.email,
+      login: findUser.login,
+      userId: findUser.id,
+    };
+  }
+
   async findUserByEmailOrLogin(loginDTO: LoginType): Promise<string | null> {
     const findUser: UserModelType | null =
       await this.userRepository.findUserByEmailOrLogin(loginDTO.loginOrEmail);
@@ -214,5 +227,12 @@ export class UsersService {
     }
 
     return true;
+  }
+
+  async findUserLogin(userID: string): Promise<string> {
+    const findUser: UserModelType = await this.userRepository.findUserById(
+      userID,
+    );
+    return findUser.login;
   }
 }

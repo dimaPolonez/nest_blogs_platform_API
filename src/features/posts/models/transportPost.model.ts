@@ -31,3 +31,12 @@ export type UpdatePostType = {
 export type CreateCommentOfPostType = {
   content: string;
 };
+
+export type NewCommentObjectType = {
+  content: string;
+  commentatorInfo: {
+    userId: string;
+    userLogin: string;
+  };
+  postId: string;
+};

@@ -95,7 +95,11 @@ export class PostsController {
     @Param('id') postID: string,
     @Body() commentDTO: CreateCommentOfPostDto,
   ): Promise<GetCommentOfPostType> {
-    return await this.postService.createCommentOfPost(postID, commentDTO);
+    return await this.postService.createCommentOfPost(
+      postID,
+      commentDTO,
+      req.user,
+    );
   }
 
   @UseGuards(QuestJwtAccessGuard)

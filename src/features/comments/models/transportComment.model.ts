@@ -1,5 +1,10 @@
 export type CreateCommentOfPostType = {
   content: string;
+  commentatorInfo: {
+    userId: string;
+    userLogin: string;
+  };
+  postId: string;
 };
 
 export type UpdateCommentType = {

@@ -18,10 +18,12 @@ import {
   GetAllPostsType,
   GetCommentOfPostType,
   GetPostType,
+  NewCommentObjectType,
   QueryCommentType,
   QueryPostType,
   UpdatePostType,
 } from './models';
+import { UsersService } from '../users/users.service';
 
 @Injectable()
 export class PostsService {
@@ -32,6 +34,8 @@ export class PostsService {
     protected blogService: BlogsService,
     @Inject(forwardRef(() => CommentsService))
     protected commentsService: CommentsService,
+    @Inject(forwardRef(() => UsersService))
+    protected usersService: UsersService,
     @InjectModel(PostModel.name)
     private readonly PostModel: Model<PostModelType>,
   ) {}
@@ -105,8 +109,18 @@ export class PostsService {
   async createCommentOfPost(
     postID: string,
     commentDTO: CreateCommentOfPostType,
+    userID: string,
   ): Promise<GetCommentOfPostType> {
-    return await this.commentsService.createCommentOfPost(postID, commentDTO);
+    const findLoginUser: string = await this.usersService.findUserLogin(userID);
+    const newCommentDTO: NewCommentObjectType = {
+      content: commentDTO.content,
+      commentatorInfo: {
+        userId: userID,
+        userLogin: findLoginUser,
+      },
+      postId: postID,
+    };
+    return await this.commentsService.createCommentOfPost(newCommentDTO);
   }
 
   async getAllCommentsOfPost(

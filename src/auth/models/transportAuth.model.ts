@@ -1,5 +1,3 @@
-import { isBoolean } from 'class-validator';
-
 export type CodeConfirmType = {
   code: string;
 };
@@ -42,4 +40,10 @@ export type TokensObjectType = {
     httpOnly: boolean;
     secure: boolean;
   };
+};
+
+export type AboutMeType = {
+  email: string;
+  login: string;
+  userId: string;
 };

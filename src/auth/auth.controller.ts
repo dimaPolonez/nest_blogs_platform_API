@@ -32,6 +32,7 @@ export class AuthController {
   constructor(protected authService: AuthService) {}
 
   @UseGuards(LocalAuthGuard)
+  @HttpCode(HttpStatus.OK)
   @Post('login')
   async userAuthorization(
     @Request() req,
@@ -58,16 +59,39 @@ export class AuthController {
   }
 
   @UseGuards(JwtRefreshGuard)
+  @HttpCode(HttpStatus.OK)
   @Post('refresh-token')
-  userRefreshToken(@Request() req) {
-    return 'hello';
+  async userRefreshToken(
+    @Request() req,
+    @Ip() userIP: string,
+    @Headers('user-agent') nameDevice: string,
+    @Res({ passthrough: true }) response: Response,
+  ) {
+    const authObjectDTO: AuthObjectType = {
+      ip: userIP,
+      nameDevice: nameDevice,
+      userID: req.user,
+    };
+
+    const tokensObject: TokensObjectType = await this.authService.createTokens(
+      authObjectDTO,
+    );
+    response.cookie(
+      'refreshToken',
+      tokensObject.refreshToken,
+      tokensObject.optionsCookie,
+    );
+
+    return tokensObject.accessDTO;
   }
 
+  @HttpCode(HttpStatus.NO_CONTENT)
   @Post('password-recovery')
   async userCreateNewPass(@Body() userEmailDTO: EmailRecPassDto) {
     await this.authService.passwordRecovery(userEmailDTO.email);
   }
 
+  @HttpCode(HttpStatus.NO_CONTENT)
   @Post('new-password')
   async userUpdateNewPass(@Body() newPassDTO: NewPassDto) {
     await this.authService.createNewPassword(newPassDTO);
@@ -91,15 +115,17 @@ export class AuthController {
     await this.authService.emailResending(userEmailDTO.email);
   }
 
+  @HttpCode(HttpStatus.NO_CONTENT)
   @UseGuards(JwtRefreshGuard)
   @Post('logout')
   userLogout(@Request() req) {
     return 'hello';
   }
 
+  @HttpCode(HttpStatus.OK)
   @UseGuards(JwtAccessGuard)
   @Get('me')
-  getUserInf(@Request() req) {
-    return 'hello';
+  async getUserInf(@Request() req) {
+    return await this.authService.getUserInf(req.user);
   }
 }

@@ -12,6 +12,7 @@ import {
   JwtAccessStrategy,
   QuestJwtAccessStrategy,
 } from '../../guards-handlers/strategies';
+import { UsersModule } from '../users/users.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import {
     ]),
     forwardRef(() => BlogsModule),
     forwardRef(() => CommentsModule),
+    forwardRef(() => UsersModule),
   ],
   controllers: [PostsController],
   providers: [

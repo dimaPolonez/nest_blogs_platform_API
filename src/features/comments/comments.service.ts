@@ -58,16 +58,10 @@ export class CommentsService {
   }
 
   async createCommentOfPost(
-    postID: string,
-    commentDTO: CreateCommentOfPostType,
+    newCommentDTO: CreateCommentOfPostType,
   ): Promise<GetCommentType> {
-    const newCommentDto = {
-      content: commentDTO.content,
-      postId: postID,
-    };
-
     const createCommentSmart: CommentModelType = await new this.CommentModel(
-      newCommentDto,
+      newCommentDTO,
     );
 
     await this.commentRepository.save(createCommentSmart);

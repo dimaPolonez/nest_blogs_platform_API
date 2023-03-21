@@ -4,6 +4,7 @@ import { JwtService } from '@nestjs/jwt';
 import { add } from 'date-fns';
 import { CONFIG } from '../config/config';
 import {
+  AboutMeType,
   AuthObjectType,
   CreateUserMailType,
   LoginType,
@@ -39,6 +40,10 @@ export class AuthService {
   }
   async validateUser(loginDTO: LoginType): Promise<null | string> {
     return await this.userService.findUserByEmailOrLogin(loginDTO);
+  }
+
+  async getUserInf(userID: string): Promise<AboutMeType> {
+    return await this.userService.getUserInf(userID);
   }
 
   async createTokens(authObject: AuthObjectType): Promise<TokensObjectType> {

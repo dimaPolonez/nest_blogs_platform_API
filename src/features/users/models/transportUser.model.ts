@@ -28,3 +28,9 @@ export type LoginType = {
   loginOrEmail: string;
   password: string;
 };
+
+export type AboutMeType = {
+  email: string;
+  login: string;
+  userId: string;
+};

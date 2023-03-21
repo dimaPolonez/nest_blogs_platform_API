@@ -39,7 +39,7 @@ export function startFlow(): TestObjectType {
       return request(app.getHttpServer())
         .get('/')
         .expect(200)
-        .expect('Hello World!');
+        .expect('Server is up!');
     });
 
     it('clear base (DELETE /testing/all-data)', () => {
@@ -49,85 +49,80 @@ export function startFlow(): TestObjectType {
     });
 
     it('post new user status 201 (POST /users)', () => {
-      return (
-        request(app.getHttpServer())
-          .post('/users')
-          //.set('Authorization', `Basic ${testObject.basic}`)
-          .send({
+      return request(app.getHttpServer())
+        .post('/users')
+        .set('Authorization', `Basic ${testObject.basic}`)
+        .send({
+          login: 'Polonez',
+          password: 'pass1234',
+          email: 'testPolonez@yandex.ru',
+        })
+        .expect(201)
+        .expect((res) => {
+          testObject.userID = res.body.id;
+          return {
+            id: res.body.id,
             login: 'Polonez',
-            password: 'pass1234',
             email: 'testPolonez@yandex.ru',
-          })
-          .expect(201)
-          .expect((res) => {
-            return {
-              id: res.body._id,
-              login: 'Polonez',
-              email: 'testPolonez@yandex.ru',
-              createdAt: res.body.createdAt,
-            };
-          })
-      );
+            createdAt: res.body.createdAt,
+          };
+        });
     });
 
     it('post new blog status 201 (POST /blogs)', () => {
-      return (
-        request(app.getHttpServer())
-          .post('/blogs')
-          //.set('Authorization', `Basic ${testObject.basic}`)
-          .send({
+      return request(app.getHttpServer())
+        .post('/blogs')
+        .set('Authorization', `Basic ${testObject.basic}`)
+        .send({
+          name: 'Test blog',
+          description: 'My test blog',
+          websiteUrl: 'polonezTestBlog.com',
+        })
+        .expect(201)
+        .expect((res) => {
+          testObject.blogID = res.body.id;
+          expect(res.body).toEqual({
+            id: expect.any(String),
             name: 'Test blog',
             description: 'My test blog',
             websiteUrl: 'polonezTestBlog.com',
-          })
-          .expect(201)
-          .expect((res) => {
-            testObject.blogID = res.body.id;
-            expect(res.body).toEqual({
-              id: expect.any(String),
-              name: 'Test blog',
-              description: 'My test blog',
-              websiteUrl: 'polonezTestBlog.com',
-              createdAt: expect.any(String),
-              isMembership: expect.any(Boolean),
-            });
-          })
-      );
+            createdAt: expect.any(String),
+            isMembership: expect.any(Boolean),
+          });
+        });
     });
 
     it('post new post status 201 (POST /posts)', () => {
-      return (
-        request(app.getHttpServer())
-          .post('/posts')
-          //.set('Authorization', `Basic ${testObject.basic}`)
-          .send({
+      return request(app.getHttpServer())
+        .post('/posts')
+        .set('Authorization', `Basic ${testObject.basic}`)
+        .send({
+          title: 'Test post',
+          shortDescription: 'My test post',
+          content: 'My test content',
+          blogId: testObject.blogID,
+        })
+        .expect(201)
+        .expect((res) => {
+          testObject.postID = res.body.id;
+          expect(res.body).toEqual({
+            id: expect.any(String),
             title: 'Test post',
             shortDescription: 'My test post',
             content: 'My test content',
             blogId: testObject.blogID,
-          })
-          .expect(201)
-          .expect((res) => {
-            testObject.postID = res.body.id;
-            expect(res.body).toEqual({
-              id: expect.any(String),
-              title: 'Test post',
-              shortDescription: 'My test post',
-              content: 'My test content',
-              blogId: testObject.blogID,
-              blogName: 'Test blog',
-              createdAt: expect.any(String),
-              extendedLikesInfo: {
-                likesCount: 0,
-                dislikesCount: 0,
-                myStatus: MyLikeStatus.None,
-                newestLikes: [],
-              },
-            });
-          })
-      );
+            blogName: 'Test blog',
+            createdAt: expect.any(String),
+            extendedLikesInfo: {
+              likesCount: 0,
+              dislikesCount: 0,
+              myStatus: MyLikeStatus.None,
+              newestLikes: [],
+            },
+          });
+        });
     });
-    /*    it('post aut user and get tokens status 200 (POST /auth/login)', () => {
+    it('post aut user and get tokens status 200 (POST /auth/login)', () => {
       return request(app.getHttpServer())
         .post('/auth/login')
         .send({
@@ -138,13 +133,8 @@ export function startFlow(): TestObjectType {
         .expect((res) => {
           testObject.accessToken = res.body['accessToken'];
           testObject.refreshToken = res.headers['set-cookie'][0];
-          /!*        const validAccess: any = jwt.verify(
-            testObject.accessToken,
-            settings.JWT_SECRET,
-          );
-          testObject.userID = validAccess.userId;*!/
         });
-    });*/
+    });
   });
   return testObject;
 }
