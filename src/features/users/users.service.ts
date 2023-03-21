@@ -222,6 +222,10 @@ export class UsersService {
       return false;
     }
 
+    if (checkedEmailToBase.activateUser.confirm === true) {
+      return false;
+    }
+
     return true;
   }
 
