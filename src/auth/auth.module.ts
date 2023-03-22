@@ -17,9 +17,18 @@ import {
   CheckedUniqueLogin,
   findBlog,
 } from '../validation';
+import { ThrottlerModule } from '@nestjs/throttler';
 
 @Module({
-  imports: [UsersModule, PassportModule, JwtModule],
+  imports: [
+    ThrottlerModule.forRoot({
+      ttl: 10,
+      limit: 5,
+    }),
+    UsersModule,
+    PassportModule,
+    JwtModule,
+  ],
   providers: [
     AuthService,
     LocalStrategy,

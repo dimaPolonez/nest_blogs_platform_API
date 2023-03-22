@@ -12,6 +12,7 @@ import {
   NewPassType,
   TokensObjectType,
 } from './models';
+import { SessionUserType } from '../features/users/models';
 
 @Injectable()
 export class AuthService {
@@ -48,7 +49,7 @@ export class AuthService {
   }
 
   async createTokens(authObject: AuthObjectType): Promise<TokensObjectType> {
-    const expiresBase = 5400;
+    const expiresBase = 20;
 
     const expiresTime: string = add(new Date(), {
       seconds: expiresBase,
@@ -66,7 +67,7 @@ export class AuthService {
 
     const accessToken: string = this.jwtService.sign(
       { userID: authObject.userID },
-      { secret: CONFIG.JWT_ACCESS_SECRET, expiresIn: 540 },
+      { secret: CONFIG.JWT_ACCESS_SECRET, expiresIn: 10 },
     );
 
     return {
@@ -83,7 +84,7 @@ export class AuthService {
   async updateTokens(
     authObject: AuthUpdateObjectType,
   ): Promise<TokensObjectType> {
-    const expiresBase = 5400;
+    const expiresBase = 20;
 
     const expiresTime: string = add(new Date(), {
       seconds: expiresBase,
@@ -101,7 +102,7 @@ export class AuthService {
 
     const accessToken: string = this.jwtService.sign(
       { userID: authObject.userID },
-      { secret: CONFIG.JWT_ACCESS_SECRET, expiresIn: 540 },
+      { secret: CONFIG.JWT_ACCESS_SECRET, expiresIn: 10 },
     );
 
     return {
@@ -122,7 +123,15 @@ export class AuthService {
     return await this.userService.checkedActiveSession(userID, deviceID);
   }
 
+  async getAllSessionsUser(userID: string): Promise<SessionUserType[]> {
+    return await this.userService.getAllSessionsUser(userID);
+  }
+
   async deleteActiveSession(userID: string, deviceID: string) {
     await this.userService.deleteOneSession(userID, deviceID);
+  }
+
+  async deleteAllSessions(userID: string, deviceID: string) {
+    await this.userService.deleteAllSessions(userID, deviceID);
   }
 }

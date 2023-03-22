@@ -2,29 +2,43 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
+  HttpStatus,
   Param,
   Request,
   UseGuards,
 } from '@nestjs/common';
 import { JwtRefreshGuard } from '../guards-handlers/guard';
+import { AuthService } from './auth.service';
+import { SessionUserType } from '../features/users/models';
 
 @Controller('security')
 export class SessionsController {
+  constructor(protected authService: AuthService) {}
+  @HttpCode(HttpStatus.OK)
   @UseGuards(JwtRefreshGuard)
   @Get('devices')
-  getUserAllSession(@Request() req) {
-    return 'hello';
+  async getUserAllSession(@Request() req): Promise<SessionUserType[]> {
+    return await this.authService.getAllSessionsUser(req.user.userID);
   }
 
+  @HttpCode(HttpStatus.NO_CONTENT)
   @UseGuards(JwtRefreshGuard)
   @Delete('devices/:id')
-  deleteUserOneSession(@Request() req, @Param('id') deviceID: string) {
-    return 'hello';
+  async deleteUserOneSession(@Request() req, @Param('id') deviceID: string) {
+    return await this.authService.deleteActiveSession(
+      req.user.userID,
+      deviceID,
+    );
   }
 
+  @HttpCode(HttpStatus.NO_CONTENT)
   @UseGuards(JwtRefreshGuard)
   @Delete('devices')
-  deleteUserAllSession(@Request() req) {
-    return 'hello';
+  async deleteUserAllSession(@Request() req) {
+    return await this.authService.deleteAllSessions(
+      req.user.userID,
+      req.user.deviceID,
+    );
   }
 }

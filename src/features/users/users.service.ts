@@ -56,6 +56,14 @@ export class UsersService {
     await this.userRepository.updateDevice(sessionUserDTO);
   }
 
+  async getAllSessionsUser(userID: string): Promise<SessionUserType[]> {
+    const findUser: UserModelType = await this.userRepository.findUserById(
+      userID,
+    );
+
+    return findUser.sessionsUser;
+  }
+
   async checkedActiveSession(
     userID: string,
     deviceID: string,
@@ -99,6 +107,18 @@ export class UsersService {
 
     findUser.sessionsUser = findUser.sessionsUser.filter(
       (value) => value.sessionID !== deviceID,
+    );
+
+    await this.userRepository.save(findUser);
+  }
+
+  async deleteAllSessions(userID: string, deviceID: string) {
+    const findUser: UserModelType = await this.userRepository.findUserById(
+      userID,
+    );
+
+    findUser.sessionsUser = findUser.sessionsUser.filter(
+      (value) => value.sessionID === deviceID,
     );
 
     await this.userRepository.save(findUser);
