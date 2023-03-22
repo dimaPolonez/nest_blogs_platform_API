@@ -12,6 +12,7 @@ import {
   QuestJwtAccessStrategy,
 } from '../../guards-handlers/strategies';
 import { findBlog } from '../../validation';
+import { JwtService } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -26,7 +27,7 @@ import { findBlog } from '../../validation';
     BlogsRepository,
     BlogsQueryRepository,
     BasicStrategy,
-    JwtRefreshStrategy,
+    JwtService,
     QuestJwtAccessStrategy,
     findBlog,
   ],

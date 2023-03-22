@@ -39,6 +39,12 @@ export class UsersController {
     await this.userService.deleteUser(userID);
   }
 
+  @Get(':id')
+  @HttpCode(HttpStatus.OK)
+  async getUserID(@Param('id') userID: string) {
+    return await this.userQueryRepository.getOneUserTest(userID);
+  }
+
   @Get()
   @HttpCode(HttpStatus.OK)
   async getAllUsers(@Query() queryAll: QueryUserDto): Promise<GetAllUsersType> {

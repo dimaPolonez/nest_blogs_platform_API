@@ -32,6 +32,10 @@ export class UsersQueryRepository {
     };
   }
 
+  async getOneUserTest(userID: string) {
+    return await this.UserModel.findById(userID);
+  }
+
   async getAllUsers(queryAll: QueryUserType): Promise<GetAllUsersType> {
     const allUsers: UserModelType[] = await this.UserModel.find({
       $or: [

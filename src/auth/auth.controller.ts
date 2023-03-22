@@ -25,7 +25,11 @@ import {
 } from '../guards-handlers/guard';
 import { AuthService } from './auth.service';
 import { Response } from 'express';
-import { AuthObjectType, TokensObjectType } from './models';
+import {
+  AuthObjectType,
+  AuthUpdateObjectType,
+  TokensObjectType,
+} from './models';
 
 @Controller('auth')
 export class AuthController {
@@ -68,13 +72,14 @@ export class AuthController {
     @Headers('user-agent') nameDevice: string,
     @Res({ passthrough: true }) response: Response,
   ) {
-    const authObjectDTO: AuthObjectType = {
+    const authObjectDTO: AuthUpdateObjectType = {
       ip: userIP,
       nameDevice: nameDevice,
-      userID: req.user,
+      deviceID: req.user.deviceID,
+      userID: req.user.userID,
     };
 
-    const tokensObject: TokensObjectType = await this.authService.createTokens(
+    const tokensObject: TokensObjectType = await this.authService.updateTokens(
       authObjectDTO,
     );
     response.cookie(
@@ -119,8 +124,16 @@ export class AuthController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @UseGuards(JwtRefreshGuard)
   @Post('logout')
-  userLogout(@Request() req) {
-    return 'hello';
+  async userLogout(
+    @Request() req,
+    @Res({ passthrough: true }) response: Response,
+  ) {
+    await this.authService.deleteActiveSession(
+      req.user.userID,
+      req.user.deviceID,
+    );
+
+    await response.clearCookie('refreshToken');
   }
 
   @HttpCode(HttpStatus.OK)

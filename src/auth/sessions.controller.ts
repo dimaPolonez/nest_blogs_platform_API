@@ -18,7 +18,7 @@ export class SessionsController {
 
   @UseGuards(JwtRefreshGuard)
   @Delete('devices/:id')
-  deleteUserOneSession(@Request() req, @Param('id') userSessionID: string) {
+  deleteUserOneSession(@Request() req, @Param('id') deviceID: string) {
     return 'hello';
   }
 

@@ -6,6 +6,7 @@ import { CONFIG } from '../config/config';
 import {
   AboutMeType,
   AuthObjectType,
+  AuthUpdateObjectType,
   CreateUserMailType,
   LoginType,
   NewPassType,
@@ -53,14 +54,13 @@ export class AuthService {
       seconds: expiresBase,
     }).toString();
 
-    /*    const deviceID: string = await guardService.addNewDevice(
-      userID,
-      deviceInfoObject,
-      expiresTime,
-    );*/
+    const deviceID: string = await this.userService.addNewDevice({
+      ...authObject,
+      expiresTime: expiresTime,
+    });
 
     const refreshToken: string = this.jwtService.sign(
-      { /*deviceID: deviceID, */ userID: authObject.userID },
+      { deviceID: deviceID, userID: authObject.userID },
       { secret: CONFIG.JWT_REFRESH_SECRET, expiresIn: expiresBase },
     );
 
@@ -79,5 +79,50 @@ export class AuthService {
         secure: true,
       },
     };
+  }
+  async updateTokens(
+    authObject: AuthUpdateObjectType,
+  ): Promise<TokensObjectType> {
+    const expiresBase = 5400;
+
+    const expiresTime: string = add(new Date(), {
+      seconds: expiresBase,
+    }).toString();
+
+    await this.userService.updateDevice({
+      ...authObject,
+      expiresTime: expiresTime,
+    });
+
+    const refreshToken: string = this.jwtService.sign(
+      { deviceID: authObject.deviceID, userID: authObject.userID },
+      { secret: CONFIG.JWT_REFRESH_SECRET, expiresIn: expiresBase },
+    );
+
+    const accessToken: string = this.jwtService.sign(
+      { userID: authObject.userID },
+      { secret: CONFIG.JWT_ACCESS_SECRET, expiresIn: 540 },
+    );
+
+    return {
+      refreshToken: refreshToken,
+      accessDTO: {
+        accessToken: accessToken,
+      },
+      optionsCookie: {
+        httpOnly: true,
+        secure: true,
+      },
+    };
+  }
+  async checkedActiveSession(
+    userID: string,
+    deviceID: string,
+  ): Promise<boolean> {
+    return await this.userService.checkedActiveSession(userID, deviceID);
+  }
+
+  async deleteActiveSession(userID: string, deviceID: string) {
+    await this.userService.deleteOneSession(userID, deviceID);
   }
 }

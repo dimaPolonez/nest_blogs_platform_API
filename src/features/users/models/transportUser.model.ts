@@ -1,3 +1,26 @@
+export type SessionUserType = {
+  sessionID: string;
+  ip: string;
+  title: string;
+  expiresTime: string;
+  lastActivateTime: string;
+};
+
+export type SessionUserDTOType = {
+  userID: string;
+  ip: string;
+  nameDevice: string;
+  expiresTime: string;
+};
+
+export type SessionUserUpdateDTOType = {
+  userID: string;
+  deviceID: string;
+  ip: string;
+  nameDevice: string;
+  expiresTime: string;
+};
+
 export type CreateUserType = {
   login: string;
   password: string;

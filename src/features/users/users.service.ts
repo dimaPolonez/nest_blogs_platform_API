@@ -2,7 +2,7 @@ import { UsersRepository } from './repository/users.repository';
 import { UserModel, UserModelType } from './entity/users.entity';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { NotFoundException } from '@nestjs/common';
+import { NotFoundException, UnauthorizedException } from '@nestjs/common';
 import {
   ActiveCodeAdapter,
   BcryptAdapter,
@@ -14,7 +14,11 @@ import {
   CreateUserType,
   LoginType,
   NewPassType,
+  SessionUserDTOType,
+  SessionUserType,
+  SessionUserUpdateDTOType,
 } from './models';
+import { isAfter } from 'date-fns';
 
 export class UsersService {
   constructor(
@@ -25,6 +29,80 @@ export class UsersService {
     @InjectModel(UserModel.name)
     private readonly UserModel: Model<UserModelType>,
   ) {}
+
+  async addNewDevice(sessionUserDTO: SessionUserDTOType): Promise<string> {
+    const deviceId: string = await this.activeCodeAdapter.generateId();
+
+    const newSessionUserDTO: SessionUserType = {
+      sessionID: deviceId,
+      ip: sessionUserDTO.ip,
+      title: sessionUserDTO.nameDevice,
+      expiresTime: sessionUserDTO.expiresTime,
+      lastActivateTime: new Date().toString(),
+    };
+
+    const findUser: UserModelType = await this.userRepository.findUserById(
+      sessionUserDTO.userID,
+    );
+
+    findUser.sessionsUser.push(newSessionUserDTO);
+
+    await this.userRepository.save(findUser);
+
+    return deviceId;
+  }
+
+  async updateDevice(sessionUserDTO: SessionUserUpdateDTOType) {
+    await this.userRepository.updateDevice(sessionUserDTO);
+  }
+
+  async checkedActiveSession(
+    userID: string,
+    deviceID: string,
+  ): Promise<boolean> {
+    const findUser: UserModelType | null =
+      await this.userRepository.findUserById(userID);
+
+    if (!findUser) {
+      return false;
+    }
+
+    const findSession = findUser.sessionsUser.find(
+      (value) => value.sessionID === deviceID,
+    );
+
+    if (!findSession) {
+      return false;
+    }
+
+    const date = Date.parse(findSession.expiresTime);
+
+    if (!isAfter(date, new Date())) {
+      return false;
+    }
+
+    return true;
+  }
+
+  async deleteOneSession(userID: string, deviceID: string) {
+    const findUser: UserModelType = await this.userRepository.findUserById(
+      userID,
+    );
+
+    const sessionByUser = findUser.sessionsUser.find(
+      (value) => value.sessionID === deviceID,
+    );
+
+    if (!sessionByUser) {
+      throw new UnauthorizedException();
+    }
+
+    findUser.sessionsUser = findUser.sessionsUser.filter(
+      (value) => value.sessionID !== deviceID,
+    );
+
+    await this.userRepository.save(findUser);
+  }
 
   async createUser(userDTO: CreateUserType): Promise<string> {
     const hushPass: string = await this.bcryptAdapter.hushGenerate(
