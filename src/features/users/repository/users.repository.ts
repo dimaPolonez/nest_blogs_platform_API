@@ -15,20 +15,6 @@ export class UsersRepository {
     return this.UserModel.findById(userID);
   }
 
-  async updateDevice(sessionUserDTO: SessionUserUpdateDTOType) {
-    await this.UserModel.updateOne(
-      { 'sessionsUser.sessionID': sessionUserDTO.deviceID },
-      {
-        $set: {
-          'sessionsUser.$.ip': sessionUserDTO.ip,
-          'sessionsUser.$.title': sessionUserDTO.nameDevice,
-          'sessionsUser.$.expiresTime': sessionUserDTO.expiresTime,
-          'sessionsUser.$.lastActivateTime': new Date().toString(),
-        },
-      },
-    );
-  }
-
   async deleteUser(userID: string) {
     await this.UserModel.deleteOne({ _id: userID });
   }

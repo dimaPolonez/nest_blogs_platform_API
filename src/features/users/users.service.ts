@@ -52,10 +52,6 @@ export class UsersService {
     return deviceId;
   }
 
-  async updateDevice(sessionUserDTO: SessionUserUpdateDTOType) {
-    await this.userRepository.updateDevice(sessionUserDTO);
-  }
-
   async getAllSessionsUser(userID: string): Promise<SessionUserType[]> {
     const findUser: UserModelType = await this.userRepository.findUserById(
       userID,

@@ -49,10 +49,8 @@ export class AuthService {
   }
 
   async createTokens(authObject: AuthObjectType): Promise<TokensObjectType> {
-    const expiresBase = 20;
-
     const expiresTime: string = add(new Date(), {
-      seconds: expiresBase,
+      seconds: CONFIG.EXPIRES_REFRESH,
     }).toString();
 
     const deviceID: string = await this.userService.addNewDevice({
@@ -62,12 +60,12 @@ export class AuthService {
 
     const refreshToken: string = this.jwtService.sign(
       { deviceID: deviceID, userID: authObject.userID },
-      { secret: CONFIG.JWT_REFRESH_SECRET, expiresIn: expiresBase },
+      { secret: CONFIG.JWT_REFRESH_SECRET, expiresIn: CONFIG.EXPIRES_REFRESH },
     );
 
     const accessToken: string = this.jwtService.sign(
       { userID: authObject.userID },
-      { secret: CONFIG.JWT_ACCESS_SECRET, expiresIn: 10 },
+      { secret: CONFIG.JWT_ACCESS_SECRET, expiresIn: CONFIG.EXPIRES_ACCESS },
     );
 
     return {
@@ -81,41 +79,7 @@ export class AuthService {
       },
     };
   }
-  async updateTokens(
-    authObject: AuthUpdateObjectType,
-  ): Promise<TokensObjectType> {
-    const expiresBase = 20;
 
-    const expiresTime: string = add(new Date(), {
-      seconds: expiresBase,
-    }).toString();
-
-    await this.userService.updateDevice({
-      ...authObject,
-      expiresTime: expiresTime,
-    });
-
-    const refreshToken: string = this.jwtService.sign(
-      { deviceID: authObject.deviceID, userID: authObject.userID },
-      { secret: CONFIG.JWT_REFRESH_SECRET, expiresIn: expiresBase },
-    );
-
-    const accessToken: string = this.jwtService.sign(
-      { userID: authObject.userID },
-      { secret: CONFIG.JWT_ACCESS_SECRET, expiresIn: 10 },
-    );
-
-    return {
-      refreshToken: refreshToken,
-      accessDTO: {
-        accessToken: accessToken,
-      },
-      optionsCookie: {
-        httpOnly: true,
-        secure: true,
-      },
-    };
-  }
   async checkedActiveSession(
     userID: string,
     deviceID: string,
