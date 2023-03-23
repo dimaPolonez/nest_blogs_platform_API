@@ -50,7 +50,7 @@ export class AuthService {
 
   async createTokens(authObject: AuthObjectType): Promise<TokensObjectType> {
     const expiresTime: string = add(new Date(), {
-      seconds: CONFIG.EXPIRES_REFRESH,
+      seconds: +CONFIG.EXPIRES_REFRESH,
     }).toString();
 
     const deviceID: string = await this.userService.addNewDevice({

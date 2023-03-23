@@ -16,7 +16,6 @@ import {
   NewPassType,
   SessionUserDTOType,
   SessionUserType,
-  SessionUserUpdateDTOType,
 } from './models';
 import { isAfter } from 'date-fns';
 

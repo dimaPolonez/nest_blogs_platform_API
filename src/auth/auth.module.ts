@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { ThrottlerModule } from '@nestjs/throttler';
 import { PassportModule } from '@nestjs/passport';
 import { AuthService } from './auth.service';
 import { UsersModule } from '../features/users/users.module';
@@ -16,7 +17,6 @@ import {
   CheckedUniqueEmail,
   CheckedUniqueLogin,
 } from '../validation';
-import { ThrottlerModule } from '@nestjs/throttler';
 
 @Module({
   imports: [
