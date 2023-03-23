@@ -55,7 +55,7 @@ export class UsersService {
     const findUser: UserModelType = await this.userRepository.findUserById(
       userID,
     );
-
+    console.log(findUser, 'users');
     return findUser.sessionsUser;
   }
 

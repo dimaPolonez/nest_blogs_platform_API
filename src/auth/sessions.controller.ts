@@ -19,6 +19,7 @@ export class SessionsController {
   @UseGuards(JwtRefreshGuard)
   @Get('devices')
   async getUserAllSession(@Request() req): Promise<SessionUserType[]> {
+    console.log(req.user.userID, 'request user');
     return await this.authService.getAllSessionsUser(req.user.userID);
   }
 
