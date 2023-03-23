@@ -15,8 +15,8 @@ import { SessionUserType } from '../features/users/models';
 @Controller('security')
 export class SessionsController {
   constructor(protected authService: AuthService) {}
-  @HttpCode(HttpStatus.OK)
-  @UseGuards(JwtRefreshGuard)
+  @HttpCode(HttpStatus.OK)/*
+  @UseGuards(JwtRefreshGuard)*/
   @Get('devices')
   async getUserAllSession(@Request() req): Promise<SessionUserType[]> {
     console.log(req.user.userID, 'request user');
