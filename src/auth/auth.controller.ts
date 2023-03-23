@@ -32,8 +32,7 @@ import { ThrottlerGuard } from '@nestjs/throttler';
 export class AuthController {
   constructor(protected authService: AuthService) {}
 
-  @UseGuards(ThrottlerGuard)
-  @UseGuards(LocalAuthGuard)
+  @UseGuards(ThrottlerGuard, LocalAuthGuard)
   @HttpCode(HttpStatus.OK)
   @Post('login')
   async userAuthorization(
