@@ -41,7 +41,7 @@ export class UsersService {
     const newSessionUserDTO: SessionUserType = {
       deviceId,
       ip: sessionUserDTO.ip,
-      lastActiveDate: new Date().toISOString(),
+      lastActiveDate: sessionUserDTO.lastActiveDate,
       title: sessionUserDTO.nameDevice,
       expiresTime: sessionUserDTO.expiresTime,
     };
@@ -100,7 +100,7 @@ export class UsersService {
       Date.parse(findSession.lastActiveDate).toString().slice(0, 10),
     );
 
-    if (lastActiveToSecond - lastDateToken > 2) {
+    if (lastActiveToSecond > lastDateToken) {
       return false;
     }
 

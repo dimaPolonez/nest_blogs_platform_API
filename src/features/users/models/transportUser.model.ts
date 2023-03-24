@@ -18,11 +18,13 @@ export type SessionUserDTOType = {
   ip: string;
   nameDevice: string;
   expiresTime: string;
+  lastActiveDate: string;
 };
 
 export type SessionUserUpdateDTOType = {
   deviceID: string;
   expiresTime: string;
+  lastActiveDate: string;
 };
 
 export type CreateUserType = {

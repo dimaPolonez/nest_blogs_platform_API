@@ -21,7 +21,7 @@ export class UsersRepository {
       {
         $set: {
           'sessionsUser.$.expiresTime': sessionUserDTO.expiresTime,
-          'sessionsUser.$.lastActiveDate': new Date().toISOString(),
+          'sessionsUser.$.lastActiveDate': sessionUserDTO.lastActiveDate,
         },
       },
     );

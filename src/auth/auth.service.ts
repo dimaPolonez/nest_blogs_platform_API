@@ -49,6 +49,8 @@ export class AuthService {
   }
 
   async createTokens(authObject: AuthObjectType): Promise<TokensObjectType> {
+    const lastActiveDate: string = new Date().toISOString();
+
     const expiresTime: string = add(new Date(), {
       seconds: CONFIG.EXPIRES_REFRESH,
     }).toString();
@@ -56,6 +58,7 @@ export class AuthService {
     const deviceID: string = await this.userService.addNewDevice({
       ...authObject,
       expiresTime: expiresTime,
+      lastActiveDate: lastActiveDate,
     });
 
     const refreshToken: string = this.jwtService.sign(
@@ -83,6 +86,8 @@ export class AuthService {
   async updateTokens(
     authObject: AuthObjectUpdateType,
   ): Promise<TokensObjectType> {
+    const lastActiveDate: string = new Date().toISOString();
+
     const expiresTime: string = add(new Date(), {
       seconds: CONFIG.EXPIRES_REFRESH,
     }).toString();
@@ -90,6 +95,7 @@ export class AuthService {
     await this.userService.updateDevice({
       deviceID: authObject.deviceID,
       expiresTime: expiresTime,
+      lastActiveDate: lastActiveDate,
     });
 
     const refreshToken: string = this.jwtService.sign(
