@@ -8,11 +8,11 @@ import { BlogsController } from './blogs.controller';
 import { PostsModule } from '../posts/posts.module';
 import {
   BasicStrategy,
-  JwtRefreshStrategy,
   QuestJwtAccessStrategy,
 } from '../../guards-handlers/strategies';
 import { findBlog } from '../../validation';
 import { JwtService } from '@nestjs/jwt';
+import { UsersModule } from '../users/users.module';
 
 @Module({
   imports: [
@@ -20,6 +20,7 @@ import { JwtService } from '@nestjs/jwt';
       { name: BlogModel.name, schema: BlogModelSchema },
     ]),
     forwardRef(() => PostsModule),
+    UsersModule,
   ],
   controllers: [BlogsController],
   providers: [

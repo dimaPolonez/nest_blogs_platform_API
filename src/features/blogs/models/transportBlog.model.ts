@@ -8,6 +8,12 @@ export type CreatePostOfBlogType = {
   title: string;
   shortDescription: string;
   content: string;
+};
+
+export type CreatePostOfBlogAllType = {
+  title: string;
+  shortDescription: string;
+  content: string;
   blogId: string;
   blogName?: string;
 };

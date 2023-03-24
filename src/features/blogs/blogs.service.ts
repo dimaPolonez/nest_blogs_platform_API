@@ -11,6 +11,7 @@ import { BlogsRepository } from './repository/blogs.repository';
 import { PostsService } from '../posts/posts.service';
 import {
   CreateBlogType,
+  CreatePostOfBlogAllType,
   CreatePostOfBlogType,
   GetAllPostsOfBlogType,
   GetPostOfBlogType,
@@ -84,7 +85,7 @@ export class BlogsService {
     await this.blogRepository.deleteAllBlogs();
   }
   async createPostOfBlog(
-    postDTO: CreatePostOfBlogType,
+    postDTO: CreatePostOfBlogAllType,
   ): Promise<GetPostOfBlogType> {
     const blogName: string = await this.findBlogName(postDTO.blogId);
 
@@ -92,7 +93,7 @@ export class BlogsService {
       throw new NotFoundException('blog not found');
     }
 
-    const newPostDTO: CreatePostOfBlogType = {
+    const newPostDTO: CreatePostOfBlogAllType = {
       ...postDTO,
       blogName: blogName,
     };

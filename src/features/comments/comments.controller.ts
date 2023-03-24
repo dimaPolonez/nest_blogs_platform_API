@@ -17,7 +17,8 @@ import {
   JwtAccessGuard,
   QuestJwtAccessGuard,
 } from '../../guards-handlers/guard';
-import { GetCommentType } from './models';
+import { GetCommentType, MyLikeStatus } from './models';
+import { UpdateLikeStatusCommentDto } from './dto/updateLikeStatusComment.dto';
 
 @Controller('comments')
 export class CommentsController {
@@ -32,7 +33,7 @@ export class CommentsController {
   async getOneComment(
     @Request() req,
     @Param('id') commentID: string,
-  ): Promise<GetCommentType> {
+  ) /*: Promise<GetCommentType>*/ {
     return await this.commentQueryRepository.findCommentById(commentID);
   }
 
@@ -54,15 +55,19 @@ export class CommentsController {
     await this.commentService.deleteComment(commentID);
   }
 
-  /*
   @UseGuards(JwtAccessGuard)
   @Put(':id/like-status')
-  likeStatusComment(
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async likeStatusComment(
     @Request() req,
     @Param('id') commentID: string,
-    @Body() commentBody: likeCommentBodyType,
+    @Body() bodyLikeStatus: UpdateLikeStatusCommentDto,
   ) {
-    return 'hello';
+    await this.commentService.updateLikeStatusComment(
+      req.user.userID,
+      req.user.login,
+      commentID,
+      bodyLikeStatus.likeStatus,
+    );
   }
-*/
 }

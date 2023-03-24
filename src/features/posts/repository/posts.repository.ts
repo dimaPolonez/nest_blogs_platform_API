@@ -11,7 +11,7 @@ export class PostsRepository {
   ) {}
 
   async findPostById(postID: string): Promise<PostModelType | null> {
-    return this.PostModel.findById(postID);
+    return this.PostModel.findById({ _id: postID });
   }
 
   async deletePost(postID: string) {

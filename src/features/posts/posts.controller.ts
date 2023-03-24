@@ -94,11 +94,12 @@ export class PostsController {
     @Request() req,
     @Param('id') postID: string,
     @Body() commentDTO: CreateCommentOfPostDto,
-  ): Promise<GetCommentOfPostType> {
+  ) /*: Promise<GetCommentOfPostType>*/ {
     return await this.postService.createCommentOfPost(
       postID,
       commentDTO,
-      req.user,
+      req.user.userID,
+      req.user.login,
     );
   }
 

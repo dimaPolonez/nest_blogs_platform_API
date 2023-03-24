@@ -10,6 +10,7 @@ import {
   JwtAccessStrategy,
   QuestJwtAccessStrategy,
 } from '../../guards-handlers/strategies';
+import { UsersModule } from '../users/users.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import {
       { name: CommentModel.name, schema: CommentModelSchema },
     ]),
     forwardRef(() => PostsModule),
+    UsersModule,
   ],
   controllers: [CommentsController],
   providers: [

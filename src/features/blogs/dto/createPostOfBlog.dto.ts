@@ -17,11 +17,4 @@ export class CreatePostOfBlogDto implements CreatePostOfBlogType {
   @Length(1, 1000)
   @IsNotEmpty()
   readonly content: string;
-
-  @Validate(findBlog)
-  @trimDecorator()
-  @IsMongoId()
-  @Length(24, 24)
-  @IsNotEmpty()
-  readonly blogId: string;
 }

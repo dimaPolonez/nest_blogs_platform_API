@@ -1,3 +1,5 @@
+import { MyLikeStatus } from './getComment.model';
+
 export type CreateCommentOfPostType = {
   content: string;
   commentatorInfo: {
@@ -16,4 +18,8 @@ export type QueryCommentType = {
   sortDirection: string;
   pageNumber: number;
   pageSize: number;
+};
+
+export type UpdateLikeStatusCommentType = {
+  likeStatus: MyLikeStatus;
 };

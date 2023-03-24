@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { UserModel, UserModelType } from '../entity/users.entity';
-import { SessionUserUpdateDTOType } from '../models';
 
 @Injectable()
 export class UsersRepository {

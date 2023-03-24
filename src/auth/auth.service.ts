@@ -6,7 +6,6 @@ import { CONFIG } from '../config/config';
 import {
   AboutMeType,
   AuthObjectType,
-  AuthUpdateObjectType,
   CreateUserMailType,
   LoginType,
   NewPassType,
@@ -59,7 +58,7 @@ export class AuthService {
     });
 
     const refreshToken: string = this.jwtService.sign(
-      { deviceID: deviceID, userID: authObject.userID },
+      { deviceId: deviceID, userID: authObject.userID },
       { secret: CONFIG.JWT_REFRESH_SECRET, expiresIn: CONFIG.EXPIRES_REFRESH },
     );
 

@@ -110,13 +110,13 @@ export class PostsService {
     postID: string,
     commentDTO: CreateCommentOfPostType,
     userID: string,
-  ): Promise<GetCommentOfPostType> {
-    const findLoginUser: string = await this.usersService.findUserLogin(userID);
+    login: string,
+  ) /*: Promise<GetCommentOfPostType>*/ {
     const newCommentDTO: NewCommentObjectType = {
       content: commentDTO.content,
       commentatorInfo: {
         userId: userID,
-        userLogin: findLoginUser,
+        userLogin: login,
       },
       postId: postID,
     };

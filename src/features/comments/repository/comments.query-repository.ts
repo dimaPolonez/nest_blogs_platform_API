@@ -22,14 +22,16 @@ export class CommentsQueryRepository {
     return (pageNum - 1) * pageSize;
   }
 
-  async findCommentById(commentID: string): Promise<GetCommentType> {
+  async findCommentById(commentID: string) /*: Promise<GetCommentType>*/ {
     const findCommentSmart = await this.CommentModel.findById(commentID);
 
     if (!findCommentSmart) {
       throw new NotFoundException('comment not found');
     }
 
-    return {
+    return findCommentSmart;
+
+    /*return {
       id: findCommentSmart.id,
       content: findCommentSmart.content,
       commentatorInfo: {
@@ -42,7 +44,7 @@ export class CommentsQueryRepository {
         dislikesCount: findCommentSmart.likesInfo.dislikesCount,
         myStatus: findCommentSmart.likesInfo.myStatus,
       },
-    };
+    };*/
   }
 
   async getAllCommentsOfPost(

@@ -55,7 +55,6 @@ export class UsersService {
     const findUser: UserModelType = await this.userRepository.findUserById(
       userID,
     );
-    console.log(findUser, 'users');
     return findUser.sessionsUser;
   }
 
@@ -334,9 +333,12 @@ export class UsersService {
   }
 
   async findUserLogin(userID: string): Promise<string> {
-    const findUser: UserModelType = await this.userRepository.findUserById(
-      userID,
-    );
+    const findUser: UserModelType | null =
+      await this.userRepository.findUserById(userID);
+
+    if (!findUser) {
+      throw new NotFoundException('user not found');
+    }
     return findUser.login;
   }
 }

@@ -5,9 +5,10 @@ export enum MyLikeStatus {
 }
 
 type NewestLikesType = {
-  addedAt: string;
   userId: string;
   login: string;
+  myStatus: MyLikeStatus;
+  addedAt: string;
 };
 
 type ExtendedLikesType = {

@@ -1,6 +1,6 @@
 import { HydratedDocument } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { MyLikeStatus, UpdateCommentType } from '../models';
+import { MyLikeStatus, NewestLikesType, UpdateCommentType } from '../models';
 
 export type CommentModelType = HydratedDocument<CommentModel>;
 
@@ -14,6 +14,9 @@ export class LikesInfo {
 
   @Prop({ enum: MyLikeStatus, default: MyLikeStatus.None })
   myStatus: MyLikeStatus;
+
+  @Prop({ required: true })
+  newestLikes: NewestLikesType[];
 }
 
 @Schema()
