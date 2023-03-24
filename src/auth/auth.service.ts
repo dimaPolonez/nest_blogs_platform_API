@@ -117,8 +117,13 @@ export class AuthService {
   async checkedActiveSession(
     userID: string,
     deviceID: string,
+    lastDateToken: number,
   ): Promise<boolean> {
-    return await this.userService.checkedActiveSession(userID, deviceID);
+    return await this.userService.checkedActiveSession(
+      userID,
+      deviceID,
+      lastDateToken,
+    );
   }
 
   async getAllSessionsUser(userID: string): Promise<GetSessionUserType[]> {

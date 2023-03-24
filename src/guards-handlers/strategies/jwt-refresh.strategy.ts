@@ -23,6 +23,7 @@ export class JwtRefreshStrategy extends PassportStrategy(
       await this.authService.checkedActiveSession(
         payload.userID,
         payload.deviceId,
+        payload.iat,
       );
 
     if (!validateSession) {

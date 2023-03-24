@@ -79,6 +79,7 @@ export class UsersService {
   async checkedActiveSession(
     userID: string,
     deviceID: string,
+    lastDateToken: number,
   ): Promise<boolean> {
     const findUser: UserModelType | null =
       await this.userRepository.findUserById(userID);
@@ -95,10 +96,11 @@ export class UsersService {
       return false;
     }
 
-    const date = Date.parse(findSession.expiresTime);
-    const expiredResult = isAfter(date, new Date());
+    const lastActiveToSecond = Number(
+      Date.parse(findSession.lastActiveDate).toString().slice(0, 10),
+    );
 
-    if (!expiredResult) {
+    if (lastActiveToSecond - lastDateToken > 2) {
       return false;
     }
 
