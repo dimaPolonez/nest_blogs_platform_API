@@ -36,9 +36,9 @@ export class UsersService {
     const newSessionUserDTO: SessionUserType = {
       deviceId,
       ip: sessionUserDTO.ip,
+      lastActiveDate: new Date().toISOString(),
       title: sessionUserDTO.nameDevice,
       expiresTime: sessionUserDTO.expiresTime,
-      lastActiveDate: new Date().toString(),
     };
 
     const findUser: UserModelType = await this.userRepository.findUserById(
@@ -61,8 +61,8 @@ export class UsersService {
       return {
         deviceId: field.deviceId,
         ip: field.ip,
-        title: field.title,
         lastActiveDate: field.lastActiveDate,
+        title: field.title,
       };
     });
   }
