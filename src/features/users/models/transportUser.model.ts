@@ -1,9 +1,16 @@
 export type SessionUserType = {
-  sessionID: string;
+  deviceId: string;
   ip: string;
   title: string;
   expiresTime: string;
-  lastActivateTime: string;
+  lastActiveDate: string;
+};
+
+export type GetSessionUserType = {
+  deviceId: string;
+  ip: string;
+  title: string;
+  lastActiveDate: string;
 };
 
 export type SessionUserDTOType = {

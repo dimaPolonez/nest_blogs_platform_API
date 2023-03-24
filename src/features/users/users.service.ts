@@ -12,6 +12,7 @@ import {
   AboutMeType,
   ConfirmUserType,
   CreateUserType,
+  GetSessionUserType,
   LoginType,
   NewPassType,
   SessionUserDTOType,
@@ -33,11 +34,11 @@ export class UsersService {
     const deviceId: string = await this.activeCodeAdapter.generateId();
 
     const newSessionUserDTO: SessionUserType = {
-      sessionID: deviceId,
+      deviceId,
       ip: sessionUserDTO.ip,
       title: sessionUserDTO.nameDevice,
       expiresTime: sessionUserDTO.expiresTime,
-      lastActivateTime: new Date().toString(),
+      lastActiveDate: new Date().toString(),
     };
 
     const findUser: UserModelType = await this.userRepository.findUserById(
@@ -51,11 +52,19 @@ export class UsersService {
     return deviceId;
   }
 
-  async getAllSessionsUser(userID: string): Promise<SessionUserType[]> {
+  async getAllSessionsUser(userID: string): Promise<GetSessionUserType[]> {
     const findUser: UserModelType = await this.userRepository.findUserById(
       userID,
     );
-    return findUser.sessionsUser;
+
+    return findUser.sessionsUser.map((field) => {
+      return {
+        deviceId: field.deviceId,
+        ip: field.ip,
+        title: field.title,
+        lastActiveDate: field.lastActiveDate,
+      };
+    });
   }
 
   async checkedActiveSession(
@@ -70,7 +79,7 @@ export class UsersService {
     }
 
     const findSession = findUser.sessionsUser.find(
-      (value) => value.sessionID === deviceID,
+      (value) => value.deviceId === deviceID,
     );
 
     if (!findSession) {
@@ -92,7 +101,7 @@ export class UsersService {
     );
 
     const sessionByUser = findUser.sessionsUser.find(
-      (value) => value.sessionID === deviceID,
+      (value) => value.deviceId === deviceID,
     );
 
     if (!sessionByUser) {
@@ -100,7 +109,7 @@ export class UsersService {
     }
 
     findUser.sessionsUser = findUser.sessionsUser.filter(
-      (value) => value.sessionID !== deviceID,
+      (value) => value.deviceId !== deviceID,
     );
 
     await this.userRepository.save(findUser);
@@ -112,7 +121,7 @@ export class UsersService {
     );
 
     findUser.sessionsUser = findUser.sessionsUser.filter(
-      (value) => value.sessionID === deviceID,
+      (value) => value.deviceId === deviceID,
     );
 
     await this.userRepository.save(findUser);

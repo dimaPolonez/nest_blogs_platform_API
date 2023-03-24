@@ -147,6 +147,6 @@ export class AuthController {
   @UseGuards(JwtAccessGuard)
   @Get('me')
   async getUserInf(@Request() req) {
-    return await this.authService.getUserInf(req.user);
+    return await this.authService.getUserInf(req.user.userID);
   }
 }

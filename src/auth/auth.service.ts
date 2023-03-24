@@ -11,7 +11,7 @@ import {
   NewPassType,
   TokensObjectType,
 } from './models';
-import { SessionUserType } from '../features/users/models';
+import { GetSessionUserType, SessionUserType } from '../features/users/models';
 
 @Injectable()
 export class AuthService {
@@ -86,7 +86,7 @@ export class AuthService {
     return await this.userService.checkedActiveSession(userID, deviceID);
   }
 
-  async getAllSessionsUser(userID: string): Promise<SessionUserType[]> {
+  async getAllSessionsUser(userID: string): Promise<GetSessionUserType[]> {
     return await this.userService.getAllSessionsUser(userID);
   }
 

@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { JwtRefreshGuard } from '../guards-handlers/guard';
 import { AuthService } from './auth.service';
-import { SessionUserType } from '../features/users/models';
+import { GetSessionUserType } from '../features/users/models';
 
 @Controller('security')
 export class SessionsController {
@@ -18,8 +18,7 @@ export class SessionsController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(JwtRefreshGuard)
   @Get('devices')
-  async getUserAllSession(@Request() req): Promise<SessionUserType[]> {
-    console.log(req.user.userID, 'request user');
+  async getUserAllSession(@Request() req): Promise<GetSessionUserType[]> {
     return await this.authService.getAllSessionsUser(req.user.userID);
   }
 
