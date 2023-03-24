@@ -96,8 +96,9 @@ export class UsersService {
     }
 
     const date = Date.parse(findSession.expiresTime);
+    const expiredResult = isAfter(date, new Date());
 
-    if (!isAfter(date, new Date())) {
+    if (!expiredResult) {
       return false;
     }
 
