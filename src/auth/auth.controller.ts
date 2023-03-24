@@ -77,7 +77,7 @@ export class AuthController {
 
     await this.authService.deleteActiveSession(
       req.user.userID,
-      req.user.deviceID,
+      req.user.deviceId,
     );
 
     const tokensObject: TokensObjectType = await this.authService.createTokens(
@@ -137,7 +137,7 @@ export class AuthController {
   ) {
     await this.authService.deleteActiveSession(
       req.user.userID,
-      req.user.deviceID,
+      req.user.deviceId,
     );
 
     await response.clearCookie('refreshToken');

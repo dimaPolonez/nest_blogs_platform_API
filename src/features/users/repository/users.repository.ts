@@ -11,7 +11,7 @@ export class UsersRepository {
   ) {}
 
   async findUserById(userID: string): Promise<UserModelType | null> {
-    return this.UserModel.findById({ _id: userID });
+    return await this.UserModel.findById({ _id: userID });
   }
 
   async deleteUser(userID: string) {

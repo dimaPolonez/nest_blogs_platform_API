@@ -39,7 +39,7 @@ export class SessionsController {
   async deleteUserAllSession(@Request() req) {
     return await this.authService.deleteAllSessions(
       req.user.userID,
-      req.user.deviceID,
+      req.user.deviceId,
     );
   }
 }
