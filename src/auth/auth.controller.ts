@@ -36,7 +36,7 @@ import { ThrottlerGuard } from '@nestjs/throttler';
 export class AuthController {
   constructor(protected authService: AuthService) {}
 
-  @UseGuards(ThrottlerGuard, LocalAuthGuard)
+  @UseGuards(/*ThrottlerGuard,*/ LocalAuthGuard)
   @HttpCode(HttpStatus.OK)
   @Post('login')
   async userAuthorization(
@@ -93,35 +93,35 @@ export class AuthController {
     return tokensObject.accessDTO;
   }
 
-  @UseGuards(ThrottlerGuard)
+  //@UseGuards(ThrottlerGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   @Post('password-recovery')
   async userCreateNewPass(@Body() userEmailDTO: EmailRecPassDto) {
     await this.authService.passwordRecovery(userEmailDTO.email);
   }
 
-  @UseGuards(ThrottlerGuard)
+  //@UseGuards(ThrottlerGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   @Post('new-password')
   async userUpdateNewPass(@Body() newPassDTO: NewPassDto) {
     await this.authService.createNewPassword(newPassDTO);
   }
 
-  @UseGuards(ThrottlerGuard)
+  //@UseGuards(ThrottlerGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   @Post('registration-confirmation')
   async userRegistrationConfirm(@Body() codeConfirm: CodeConfirmDto) {
     await this.authService.confirmEmail(codeConfirm.code);
   }
 
-  @UseGuards(ThrottlerGuard)
+  //@UseGuards(ThrottlerGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   @Post('registration')
   async userRegistration(@Body() userRegDTO: CreateUserMailDto) {
     await this.authService.registrationUser(userRegDTO);
   }
 
-  @UseGuards(ThrottlerGuard)
+  //@UseGuards(ThrottlerGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   @Post('registration-email-resending')
   async userRegistrationResending(@Body() userEmailDTO: EmailResendDto) {
