@@ -31,6 +31,13 @@ export type AuthObjectType = {
   userID: string;
 };
 
+export type AuthObjectUpdateType = {
+  ip: string;
+  nameDevice: string;
+  userID: string;
+  deviceID: string;
+};
+
 export type TokensObjectType = {
   refreshToken: string;
   accessDTO: {

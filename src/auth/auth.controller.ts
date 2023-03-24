@@ -25,7 +25,11 @@ import {
 } from '../guards-handlers/guard';
 import { AuthService } from './auth.service';
 import { Response } from 'express';
-import { AuthObjectType, TokensObjectType } from './models';
+import {
+  AuthObjectType,
+  AuthObjectUpdateType,
+  TokensObjectType,
+} from './models';
 import { ThrottlerGuard } from '@nestjs/throttler';
 
 @Controller('auth')
@@ -69,18 +73,19 @@ export class AuthController {
     @Headers('user-agent') nameDevice: string,
     @Res({ passthrough: true }) response: Response,
   ) {
-    const authObjectDTO: AuthObjectType = {
+    const authObjectDTO: AuthObjectUpdateType = {
       ip: userIP,
       nameDevice: nameDevice,
       userID: req.user.userID,
+      sessionId: req.user.sessionId,
     };
 
     await this.authService.deleteActiveSession(
       req.user.userID,
-      req.user.deviceId,
+      req.user.sessionId,
     );
 
-    const tokensObject: TokensObjectType = await this.authService.createTokens(
+    const tokensObject: TokensObjectType = await this.authService.updateTokens(
       authObjectDTO,
     );
 

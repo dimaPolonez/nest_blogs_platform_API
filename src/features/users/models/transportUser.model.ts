@@ -21,10 +21,7 @@ export type SessionUserDTOType = {
 };
 
 export type SessionUserUpdateDTOType = {
-  userID: string;
   deviceID: string;
-  ip: string;
-  nameDevice: string;
   expiresTime: string;
 };
 

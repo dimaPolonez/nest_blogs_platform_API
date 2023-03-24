@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { UserModel, UserModelType } from '../entity/users.entity';
+import { SessionUserType, SessionUserUpdateDTOType } from '../models';
 
 @Injectable()
 export class UsersRepository {
@@ -11,7 +12,23 @@ export class UsersRepository {
   ) {}
 
   async findUserById(userID: string): Promise<UserModelType | null> {
-    return await this.UserModel.findById({ _id: userID });
+    return this.UserModel.findById({ _id: userID });
+  }
+
+  async updateDevice(sessionUserDTO: SessionUserUpdateDTOType) {
+    await this.UserModel.updateOne(
+      { 'sessionsUser.deviceId': sessionUserDTO.deviceID },
+      {
+        $set: {
+          'sessionsUser.$.expiresTime': sessionUserDTO.expiresTime,
+          'sessionsUser.$.lastActiveDate': new Date().toISOString(),
+        },
+      },
+    );
+  }
+
+  async findUserSession(sessionID: string): Promise<SessionUserType | null> {
+    return this.UserModel.findOne({ 'sessionsUser.deviceId': sessionID });
   }
 
   async deleteUser(userID: string) {

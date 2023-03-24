@@ -2,7 +2,11 @@ import { UsersRepository } from './repository/users.repository';
 import { UserModel, UserModelType } from './entity/users.entity';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { NotFoundException, UnauthorizedException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import {
   ActiveCodeAdapter,
   BcryptAdapter,
@@ -17,6 +21,7 @@ import {
   NewPassType,
   SessionUserDTOType,
   SessionUserType,
+  SessionUserUpdateDTOType,
 } from './models';
 import { isAfter } from 'date-fns';
 
@@ -50,6 +55,10 @@ export class UsersService {
     await this.userRepository.save(findUser);
 
     return deviceId;
+  }
+
+  async updateDevice(sessionUserDTO: SessionUserUpdateDTOType) {
+    await this.userRepository.updateDevice(sessionUserDTO);
   }
 
   async getAllSessionsUser(userID: string): Promise<GetSessionUserType[]> {
@@ -100,12 +109,19 @@ export class UsersService {
       userID,
     );
 
+    const foundSession: SessionUserType | null =
+      await this.userRepository.findUserSession(deviceID);
+
+    if (!foundSession) {
+      throw new NotFoundException();
+    }
+
     const sessionByUser = findUser.sessionsUser.find(
       (value) => value.deviceId === deviceID,
     );
 
     if (!sessionByUser) {
-      throw new UnauthorizedException();
+      throw new ForbiddenException();
     }
 
     findUser.sessionsUser = findUser.sessionsUser.filter(

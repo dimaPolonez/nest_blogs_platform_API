@@ -6,6 +6,7 @@ import { CONFIG } from '../config/config';
 import {
   AboutMeType,
   AuthObjectType,
+  AuthObjectUpdateType,
   CreateUserMailType,
   LoginType,
   NewPassType,
@@ -59,6 +60,40 @@ export class AuthService {
 
     const refreshToken: string = this.jwtService.sign(
       { deviceId: deviceID, userID: authObject.userID },
+      { secret: CONFIG.JWT_REFRESH_SECRET, expiresIn: CONFIG.EXPIRES_REFRESH },
+    );
+
+    const accessToken: string = this.jwtService.sign(
+      { userID: authObject.userID },
+      { secret: CONFIG.JWT_ACCESS_SECRET, expiresIn: CONFIG.EXPIRES_ACCESS },
+    );
+
+    return {
+      refreshToken: refreshToken,
+      accessDTO: {
+        accessToken: accessToken,
+      },
+      optionsCookie: {
+        httpOnly: true,
+        secure: true,
+      },
+    };
+  }
+
+  async updateTokens(
+    authObject: AuthObjectUpdateType,
+  ): Promise<TokensObjectType> {
+    const expiresTime: string = add(new Date(), {
+      seconds: CONFIG.EXPIRES_REFRESH,
+    }).toString();
+
+    await this.userService.updateDevice({
+      deviceID: authObject.deviceID,
+      expiresTime: expiresTime,
+    });
+
+    const refreshToken: string = this.jwtService.sign(
+      { deviceId: authObject.deviceID, userID: authObject.userID },
       { secret: CONFIG.JWT_REFRESH_SECRET, expiresIn: CONFIG.EXPIRES_REFRESH },
     );
 
