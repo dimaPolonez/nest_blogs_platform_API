@@ -77,13 +77,8 @@ export class AuthController {
       ip: userIP,
       nameDevice: nameDevice,
       userID: req.user.userID,
-      sessionId: req.user.sessionId,
+      deviceID: req.user.deviceId,
     };
-
-    await this.authService.deleteActiveSession(
-      req.user.userID,
-      req.user.sessionId,
-    );
 
     const tokensObject: TokensObjectType = await this.authService.updateTokens(
       authObjectDTO,
