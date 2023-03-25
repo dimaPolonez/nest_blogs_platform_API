@@ -111,7 +111,7 @@ export class PostsService {
     commentDTO: CreateCommentOfPostType,
     userID: string,
     login: string,
-  ) /*: Promise<GetCommentOfPostType>*/ {
+  ): Promise<GetCommentOfPostType> {
     const newCommentDTO: NewCommentObjectType = {
       content: commentDTO.content,
       commentatorInfo: {
@@ -124,11 +124,16 @@ export class PostsService {
   }
 
   async getAllCommentsOfPost(
+    userID: string,
     postID: string,
     queryAll: QueryCommentType,
   ): Promise<GetAllCommentsOfPostType> {
     await this.postQueryRepository.findPostById(postID);
 
-    return await this.commentsService.getAllCommentsOfPost(postID, queryAll);
+    return await this.commentsService.getAllCommentsOfPost(
+      userID,
+      postID,
+      queryAll,
+    );
   }
 }

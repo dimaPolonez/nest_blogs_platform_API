@@ -5,6 +5,8 @@ import { CommentModel, CommentModelType } from '../entity/comments.entity';
 import {
   GetAllCommentsType,
   GetCommentType,
+  MyLikeStatus,
+  NewestLikesType,
   QueryCommentType,
 } from '../models';
 
@@ -22,16 +24,28 @@ export class CommentsQueryRepository {
     return (pageNum - 1) * pageSize;
   }
 
-  async findCommentById(commentID: string) /*: Promise<GetCommentType>*/ {
+  async findCommentById(
+    commentID: string,
+    userID?: string,
+  ): Promise<GetCommentType> {
     const findCommentSmart = await this.CommentModel.findById(commentID);
 
     if (!findCommentSmart) {
       throw new NotFoundException('comment not found');
     }
 
-    return findCommentSmart;
+    let userStatus = MyLikeStatus.None;
 
-    /*return {
+    if (userID !== 'quest') {
+      const findUserLike: null | NewestLikesType =
+        findCommentSmart.likesInfo.newestLikes.find((v) => v.userId === userID);
+
+      if (findUserLike) {
+        userStatus = findUserLike.myStatus;
+      }
+    }
+
+    return {
       id: findCommentSmart.id,
       content: findCommentSmart.content,
       commentatorInfo: {
@@ -42,12 +56,13 @@ export class CommentsQueryRepository {
       likesInfo: {
         likesCount: findCommentSmart.likesInfo.likesCount,
         dislikesCount: findCommentSmart.likesInfo.dislikesCount,
-        myStatus: findCommentSmart.likesInfo.myStatus,
+        myStatus: userStatus,
       },
-    };*/
+    };
   }
 
   async getAllCommentsOfPost(
+    userID: string,
     postID: string,
     queryAll: QueryCommentType,
   ): Promise<GetAllCommentsType> {
@@ -59,6 +74,17 @@ export class CommentsQueryRepository {
       .sort({ [queryAll.sortBy]: this.sortObject(queryAll.sortDirection) });
 
     const allMapsComments: GetCommentType[] = allComments.map((field) => {
+      let userStatus = MyLikeStatus.None;
+
+      if (userID !== 'quest') {
+        const findUserLike: null | NewestLikesType =
+          field.likesInfo.newestLikes.find((v) => v.userId === userID);
+
+        if (findUserLike) {
+          userStatus = findUserLike.myStatus;
+        }
+      }
+
       return {
         id: field.id,
         content: field.content,
@@ -70,7 +96,7 @@ export class CommentsQueryRepository {
         likesInfo: {
           likesCount: field.likesInfo.likesCount,
           dislikesCount: field.likesInfo.dislikesCount,
-          myStatus: field.likesInfo.myStatus,
+          myStatus: userStatus,
         },
       };
     });

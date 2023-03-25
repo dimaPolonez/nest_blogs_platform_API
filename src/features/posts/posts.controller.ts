@@ -94,7 +94,7 @@ export class PostsController {
     @Request() req,
     @Param('id') postID: string,
     @Body() commentDTO: CreateCommentOfPostDto,
-  ) /*: Promise<GetCommentOfPostType>*/ {
+  ): Promise<GetCommentOfPostType> {
     return await this.postService.createCommentOfPost(
       postID,
       commentDTO,
@@ -111,7 +111,11 @@ export class PostsController {
     @Param('id') postID: string,
     @Query() queryAll: QueryCommentDto,
   ): Promise<GetAllCommentsOfPostType> {
-    return await this.postService.getAllCommentsOfPost(postID, queryAll);
+    return await this.postService.getAllCommentsOfPost(
+      req.user.userID,
+      postID,
+      queryAll,
+    );
   }
 
   /*

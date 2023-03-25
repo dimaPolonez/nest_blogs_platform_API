@@ -13,6 +13,7 @@ import { CommentsQueryRepository } from './repository/comments.query-repository'
 import {
   CreateCommentOfPostType,
   GetAllCommentsType,
+  GetCommentType,
   MyLikeStatus,
   NewestLikesType,
   QueryCommentType,
@@ -41,8 +42,6 @@ export class CommentsService {
     if (likeStatus === MyLikeStatus.Dislike) {
       comment.likesInfo.dislikesCount++;
     }
-
-    console.log(likeCaseString);
 
     switch (likeCaseString) {
       case 'LikeDislike':
@@ -144,7 +143,7 @@ export class CommentsService {
 
   async createCommentOfPost(
     newCommentDTO: CreateCommentOfPostType,
-  ) /*: Promise<GetCommentType>*/ {
+  ): Promise<GetCommentType> {
     const createCommentSmart: CommentModelType = await new this.CommentModel(
       newCommentDTO,
     );
@@ -155,9 +154,14 @@ export class CommentsService {
   }
 
   async getAllCommentsOfPost(
+    userID: string,
     postID: string,
     queryAll: QueryCommentType,
   ): Promise<GetAllCommentsType> {
-    return this.commentQueryRepository.getAllCommentsOfPost(postID, queryAll);
+    return this.commentQueryRepository.getAllCommentsOfPost(
+      userID,
+      postID,
+      queryAll,
+    );
   }
 }

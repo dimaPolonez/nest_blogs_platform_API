@@ -37,3 +37,8 @@ export type GetAllCommentsType = {
   totalCount: number;
   items: GetCommentType[];
 };
+
+export type UserObject = {
+  userID: string;
+  login: string;
+};

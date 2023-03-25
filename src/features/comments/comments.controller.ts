@@ -17,7 +17,7 @@ import {
   JwtAccessGuard,
   QuestJwtAccessGuard,
 } from '../../guards-handlers/guard';
-import { GetCommentType, MyLikeStatus } from './models';
+import { GetCommentType } from './models';
 import { UpdateLikeStatusCommentDto } from './dto/updateLikeStatusComment.dto';
 
 @Controller('comments')
@@ -33,8 +33,11 @@ export class CommentsController {
   async getOneComment(
     @Request() req,
     @Param('id') commentID: string,
-  ) /*: Promise<GetCommentType>*/ {
-    return await this.commentQueryRepository.findCommentById(commentID);
+  ): Promise<GetCommentType> {
+    return await this.commentQueryRepository.findCommentById(
+      commentID,
+      req.user.userID,
+    );
   }
 
   @UseGuards(JwtAccessGuard)
