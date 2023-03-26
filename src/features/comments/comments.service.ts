@@ -96,6 +96,8 @@ export class CommentsService {
       throw new NotFoundException('comment not found');
     }
 
+    console.log(findComment.likesInfo.newestLikes);
+
     const userActive: NewestLikesType | null =
       findComment.likesInfo.newestLikes.find(
         (value) => value.userId === userID,
@@ -135,10 +137,14 @@ export class CommentsService {
         await this.commentRepository.save(findComment);
         return;
       }
-
-      await this.commentRepository.updateStatusLikeComment(userID, likeStatus);
+      const likeFromArray = findComment.likesInfo.newestLikes.find(
+        (l) => l.userId === userID,
+      );
+      likeFromArray.myStatus = likeStatus;
+      await this.commentRepository.save(findComment);
       return;
     }
+    return;
   }
 
   async deleteComment(userID: string, commentID: string) {
@@ -162,7 +168,7 @@ export class CommentsService {
 
   async createCommentOfPost(
     newCommentDTO: CreateCommentOfPostType,
-  ): Promise<GetCommentType> {
+  ) /*: Promise<GetCommentType>*/ {
     const createCommentSmart: CommentModelType = await new this.CommentModel(
       newCommentDTO,
     );

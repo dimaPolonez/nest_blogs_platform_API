@@ -70,7 +70,7 @@ export class CommentsController {
     @Param('id') commentID: string,
     @Body() bodyLikeStatus: UpdateLikeStatusCommentDto,
   ) {
-    await this.commentService.updateLikeStatusComment(
+    return this.commentService.updateLikeStatusComment(
       req.user.userID,
       req.user.login,
       commentID,
