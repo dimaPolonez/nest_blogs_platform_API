@@ -137,11 +137,12 @@ export class CommentsService {
         await this.commentRepository.save(findComment);
         return;
       }
-      const likeFromArray = findComment.likesInfo.newestLikes.find(
-        (l) => l.userId === userID,
-      );
-      likeFromArray.myStatus = likeStatus;
+      // const likeFromArray = findComment.likesInfo.newestLikes.find(
+      //   (l) => l.userId === userID,
+      // );
+      // likeFromArray.myStatus = likeStatus;
       await this.commentRepository.save(findComment);
+      await this.commentRepository.updateStatusLikeComment(userID, likeStatus);
       return;
     }
     return;

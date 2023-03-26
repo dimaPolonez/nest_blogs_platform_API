@@ -365,7 +365,7 @@ export class UsersService {
       await this.userRepository.findUserById(userID);
 
     if (!findUser) {
-      throw new NotFoundException('user not found');
+      return null;
     }
     return findUser.login;
   }

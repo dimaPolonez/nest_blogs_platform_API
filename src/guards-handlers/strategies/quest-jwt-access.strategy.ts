@@ -25,6 +25,8 @@ export class QuestJwtAccessStrategy extends PassportStrategy(
     const userName: string = await this.userService.findUserLogin(
       payload.userID,
     );
-    return { userID: payload.userID, login: userName };
+    return userName
+      ? { userID: payload.userID, login: userName }
+      : { userID: payload.userID };
   }
 }
