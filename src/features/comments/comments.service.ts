@@ -122,12 +122,12 @@ export class CommentsService {
       const likeCaseString = likeStatus + userActive.myStatus;
       await this.likeCounter(findComment, MyLikeStatus.None, likeCaseString);
 
-      /*      if (likeStatus === MyLikeStatus.None) {
+      if (likeStatus === MyLikeStatus.None) {
         findComment.likesInfo.newestLikes =
           findComment.likesInfo.newestLikes.filter((v) => v.userId !== userID);
         await this.commentRepository.save(findComment);
         return;
-      }*/
+      }
 
       await this.commentRepository.updateStatusLikeComment(userID, likeStatus);
       await this.commentRepository.save(findComment);

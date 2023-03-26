@@ -5,6 +5,9 @@ export const questAccessHelper = function (req) {
     'nxX4po__P3out0lwazvTqdAdH6nErLiA4szRvxyiaOo';
 
   if (req.headers.authorization) {
+    if (req.headers.authorization.slice(0, 5) === 'Basic') {
+      return token;
+    }
     token = req.headers.authorization.substring(7);
   }
   return token;
