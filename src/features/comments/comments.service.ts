@@ -118,21 +118,28 @@ export class CommentsService {
       return;
     }
 
-    if (userActive.myStatus !== likeStatus) {
-      const likeCaseString = likeStatus + userActive.myStatus;
-      await this.likeCounter(findComment, MyLikeStatus.None, likeCaseString);
-
-      if (likeStatus === MyLikeStatus.None) {
-        findComment.likesInfo.newestLikes =
-          findComment.likesInfo.newestLikes.filter((v) => v.userId !== userID);
-        await this.commentRepository.save(findComment);
-        return;
-      }
-
-      await this.commentRepository.updateStatusLikeComment(userID, likeStatus);
-      await this.commentRepository.save(findComment);
-      return;
-    }
+    const likeFromArray = findComment.likesInfo.newestLikes.find(
+      (l) => l.userId === userID,
+    );
+    likeFromArray.myStatus = likeStatus;
+    likeFromArray.addedAt = new Date().toISOString();
+    await this.commentRepository.save(findComment);
+    return;
+    // if (userActive.myStatus !== likeStatus) {
+    //   const likeCaseString = likeStatus + userActive.myStatus;
+    //   await this.likeCounter(findComment, MyLikeStatus.None, likeCaseString);
+    //
+    //   if (likeStatus === MyLikeStatus.None) {
+    //     findComment.likesInfo.newestLikes =
+    //       findComment.likesInfo.newestLikes.filter((v) => v.userId !== userID);
+    //     await this.commentRepository.save(findComment);
+    //     return;
+    //   }
+    //
+    //   await this.commentRepository.updateStatusLikeComment(userID, likeStatus);
+    //   await this.commentRepository.save(findComment);
+    //   return;
+    // }
   }
 
   async deleteComment(userID: string, commentID: string) {
