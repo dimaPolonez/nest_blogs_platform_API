@@ -96,8 +96,6 @@ export class CommentsService {
       throw new NotFoundException('comment not found');
     }
 
-    console.log(findComment.likesInfo.newestLikes);
-
     const userActive: NewestLikesType | null =
       findComment.likesInfo.newestLikes.find(
         (value) => value.userId === userID,
@@ -120,13 +118,6 @@ export class CommentsService {
       return;
     }
 
-    /*    const likeFromArray = findComment.likesInfo.newestLikes.find(
-      (l) => l.userId === userID,
-    );
-    likeFromArray.myStatus = likeStatus;
-    likeFromArray.addedAt = new Date().toISOString();
-    await this.commentRepository.save(findComment);
-    return;*/
     if (userActive.myStatus !== likeStatus) {
       const likeCaseString = likeStatus + userActive.myStatus;
       await this.likeCounter(findComment, MyLikeStatus.None, likeCaseString);
@@ -137,12 +128,8 @@ export class CommentsService {
         await this.commentRepository.save(findComment);
         return;
       }
-      const likeFromArray = findComment.likesInfo.newestLikes.find(
-        (l) => l.userId === userID,
-      );
-      likeFromArray.myStatus = likeStatus;
       await this.commentRepository.save(findComment);
-      //await this.commentRepository.updateStatusLikeComment(userID, likeStatus);
+      await this.commentRepository.updateStatusLikeComment(userID, likeStatus);
       return;
     }
     return;
