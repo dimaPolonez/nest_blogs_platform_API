@@ -48,7 +48,11 @@ export class CommentsController {
     @Param('id') commentID: string,
     @Body() commentDTO: UpdateCommentDto,
   ) {
-    await this.commentService.updateComment(commentID, commentDTO);
+    await this.commentService.updateComment(
+      req.user.userID,
+      commentID,
+      commentDTO,
+    );
   }
 
   @UseGuards(JwtAccessGuard)

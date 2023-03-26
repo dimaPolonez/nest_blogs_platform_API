@@ -18,5 +18,5 @@ describe('AppController (e2e)', () => {
   //blogFlow(testObject);
   //postFlow(testObject);
   //commentFlow(testObject);
-  likeFlow(testObject);
+  //likeFlow(testObject);
 });

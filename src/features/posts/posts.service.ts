@@ -197,6 +197,14 @@ export class PostsService {
     userID: string,
     login: string,
   ): Promise<GetCommentOfPostType> {
+    const findPost: PostModelType = await this.postRepository.findPostById(
+      postID,
+    );
+
+    if (!findPost) {
+      throw new NotFoundException('post not found');
+    }
+
     const newCommentDTO: NewCommentObjectType = {
       content: commentDTO.content,
       commentatorInfo: {

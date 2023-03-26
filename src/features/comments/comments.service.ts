@@ -1,6 +1,7 @@
 import { CommentsRepository } from './repository/comments.repository';
 import { CommentModel, CommentModelType } from './entity/comments.entity';
 import {
+  ForbiddenException,
   forwardRef,
   Inject,
   Injectable,
@@ -61,12 +62,20 @@ export class CommentsService {
     }
   }
 
-  async updateComment(commentID: string, commentDTO: UpdateCommentType) {
+  async updateComment(
+    userID: string,
+    commentID: string,
+    commentDTO: UpdateCommentType,
+  ) {
     const findComment: CommentModelType | null =
       await this.commentRepository.findCommentById(commentID);
 
     if (!findComment) {
       throw new NotFoundException('comment not found');
+    }
+
+    if (findComment.commentatorInfo.userId !== userID) {
+      throw new ForbiddenException("You can't update another user's comment");
     }
 
     await findComment.updateComment(commentDTO);
