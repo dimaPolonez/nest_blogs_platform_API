@@ -98,6 +98,10 @@ export class BlogsController {
     @Param('id') blogID: string,
     @Query() queryAll: QueryPostOfBlogDto,
   ): Promise<GetAllPostsOfBlogType> {
-    return await this.blogService.getAllPostsOfBlog(blogID, queryAll);
+    return await this.blogService.getAllPostsOfBlog(
+      req.user.userID,
+      blogID,
+      queryAll,
+    );
   }
 }

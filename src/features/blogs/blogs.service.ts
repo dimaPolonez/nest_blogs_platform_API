@@ -102,6 +102,7 @@ export class BlogsService {
   }
 
   async getAllPostsOfBlog(
+    userID: string,
     blogID: string,
     queryAll: QueryPostOfBlogType,
   ): Promise<GetAllPostsOfBlogType> {
@@ -111,6 +112,6 @@ export class BlogsService {
       throw new NotFoundException('blog not found');
     }
 
-    return await this.postsService.getAllPostsOfBlog(blogID, queryAll);
+    return await this.postsService.getAllPostsOfBlog(userID, blogID, queryAll);
   }
 }

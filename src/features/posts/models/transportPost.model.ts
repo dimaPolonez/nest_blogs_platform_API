@@ -1,3 +1,5 @@
+import { MyLikeStatus } from './getPost.model';
+
 export type CreatePostType = {
   title: string;
   shortDescription: string;
@@ -39,4 +41,8 @@ export type NewCommentObjectType = {
     userLogin: string;
   };
   postId: string;
+};
+
+export type UpdateLikeStatusPostType = {
+  likeStatus: MyLikeStatus;
 };

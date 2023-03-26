@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { PostModel, PostModelType } from '../entity/posts.entity';
+import { MyLikeStatus } from '../models';
 
 @Injectable()
 export class PostsRepository {
@@ -12,6 +13,19 @@ export class PostsRepository {
 
   async findPostById(postID: string): Promise<PostModelType | null> {
     return this.PostModel.findById({ _id: postID });
+  }
+
+  async updateStatusLikePost(userID: string, likeStatus: MyLikeStatus) {
+    await this.PostModel.updateOne(
+      {
+        'extendedLikesInfo.newestLikes.userId': userID,
+      },
+      {
+        $set: {
+          'extendedLikesInfo.newestLikes.$.myStatus': likeStatus,
+        },
+      },
+    );
   }
 
   async deletePost(postID: string) {

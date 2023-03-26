@@ -33,6 +33,7 @@ import {
   GetCommentOfPostType,
   GetPostType,
 } from './models';
+import { UpdateLikeStatusPostDto } from './dto/updateLikeStatusPost.dto';
 
 @Controller('posts')
 export class PostsController {
@@ -74,7 +75,7 @@ export class PostsController {
     @Request() req,
     @Param('id') postID: string,
   ): Promise<GetPostType> {
-    return await this.postQueryRepository.findPostById(postID);
+    return await this.postQueryRepository.findPostById(postID, req.user.userID);
   }
 
   @UseGuards(QuestJwtAccessGuard)
@@ -84,7 +85,10 @@ export class PostsController {
     @Request() req,
     @Query() queryAll: QueryPostDto,
   ): Promise<GetAllPostsType> {
-    return await this.postQueryRepository.getAllPosts(queryAll);
+    return await this.postQueryRepository.getAllPosts(
+      req.user.userID,
+      queryAll,
+    );
   }
 
   @UseGuards(JwtAccessGuard)
@@ -118,15 +122,19 @@ export class PostsController {
     );
   }
 
-  /*
   @UseGuards(JwtAccessGuard)
   @Put(':id/like-status')
-  likeStatusPost(
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async likeStatusPost(
     @Request() req,
     @Param('id') postID: string,
-    @Body() postBody: likePostBodyType,
+    @Body() bodyLikeStatus: UpdateLikeStatusPostDto,
   ) {
-    return 'hello';
+    await this.postService.updateLikeStatusPost(
+      req.user.userID,
+      req.user.login,
+      postID,
+      bodyLikeStatus.likeStatus,
+    );
   }
-*/
 }

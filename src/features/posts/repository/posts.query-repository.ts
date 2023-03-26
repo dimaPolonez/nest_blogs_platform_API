@@ -2,7 +2,13 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { PostModel, PostModelType } from '../entity/posts.entity';
-import { GetAllPostsType, GetPostType, QueryPostType } from '../models';
+import {
+  GetAllPostsType,
+  GetPostType,
+  MyLikeStatus,
+  NewestLikesType,
+  QueryPostType,
+} from '../models';
 
 @Injectable()
 export class PostsQueryRepository {
@@ -18,11 +24,46 @@ export class PostsQueryRepository {
     return (pageNum - 1) * pageSize;
   }
 
-  async findPostById(postID: string): Promise<GetPostType> {
+  async findPostById(postID: string, userID?: string): Promise<GetPostType> {
     const findPostSmart = await this.PostModel.findById(postID);
 
     if (!findPostSmart) {
       throw new NotFoundException('post not found');
+    }
+
+    let userStatus = MyLikeStatus.None;
+
+    if (userID !== 'quest') {
+      const findUserLike: null | NewestLikesType =
+        findPostSmart.extendedLikesInfo.newestLikes.find(
+          (v) => v.userId === userID,
+        );
+
+      if (findUserLike) {
+        userStatus = findUserLike.myStatus;
+      }
+    }
+    let newestLikesArray = [];
+
+    if (findPostSmart.extendedLikesInfo.newestLikes.length > 0) {
+      let newestLikes: NewestLikesType[] | [] =
+        findPostSmart.extendedLikesInfo.newestLikes.filter(
+          (v) => v.myStatus === MyLikeStatus.Like,
+        );
+
+      newestLikes.sort(function (a: NewestLikesType, b: NewestLikesType) {
+        return a.addedAt < b.addedAt ? 1 : a.addedAt > b.addedAt ? -1 : 0;
+      });
+
+      newestLikes = newestLikes.slice(0, 3);
+
+      newestLikesArray = newestLikes.map((v: NewestLikesType) => {
+        return {
+          userId: v.userId,
+          login: v.login,
+          addedAt: v.addedAt,
+        };
+      });
     }
 
     return {
@@ -36,13 +77,14 @@ export class PostsQueryRepository {
       extendedLikesInfo: {
         likesCount: findPostSmart.extendedLikesInfo.likesCount,
         dislikesCount: findPostSmart.extendedLikesInfo.dislikesCount,
-        myStatus: findPostSmart.extendedLikesInfo.myStatus,
-        newestLikes: findPostSmart.extendedLikesInfo.newestLikes,
+        myStatus: userStatus,
+        newestLikes: newestLikesArray,
       },
     };
   }
 
   async getAllPosts(
+    userID: string,
     queryAll: QueryPostType,
     blogID?: string,
   ): Promise<GetAllPostsType> {
@@ -58,6 +100,40 @@ export class PostsQueryRepository {
       .sort({ [queryAll.sortBy]: this.sortObject(queryAll.sortDirection) });
 
     const allMapsPosts: GetPostType[] = allPosts.map((field) => {
+      let userStatus = MyLikeStatus.None;
+
+      if (userID !== 'quest') {
+        const findUserLike: null | NewestLikesType =
+          field.extendedLikesInfo.newestLikes.find((v) => v.userId === userID);
+
+        if (findUserLike) {
+          userStatus = findUserLike.myStatus;
+        }
+      }
+
+      let newestLikesArray = [];
+
+      if (field.extendedLikesInfo.newestLikes.length > 0) {
+        let newestLikes: NewestLikesType[] | [] =
+          field.extendedLikesInfo.newestLikes.filter(
+            (v) => v.myStatus === MyLikeStatus.Like,
+          );
+
+        newestLikes.sort(function (a: NewestLikesType, b: NewestLikesType) {
+          return a.addedAt < b.addedAt ? 1 : a.addedAt > b.addedAt ? -1 : 0;
+        });
+
+        newestLikes = newestLikes.slice(0, 3);
+
+        newestLikesArray = newestLikes.map((v: NewestLikesType) => {
+          return {
+            userId: v.userId,
+            login: v.login,
+            addedAt: v.addedAt,
+          };
+        });
+      }
+
       return {
         id: field.id,
         title: field.title,
@@ -69,8 +145,8 @@ export class PostsQueryRepository {
         extendedLikesInfo: {
           likesCount: field.extendedLikesInfo.likesCount,
           dislikesCount: field.extendedLikesInfo.dislikesCount,
-          myStatus: field.extendedLikesInfo.myStatus,
-          newestLikes: field.extendedLikesInfo.newestLikes,
+          myStatus: userStatus,
+          newestLikes: newestLikesArray,
         },
       };
     });

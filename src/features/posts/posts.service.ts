@@ -18,7 +18,9 @@ import {
   GetAllPostsType,
   GetCommentOfPostType,
   GetPostType,
+  MyLikeStatus,
   NewCommentObjectType,
+  NewestLikesType,
   QueryCommentType,
   QueryPostType,
   UpdatePostType,
@@ -39,6 +41,36 @@ export class PostsService {
     @InjectModel(PostModel.name)
     private readonly PostModel: Model<PostModelType>,
   ) {}
+
+  async likeCounter(
+    post: PostModelType,
+    likeStatus: MyLikeStatus,
+    likeCaseString?: string,
+  ) {
+    if (likeStatus === MyLikeStatus.Like) {
+      post.extendedLikesInfo.likesCount++;
+    }
+    if (likeStatus === MyLikeStatus.Dislike) {
+      post.extendedLikesInfo.dislikesCount++;
+    }
+
+    switch (likeCaseString) {
+      case 'LikeDislike':
+        post.extendedLikesInfo.likesCount++;
+        post.extendedLikesInfo.dislikesCount--;
+        break;
+      case 'DislikeLike':
+        post.extendedLikesInfo.likesCount--;
+        post.extendedLikesInfo.dislikesCount++;
+        break;
+      case 'NoneDislike':
+        post.extendedLikesInfo.dislikesCount--;
+        break;
+      case 'NoneLike':
+        post.extendedLikesInfo.likesCount--;
+        break;
+    }
+  }
 
   async createPost(postDTO: CreatePostType): Promise<string> {
     const findBlogName: string = await this.blogService.findBlogName(
@@ -100,10 +132,63 @@ export class PostsService {
   }
 
   async getAllPostsOfBlog(
+    userID: string,
     blogID: string,
     queryAll: QueryPostType,
   ): Promise<GetAllPostsType> {
-    return this.postQueryRepository.getAllPosts(queryAll, blogID);
+    return this.postQueryRepository.getAllPosts(userID, queryAll, blogID);
+  }
+
+  async updateLikeStatusPost(
+    userID: string,
+    login: string,
+    postID: string,
+    likeStatus: MyLikeStatus,
+  ) {
+    const findPost: PostModelType = await this.postRepository.findPostById(
+      postID,
+    );
+
+    if (!findPost) {
+      throw new NotFoundException('post not found');
+    }
+
+    const userActive: NewestLikesType | null =
+      findPost.extendedLikesInfo.newestLikes.find((v) => v.userId === userID);
+
+    const likesObjectDTO: NewestLikesType = {
+      userId: userID,
+      login: login,
+      myStatus: likeStatus,
+      addedAt: new Date().toISOString(),
+    };
+
+    if (!userActive) {
+      if (likeStatus === 'None') {
+        return;
+      }
+      await this.likeCounter(findPost, likeStatus);
+      findPost.extendedLikesInfo.newestLikes.push(likesObjectDTO);
+      await this.postRepository.save(findPost);
+      return;
+    }
+    if (userActive.myStatus !== likeStatus) {
+      const likeCaseString = likeStatus + userActive.myStatus;
+      await this.likeCounter(findPost, MyLikeStatus.None, likeCaseString);
+
+      if (likeStatus === MyLikeStatus.None) {
+        findPost.extendedLikesInfo.newestLikes =
+          findPost.extendedLikesInfo.newestLikes.filter(
+            (v) => v.userId !== userID,
+          );
+        await this.postRepository.save(findPost);
+        return;
+      }
+
+      await this.postRepository.updateStatusLikePost(userID, likeStatus);
+      await this.postRepository.save(findPost);
+      return;
+    }
   }
 
   async createCommentOfPost(
