@@ -122,12 +122,12 @@ export class CommentsService {
       const likeCaseString = likeStatus + userActive.myStatus;
       await this.likeCounter(findComment, MyLikeStatus.None, likeCaseString);
 
-      if (likeStatus === MyLikeStatus.None) {
+      /*      if (likeStatus === MyLikeStatus.None) {
         findComment.likesInfo.newestLikes =
           findComment.likesInfo.newestLikes.filter((v) => v.userId !== userID);
         await this.commentRepository.save(findComment);
         return;
-      }
+      }*/
 
       await this.commentRepository.updateStatusLikeComment(userID, likeStatus);
       await this.commentRepository.save(findComment);
@@ -135,12 +135,16 @@ export class CommentsService {
     }
   }
 
-  async deleteComment(commentID: string) {
+  async deleteComment(userID: string, commentID: string) {
     const findComment: CommentModelType =
       await this.commentRepository.findCommentById(commentID);
 
     if (!findComment) {
       throw new NotFoundException('comment not found');
+    }
+
+    if (findComment.commentatorInfo.userId !== userID) {
+      throw new ForbiddenException("You can't delete another user's comment");
     }
 
     await this.commentRepository.deleteComment(commentID);

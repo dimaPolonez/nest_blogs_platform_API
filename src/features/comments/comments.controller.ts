@@ -59,7 +59,7 @@ export class CommentsController {
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   async deleteComment(@Request() req, @Param('id') commentID: string) {
-    await this.commentService.deleteComment(commentID);
+    await this.commentService.deleteComment(req.user.userID, commentID);
   }
 
   @UseGuards(JwtAccessGuard)
