@@ -15,14 +15,16 @@ export class CommentsRepository {
     return this.CommentModel.findById({ _id: commentID });
   }
 
-  async updateStatusLikeComment(userID: string, likeStatus: MyLikeStatus) {
+  async updateStatusLikeComment(
+    commentID: string,
+    userID: string,
+    likeStatus: MyLikeStatus,
+  ) {
     await this.CommentModel.updateOne(
-      {
-        'likesInfo.newestLikes.userId': userID,
-      },
+      { 'commentID.likesInfo.newestLikes.userId': userID },
       {
         $set: {
-          'likesInfo.newestLikes.$.myStatus': likeStatus,
+          'commentID.likesInfo.newestLikes.$.myStatus': likeStatus,
         },
       },
     );

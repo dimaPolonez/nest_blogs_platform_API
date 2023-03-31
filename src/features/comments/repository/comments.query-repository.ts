@@ -38,7 +38,7 @@ export class CommentsQueryRepository {
 
     if (userID !== 'quest') {
       const findUserLike: null | NewestLikesType =
-        findCommentSmart.likesInfo.newestLikes.find((v) => v.userId === userID);
+        findCommentSmart.likesInfo.newestLikes.find((l) => l.userId === userID);
 
       if (findUserLike) {
         userStatus = findUserLike.myStatus;

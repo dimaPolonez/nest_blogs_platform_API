@@ -184,10 +184,22 @@ export class PostsService {
         await this.postRepository.save(findPost);
         return;
       }
+      const findActivity = findPost.extendedLikesInfo.newestLikes.find(
+        (v) => v.userId === userID,
+      );
 
-      await this.postRepository.updateStatusLikePost(userID, likeStatus);
+      findActivity.myStatus = likeStatus;
+
+      findPost.extendedLikesInfo.newestLikes =
+        findPost.extendedLikesInfo.newestLikes.filter(
+          (v) => v.userId !== userID,
+        );
+
+      findPost.extendedLikesInfo.newestLikes.push(findActivity);
+
       await this.postRepository.save(findPost);
-      return;
+
+      //await this.postRepository.updateStatusLikePost(userID, likeStatus);
     }
   }
 

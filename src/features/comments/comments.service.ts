@@ -128,11 +128,24 @@ export class CommentsService {
         await this.commentRepository.save(findComment);
         return;
       }
+      const findActivity = findComment.likesInfo.newestLikes.find(
+        (v) => v.userId === userID,
+      );
+
+      findActivity.myStatus = likeStatus;
+
+      findComment.likesInfo.newestLikes =
+        findComment.likesInfo.newestLikes.filter((v) => v.userId !== userID);
+
+      findComment.likesInfo.newestLikes.push(findActivity);
+
       await this.commentRepository.save(findComment);
-      await this.commentRepository.updateStatusLikeComment(userID, likeStatus);
-      return;
+      /*await this.commentRepository.updateStatusLikeComment(
+        commentID,
+        userID,
+        likeStatus,
+      );*/
     }
-    return;
   }
 
   async deleteComment(userID: string, commentID: string) {

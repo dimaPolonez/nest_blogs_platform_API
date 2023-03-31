@@ -4,6 +4,7 @@ import { CONFIG } from '../../config/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { questAccessHelper } from '../request-handlers';
 import { UsersService } from '../../features/users/users.service';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class QuestJwtAccessStrategy extends PassportStrategy(
@@ -22,6 +23,8 @@ export class QuestJwtAccessStrategy extends PassportStrategy(
     if (payload.userID === 'quest') {
       return { userID: payload.userID };
     }
+
+    JwtService;
     const userName: string = await this.userService.findUserLogin(
       payload.userID,
     );
