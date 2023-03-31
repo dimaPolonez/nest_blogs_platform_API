@@ -1,14 +1,20 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import * as process from 'process';
-import { PORT_CONFIGURATION } from './configuration';
 import { ValidationPipe } from '@nestjs/common';
+import { HttpExceptionFilter } from './errors-handlers/http-exception.filter';
+import cookieParser from 'cookie-parser';
+import { CONFIG } from './config/config';
+import { validatePipeOptions } from './errors-handlers/validatePipeOptions';
+import { useContainer } from 'class-validator';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors();
-  app.useGlobalPipes(new ValidationPipe({ transform: true }));
-  await app.listen(PORT_CONFIGURATION.PORT_DEV);
-  console.log(`Start server on ${process.env.PORT} port`);
+  app.use(cookieParser());
+  useContainer(app.select(AppModule), { fallbackOnErrors: true });
+  app.useGlobalPipes(new ValidationPipe(validatePipeOptions));
+  app.useGlobalFilters(new HttpExceptionFilter());
+  await app.listen(CONFIG.PORT);
+  console.log(`Start server on ${CONFIG.PORT} port`);
 }
 bootstrap();
