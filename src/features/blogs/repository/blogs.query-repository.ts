@@ -1,8 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { BlogModel, BlogModelType } from '../entity/blogs.entity';
-import { GetAllBlogsType, GetBlogType, QueryBlogType } from '../models';
+import { BlogModel, BlogModelType } from '../core/entity/blogs.entity';
+import { GetAllBlogsType, GetBlogType, QueryBlogType } from '../core/models';
 @Injectable()
 export class BlogsQueryRepository {
   constructor(

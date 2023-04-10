@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { UsersService } from '../features/users/users.service';
+import { UsersService } from '../../features/users/application/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { add } from 'date-fns';
-import { CONFIG } from '../config/config';
+import { CONFIG } from '../../config/config';
 import {
   AboutMeType,
   AuthObjectType,
@@ -11,8 +11,11 @@ import {
   LoginType,
   NewPassType,
   TokensObjectType,
-} from './models';
-import { GetSessionUserType, SessionUserType } from '../features/users/models';
+} from '../models';
+import {
+  GetSessionUserType,
+  SessionUserType,
+} from '../../features/users/core/models';
 
 @Injectable()
 export class AuthService {

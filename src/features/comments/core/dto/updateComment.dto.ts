@@ -1,5 +1,5 @@
 import { IsNotEmpty, Length } from 'class-validator';
-import { trimDecorator } from '../../../validation';
+import { trimDecorator } from '../../../../validation';
 import { UpdateCommentType } from '../models';
 
 export class UpdateCommentDto implements UpdateCommentType {

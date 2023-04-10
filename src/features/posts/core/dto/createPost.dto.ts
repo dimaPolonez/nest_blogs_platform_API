@@ -1,8 +1,8 @@
-import { findBlog, trimDecorator } from '../../../validation';
 import { IsMongoId, IsNotEmpty, Length, Validate } from 'class-validator';
-import { CreatePostOfBlogType } from '../models';
+import { findBlog, trimDecorator } from '../../../../validation';
+import { CreatePostType } from '../models';
 
-export class CreatePostOfBlogDto implements CreatePostOfBlogType {
+export class CreatePostDto implements CreatePostType {
   @trimDecorator()
   @Length(1, 30)
   @IsNotEmpty()
@@ -17,4 +17,11 @@ export class CreatePostOfBlogDto implements CreatePostOfBlogType {
   @Length(1, 1000)
   @IsNotEmpty()
   readonly content: string;
+
+  @Validate(findBlog)
+  @trimDecorator()
+  @IsMongoId()
+  @Length(24, 24)
+  @IsNotEmpty()
+  readonly blogId: string;
 }

@@ -6,9 +6,9 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { BlogModel, BlogModelType } from './entity/blogs.entity';
-import { BlogsRepository } from './repository/blogs.repository';
-import { PostsService } from '../posts/posts.service';
+import { BlogModel, BlogModelType } from '../core/entity/blogs.entity';
+import { BlogsRepository } from '../repository/blogs.repository';
+import { PostsService } from '../../posts/application/posts.service';
 import {
   CreateBlogType,
   CreatePostOfBlogAllType,
@@ -17,7 +17,7 @@ import {
   GetPostOfBlogType,
   QueryPostOfBlogType,
   UpdateBlogType,
-} from './models';
+} from '../core/models';
 
 @Injectable()
 export class BlogsService {
@@ -48,37 +48,6 @@ export class BlogsService {
     }
 
     return findBlog.name;
-  }
-
-  async createBlog(blogDTO: CreateBlogType): Promise<string> {
-    const createBlogSmart: BlogModelType = await new this.BlogModel(blogDTO);
-
-    await this.blogRepository.save(createBlogSmart);
-
-    return createBlogSmart.id;
-  }
-
-  async updateBlog(blogID: string, blogDTO: UpdateBlogType) {
-    const findBlog: BlogModelType | null =
-      await this.blogRepository.findBlogById(blogID);
-
-    if (!findBlog) {
-      throw new NotFoundException('blog not found');
-    }
-
-    await findBlog.updateBlog(blogDTO);
-
-    await this.blogRepository.save(findBlog);
-  }
-
-  async deleteBlog(blogID: string) {
-    const findBlog: boolean = await this.checkBlog(blogID);
-
-    if (!findBlog) {
-      throw new NotFoundException('blog not found');
-    }
-
-    await this.blogRepository.deleteBlog(blogID);
   }
 
   async deleteAllBlogs() {

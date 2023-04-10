@@ -13,7 +13,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 
-import { PostsService } from './posts.service';
+import { PostsService } from './application/posts.service';
 import { PostsQueryRepository } from './repository/posts.query-repository';
 import {
   CreateCommentOfPostDto,
@@ -21,7 +21,7 @@ import {
   QueryPostDto,
   UpdatePostDto,
   QueryCommentDto,
-} from './dto';
+} from './core/dto';
 import {
   BasicAuthGuard,
   JwtAccessGuard,
@@ -32,8 +32,8 @@ import {
   GetAllPostsType,
   GetCommentOfPostType,
   GetPostType,
-} from './models';
-import { UpdateLikeStatusPostDto } from './dto/updateLikeStatusPost.dto';
+} from './core/models';
+import { UpdateLikeStatusPostDto } from './core/dto/updateLikeStatusPost.dto';
 
 @Controller('posts')
 export class PostsController {

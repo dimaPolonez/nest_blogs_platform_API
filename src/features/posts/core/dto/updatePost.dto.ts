@@ -1,5 +1,5 @@
 import { IsMongoId, IsNotEmpty, Length, Validate } from 'class-validator';
-import { findBlog, trimDecorator } from '../../../validation';
+import { findBlog, trimDecorator } from '../../../../validation';
 import { UpdatePostType } from '../models';
 
 export class UpdatePostDto implements UpdatePostType {

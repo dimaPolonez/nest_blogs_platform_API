@@ -1,8 +1,8 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { PostModel, PostModelSchema } from './entity/posts.entity';
+import { PostModel, PostModelSchema } from './core/entity/posts.entity';
 import { PostsController } from './posts.controller';
-import { PostsService } from './posts.service';
+import { PostsService } from './application/posts.service';
 import { PostsRepository } from './repository/posts.repository';
 import { PostsQueryRepository } from './repository/posts.query-repository';
 import { BlogsModule } from '../blogs/blogs.module';

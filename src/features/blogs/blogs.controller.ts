@@ -12,7 +12,7 @@ import {
   Request,
   UseGuards,
 } from '@nestjs/common';
-import { BlogsService } from './blogs.service';
+import { BlogsService } from './application/blogs.service';
 import { BlogsQueryRepository } from './repository/blogs.query-repository';
 import {
   CreateBlogDto,
@@ -20,7 +20,7 @@ import {
   QueryBlogsDto,
   UpdateBlogDto,
   QueryPostOfBlogDto,
-} from './dto';
+} from './core/dto';
 import {
   BasicAuthGuard,
   QuestJwtAccessGuard,
@@ -30,7 +30,7 @@ import {
   GetAllPostsOfBlogType,
   GetBlogType,
   GetPostOfBlogType,
-} from './models';
+} from './core/models';
 
 @Controller('blogs')
 export class BlogsController {
@@ -38,32 +38,6 @@ export class BlogsController {
     protected blogService: BlogsService,
     protected blogQueryRepository: BlogsQueryRepository,
   ) {}
-
-  @UseGuards(BasicAuthGuard)
-  @Post()
-  @HttpCode(HttpStatus.CREATED)
-  async createBlog(@Body() blogDTO: CreateBlogDto): Promise<GetBlogType> {
-    const newBlogID: string = await this.blogService.createBlog(blogDTO);
-
-    return await this.blogQueryRepository.findBlogById(newBlogID);
-  }
-
-  @UseGuards(BasicAuthGuard)
-  @Put(':id')
-  @HttpCode(HttpStatus.NO_CONTENT)
-  async updateBlog(
-    @Param('id') blogID: string,
-    @Body() blogDTO: UpdateBlogDto,
-  ) {
-    await this.blogService.updateBlog(blogID, blogDTO);
-  }
-
-  @UseGuards(BasicAuthGuard)
-  @Delete(':id')
-  @HttpCode(HttpStatus.NO_CONTENT)
-  async deleteBlog(@Param('id') blogID: string) {
-    await this.blogService.deleteBlog(blogID);
-  }
 
   @Get(':id')
   @HttpCode(HttpStatus.OK)

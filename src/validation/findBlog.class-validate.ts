@@ -2,7 +2,7 @@ import {
   ValidatorConstraint,
   ValidatorConstraintInterface,
 } from 'class-validator';
-import { BlogsService } from '../features/blogs/blogs.service';
+import { BlogsService } from '../features/blogs/application/blogs.service';
 import { Injectable } from '@nestjs/common';
 
 @ValidatorConstraint()

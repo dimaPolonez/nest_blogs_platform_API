@@ -1,4 +1,4 @@
-import { trimDecorator } from '../../../validation';
+import { trimDecorator } from '../../../../validation';
 import { IsNotEmpty, IsUrl, Length, Matches } from 'class-validator';
 import { UpdateBlogType } from '../models';
 

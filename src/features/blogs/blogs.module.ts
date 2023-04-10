@@ -1,7 +1,7 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { BlogModel, BlogModelSchema } from './entity/blogs.entity';
-import { BlogsService } from './blogs.service';
+import { BlogModel, BlogModelSchema } from './core/entity/blogs.entity';
+import { BlogsService } from './application/blogs.service';
 import { BlogsRepository } from './repository/blogs.repository';
 import { BlogsQueryRepository } from './repository/blogs.query-repository';
 import { BlogsController } from './blogs.controller';
@@ -14,6 +14,7 @@ import { findBlog } from '../../validation';
 import { JwtService } from '@nestjs/jwt';
 import { UsersModule } from '../users/users.module';
 
+const strategies = [BasicStrategy, JwtService, QuestJwtAccessStrategy];
 @Module({
   imports: [
     MongooseModule.forFeature([
@@ -27,9 +28,8 @@ import { UsersModule } from '../users/users.module';
     BlogsService,
     BlogsRepository,
     BlogsQueryRepository,
-    BasicStrategy,
+    ...strategies,
     JwtService,
-    QuestJwtAccessStrategy,
     findBlog,
   ],
   exports: [BlogsService],

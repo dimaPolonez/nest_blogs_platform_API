@@ -1,5 +1,5 @@
 import { MyLikeStatus, UpdateLikeStatusPostType } from '../models';
-import { trimDecorator } from '../../../validation';
+import { trimDecorator } from '../../../../validation';
 import { IsEnum, IsNotEmpty } from 'class-validator';
 
 export class UpdateLikeStatusPostDto implements UpdateLikeStatusPostType {

@@ -23,7 +23,7 @@ import {
   JwtRefreshGuard,
   LocalAuthGuard,
 } from '../guards-handlers/guard';
-import { AuthService } from './auth.service';
+import { AuthService } from './application/auth.service';
 import { Response } from 'express';
 import {
   AuthObjectType,

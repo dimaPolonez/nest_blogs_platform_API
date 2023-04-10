@@ -6,11 +6,11 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { PostModel, PostModelType } from './entity/posts.entity';
-import { PostsRepository } from './repository/posts.repository';
-import { PostsQueryRepository } from './repository/posts.query-repository';
-import { BlogsService } from '../blogs/blogs.service';
-import { CommentsService } from '../comments/comments.service';
+import { PostModel, PostModelType } from '../core/entity/posts.entity';
+import { PostsRepository } from '../repository/posts.repository';
+import { PostsQueryRepository } from '../repository/posts.query-repository';
+import { BlogsService } from '../../blogs/application/blogs.service';
+import { CommentsService } from '../../comments/application/comments.service';
 import {
   CreateCommentOfPostType,
   CreatePostType,
@@ -24,8 +24,8 @@ import {
   QueryCommentType,
   QueryPostType,
   UpdatePostType,
-} from './models';
-import { UsersService } from '../users/users.service';
+} from '../core/models';
+import { UsersService } from '../../users/application/users.service';
 
 @Injectable()
 export class PostsService {

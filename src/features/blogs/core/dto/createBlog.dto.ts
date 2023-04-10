@@ -1,5 +1,5 @@
 import { IsNotEmpty, IsUrl, Length } from 'class-validator';
-import { trimDecorator } from '../../../validation';
+import { trimDecorator } from '../../../../validation';
 import { CreateBlogType } from '../models';
 
 export class CreateBlogDto implements CreateBlogType {

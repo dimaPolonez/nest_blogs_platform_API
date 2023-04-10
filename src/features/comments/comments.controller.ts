@@ -10,15 +10,15 @@ import {
   Request,
   UseGuards,
 } from '@nestjs/common';
-import { CommentsService } from './comments.service';
+import { CommentsService } from './application/comments.service';
 import { CommentsQueryRepository } from './repository/comments.query-repository';
-import { UpdateCommentDto } from './dto';
+import { UpdateCommentDto } from './core/dto';
 import {
   JwtAccessGuard,
   QuestJwtAccessGuard,
 } from '../../guards-handlers/guard';
-import { GetCommentType } from './models';
-import { UpdateLikeStatusCommentDto } from './dto/updateLikeStatusComment.dto';
+import { GetCommentType } from './core/models';
+import { UpdateLikeStatusCommentDto } from './core/dto/updateLikeStatusComment.dto';
 
 @Controller('comments')
 export class CommentsController {

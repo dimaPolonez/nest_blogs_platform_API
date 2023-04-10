@@ -1,5 +1,5 @@
-import { UsersRepository } from './repository/users.repository';
-import { UserModel, UserModelType } from './entity/users.entity';
+import { UsersRepository } from '../repository/users.repository';
+import { UserModel, UserModelType } from '../core/entity/users.entity';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import {
@@ -11,7 +11,7 @@ import {
   ActiveCodeAdapter,
   BcryptAdapter,
   MailerAdapter,
-} from '../../adapters';
+} from '../../../adapters';
 import {
   AboutMeType,
   ConfirmUserType,
@@ -22,7 +22,7 @@ import {
   SessionUserDTOType,
   SessionUserType,
   SessionUserUpdateDTOType,
-} from './models';
+} from '../core/models';
 import { isAfter } from 'date-fns';
 
 export class UsersService {

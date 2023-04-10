@@ -10,11 +10,11 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { UsersService } from './users.service';
+import { UsersService } from './application/users.service';
 import { UsersQueryRepository } from './repository/users.query-repository';
-import { CreateUserDto, QueryUserDto } from './dto';
+import { CreateUserDto, QueryUserDto } from './core/dto';
 import { BasicAuthGuard } from '../../guards-handlers/guard';
-import { GetAllUsersType, GetUserType } from './models';
+import { GetAllUsersType, GetUserType } from './core/models';
 
 @Controller('users')
 export class UsersController {

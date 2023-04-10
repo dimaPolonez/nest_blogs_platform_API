@@ -1,5 +1,5 @@
-import { CommentsRepository } from './repository/comments.repository';
-import { CommentModel, CommentModelType } from './entity/comments.entity';
+import { CommentsRepository } from '../repository/comments.repository';
+import { CommentModel, CommentModelType } from '../core/entity/comments.entity';
 import {
   ForbiddenException,
   forwardRef,
@@ -9,8 +9,8 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { PostsService } from '../posts/posts.service';
-import { CommentsQueryRepository } from './repository/comments.query-repository';
+import { PostsService } from '../../posts/application/posts.service';
+import { CommentsQueryRepository } from '../repository/comments.query-repository';
 import {
   CreateCommentOfPostType,
   GetAllCommentsType,
@@ -19,7 +19,7 @@ import {
   NewestLikesType,
   QueryCommentType,
   UpdateCommentType,
-} from './models';
+} from '../core/models';
 
 @Injectable()
 export class CommentsService {

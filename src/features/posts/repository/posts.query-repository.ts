@@ -1,14 +1,14 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { PostModel, PostModelType } from '../entity/posts.entity';
+import { PostModel, PostModelType } from '../core/entity/posts.entity';
 import {
   GetAllPostsType,
   GetPostType,
   MyLikeStatus,
   NewestLikesType,
   QueryPostType,
-} from '../models';
+} from '../core/models';
 
 @Injectable()
 export class PostsQueryRepository {
