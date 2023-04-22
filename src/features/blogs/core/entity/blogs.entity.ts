@@ -15,6 +15,9 @@ export class BlogModel {
   @Prop({ required: true })
   websiteUrl: string;
 
+  @Prop({ required: true })
+  bloggerId: string;
+
   @Prop({
     default: () => {
       return new Date().toISOString();

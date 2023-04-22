@@ -69,4 +69,47 @@ export class BlogsQueryRepository {
       items: allMapsBlogs,
     };
   }
+
+  async getAllBlogsToBlogger(
+    blogerId: string,
+    queryAll: QueryBlogType,
+  ): Promise<GetAllBlogsType> {
+    const allBlogs: BlogModelType[] = await this.BlogModel.find({
+      $and: [
+        {
+          bloggerId: blogerId,
+        },
+        { name: new RegExp(queryAll.searchNameTerm, 'gi') },
+      ],
+    })
+      .skip(this.skippedObject(queryAll.pageNumber, queryAll.pageSize))
+      .limit(queryAll.pageSize)
+      .sort({
+        [queryAll.sortBy]: this.sortObject(queryAll.sortDirection),
+      });
+
+    const allMapsBlogs: GetBlogType[] = allBlogs.map((field) => {
+      return {
+        id: field.id,
+        name: field.name,
+        description: field.description,
+        websiteUrl: field.websiteUrl,
+        createdAt: field.createdAt,
+        isMembership: field.isMembership,
+      };
+    });
+
+    const allCount: number = await this.BlogModel.countDocuments({
+      name: new RegExp(queryAll.searchNameTerm, 'gi'),
+    });
+    const pagesCount: number = Math.ceil(allCount / queryAll.pageSize);
+
+    return {
+      pagesCount: pagesCount,
+      page: queryAll.pageNumber,
+      pageSize: queryAll.pageSize,
+      totalCount: allCount,
+      items: allMapsBlogs,
+    };
+  }
 }

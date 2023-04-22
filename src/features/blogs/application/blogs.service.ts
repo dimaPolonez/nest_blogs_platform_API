@@ -53,22 +53,6 @@ export class BlogsService {
   async deleteAllBlogs() {
     await this.blogRepository.deleteAllBlogs();
   }
-  async createPostOfBlog(
-    postDTO: CreatePostOfBlogAllType,
-  ): Promise<GetPostOfBlogType> {
-    const blogName: string = await this.findBlogName(postDTO.blogId);
-
-    if (!blogName) {
-      throw new NotFoundException('blog not found');
-    }
-
-    const newPostDTO: CreatePostOfBlogAllType = {
-      ...postDTO,
-      blogName: blogName,
-    };
-
-    return await this.postsService.createPostOfBlog(newPostDTO);
-  }
 
   async getAllPostsOfBlog(
     userID: string,

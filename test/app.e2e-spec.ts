@@ -15,7 +15,7 @@ export type TestObjectType = {
 describe('AppController (e2e)', () => {
   jest.setTimeout(30000);
   const testObject: TestObjectType = startFlow();
-  //blogFlow(testObject);
+  blogFlow(testObject);
   //postFlow(testObject);
   //commentFlow(testObject);
   //likeFlow(testObject);

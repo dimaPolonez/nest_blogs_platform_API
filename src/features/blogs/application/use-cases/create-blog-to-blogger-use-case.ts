@@ -6,7 +6,10 @@ import { CreateBlogType } from '../../core/models';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
 export class CreateBlogToBloggerCommand {
-  constructor(public readonly blogDTO: CreateBlogType) {}
+  constructor(
+    public readonly bloggerId: string,
+    public readonly blogDTO: CreateBlogType,
+  ) {}
 }
 
 @CommandHandler(CreateBlogToBloggerCommand)
@@ -20,9 +23,12 @@ export class CreateBlogToBloggerUseCase
   ) {}
 
   async execute(command: CreateBlogToBloggerCommand): Promise<string> {
-    const { blogDTO } = command;
+    const { bloggerId, blogDTO } = command;
 
-    const createBlogSmart: BlogModelType = await new this.BlogModel(blogDTO);
+    const createBlogSmart: BlogModelType = new this.BlogModel({
+      ...blogDTO,
+      bloggerId: bloggerId,
+    });
 
     await this.blogRepository.save(createBlogSmart);
 

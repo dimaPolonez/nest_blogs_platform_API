@@ -30,4 +30,8 @@ export class AgregateRepository {
     @InjectModel(UserModel.name)
     protected readonly UserModel: Model<UserModelType>,
   ) {}
+
+  async findBlogById(blogID: string): Promise<BlogModelType | null> {
+    return this.BlogModel.findById({ _id: blogID });
+  }
 }

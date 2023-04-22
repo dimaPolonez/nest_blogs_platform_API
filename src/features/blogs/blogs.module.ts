@@ -13,6 +13,7 @@ import {
 import { findBlog } from '../../validation';
 import { JwtService } from '@nestjs/jwt';
 import { UsersModule } from '../users/users.module';
+import { AgregateModule } from '../../agregate/agregate.module';
 
 const strategies = [BasicStrategy, JwtService, QuestJwtAccessStrategy];
 @Module({
@@ -22,6 +23,7 @@ const strategies = [BasicStrategy, JwtService, QuestJwtAccessStrategy];
     ]),
     forwardRef(() => PostsModule),
     UsersModule,
+    AgregateModule,
   ],
   controllers: [BlogsController],
   providers: [
@@ -29,7 +31,6 @@ const strategies = [BasicStrategy, JwtService, QuestJwtAccessStrategy];
     BlogsRepository,
     BlogsQueryRepository,
     ...strategies,
-    JwtService,
     findBlog,
   ],
   exports: [BlogsService],

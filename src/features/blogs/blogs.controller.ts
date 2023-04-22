@@ -31,19 +31,15 @@ import {
   GetBlogType,
   GetPostOfBlogType,
 } from './core/models';
+import { PostsQueryRepository } from '../posts/repository/posts.query-repository';
 
 @Controller('blogs')
 export class BlogsController {
   constructor(
-    protected blogService: BlogsService,
+    protected postQueryRepository: PostsQueryRepository,
     protected blogQueryRepository: BlogsQueryRepository,
   ) {}
 
-  @Get(':id')
-  @HttpCode(HttpStatus.OK)
-  async getOneBlog(@Param('id') blogID: string): Promise<GetBlogType> {
-    return await this.blogQueryRepository.findBlogById(blogID);
-  }
   @Get()
   @HttpCode(HttpStatus.OK)
   async getAllBlogs(
@@ -52,18 +48,6 @@ export class BlogsController {
     return await this.blogQueryRepository.getAllBlogs(queryAll);
   }
 
-  @UseGuards(BasicAuthGuard)
-  @Post(':id/posts')
-  @HttpCode(HttpStatus.CREATED)
-  async createPostOfBlog(
-    @Param('id') blogID: string,
-    @Body() postDTO: CreatePostOfBlogDto,
-  ): Promise<GetPostOfBlogType> {
-    return await this.blogService.createPostOfBlog({
-      ...postDTO,
-      blogId: blogID,
-    });
-  }
   @UseGuards(QuestJwtAccessGuard)
   @Get(':id/posts')
   @HttpCode(HttpStatus.OK)
@@ -72,10 +56,16 @@ export class BlogsController {
     @Param('id') blogID: string,
     @Query() queryAll: QueryPostOfBlogDto,
   ): Promise<GetAllPostsOfBlogType> {
-    return await this.blogService.getAllPostsOfBlog(
+    return await this.postQueryRepository.getAllPosts(
       req.user.userID,
-      blogID,
       queryAll,
+      blogID,
     );
+  }
+
+  @Get(':id')
+  @HttpCode(HttpStatus.OK)
+  async getOneBlog(@Param('id') blogID: string): Promise<GetBlogType> {
+    return await this.blogQueryRepository.findBlogById(blogID);
   }
 }
