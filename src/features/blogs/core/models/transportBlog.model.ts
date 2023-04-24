@@ -10,6 +10,12 @@ export type CreatePostOfBlogType = {
   content: string;
 };
 
+export type UpdatePostOfBlogType = {
+  title: string;
+  shortDescription: string;
+  content: string;
+};
+
 export type CreatePostOfBlogAllType = {
   title: string;
   shortDescription: string;

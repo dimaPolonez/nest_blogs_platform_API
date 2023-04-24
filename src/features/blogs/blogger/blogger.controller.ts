@@ -33,6 +33,9 @@ import { UpdateBlogToBloggerCommand } from '../application/use-cases/update-blog
 import { DeleteBlogToBloggerCommand } from '../application/use-cases/delete-blog-to-blogger-use-case';
 import { CreatePostOfBlogToBloggerCommand } from '../../posts/application/use-cases/create-post-of-blog-use-case';
 import { PostsQueryRepository } from '../../posts/repository/posts.query-repository';
+import { UpdatePostOfBlogDto } from '../core/dto/updatePostOfBlog.dto';
+import { UpdatePostOfBlogToBloggerCommand } from '../../posts/application/use-cases/update-post-of-blog-use-case';
+import { DeletePostOfBlogToBloggerCommand } from '../../posts/application/use-cases/delete-post-of-blog-use-case';
 
 @Controller('blogger')
 export class BloggerController {
@@ -140,15 +143,38 @@ export class BloggerController {
   async updatePostOfBlog(
     @Param('idBlog') blogID: string,
     @Param('idPost') postID: string,
-    @Body() postDTO: CreatePostOfBlogDto,
+    @Body() postDTO: UpdatePostOfBlogDto,
     @Request() req,
   ) {
     try {
-      const newPostOfBlogID: string = await this.commandBus.execute(
-        new CreatePostOfBlogToBloggerCommand(req.user.userID, blogID, postDTO),
+      await this.commandBus.execute(
+        new UpdatePostOfBlogToBloggerCommand(
+          req.user.userID,
+          blogID,
+          postID,
+          postDTO,
+        ),
       );
+    } catch (err) {
+      throw new HttpException(
+        { message: err.message },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
 
-      return await this.postQueryRepository.findPostById(newPostOfBlogID);
+  @UseGuards(JwtAccessGuard)
+  @Post(':idBlog/posts/:idPost')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async deletePostOfBlog(
+    @Param('idBlog') blogID: string,
+    @Param('idPost') postID: string,
+    @Request() req,
+  ) {
+    try {
+      await this.commandBus.execute(
+        new DeletePostOfBlogToBloggerCommand(req.user.userID, blogID, postID),
+      );
     } catch (err) {
       throw new HttpException(
         { message: err.message },
