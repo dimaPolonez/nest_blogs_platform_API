@@ -14,34 +14,34 @@ import {
   Request,
   UseGuards,
 } from '@nestjs/common';
-import { BlogsQueryRepository } from '../../public/blogs/repository/blogs.query-repository';
 import { JwtAccessGuard } from '../../guards-handlers/guard';
 import {
   CreateBlogDto,
   CreatePostOfBlogDto,
   QueryBlogsDto,
   UpdateBlogDto,
+  UpdatePostOfBlogDto,
 } from '../../core/dto/blogs';
 import {
   GetAllBlogsType,
   GetBlogType,
   GetPostOfBlogType,
 } from '../../core/models';
-import { CreateBlogToBloggerCommand } from './use-cases/create-blog-to-blogger-use-case';
-import { UpdateBlogToBloggerCommand } from './use-cases/update-blog-to-blogger-use-case';
-import { DeleteBlogToBloggerCommand } from './use-cases/delete-blog-to-blogger-use-case';
-import { CreatePostOfBlogToBloggerCommand } from './use-cases/create-post-of-blog-use-case';
-import { PostsQueryRepository } from '../../public/posts/repository/posts.query-repository';
-import { UpdatePostOfBlogDto } from '../../core/dto/blogs/updatePostOfBlog.dto';
-import { UpdatePostOfBlogToBloggerCommand } from './use-cases/update-post-of-blog-use-case';
-import { DeletePostOfBlogToBloggerCommand } from './use-cases/delete-post-of-blog-use-case';
+import { BloggerQueryRepository } from './repository/blogger.query-repository';
+import {
+  CreateBlogToBloggerCommand,
+  CreatePostOfBlogToBloggerCommand,
+  DeleteBlogToBloggerCommand,
+  DeletePostOfBlogToBloggerCommand,
+  UpdateBlogToBloggerCommand,
+  UpdatePostOfBlogToBloggerCommand,
+} from './use-cases';
 
 @Controller('blogger')
 export class BloggerController {
   constructor(
     protected commandBus: CommandBus,
-    protected blogQueryRepository: BlogsQueryRepository,
-    protected postQueryRepository: PostsQueryRepository,
+    protected bloggerQueryRepository: BloggerQueryRepository,
   ) {}
 
   @UseGuards(JwtAccessGuard)
@@ -54,7 +54,7 @@ export class BloggerController {
     const newBlogID: string = await this.commandBus.execute(
       new CreateBlogToBloggerCommand(req.user.userID, blogDTO),
     );
-    return await this.blogQueryRepository.findBlogById(newBlogID);
+    return await this.bloggerQueryRepository.findBlogById(newBlogID);
   }
 
   @UseGuards(JwtAccessGuard)
@@ -85,7 +85,7 @@ export class BloggerController {
     @Query() queryAll: QueryBlogsDto,
     @Request() req,
   ): Promise<GetAllBlogsType> {
-    return await this.blogQueryRepository.getAllBlogsToBlogger(
+    return await this.bloggerQueryRepository.getAllBlogsToBlogger(
       req.user.userID,
       queryAll,
     );
@@ -103,7 +103,7 @@ export class BloggerController {
       new CreatePostOfBlogToBloggerCommand(req.user.userID, blogID, postDTO),
     );
 
-    return await this.postQueryRepository.findPostById(newPostOfBlogID);
+    return await this.bloggerQueryRepository.findPostById(newPostOfBlogID);
   }
 
   @UseGuards(JwtAccessGuard)

@@ -23,6 +23,8 @@ import {
   UpdateBlogToBloggerUseCase,
   UpdatePostOfBlogToBloggerUseCase,
 } from './use-cases';
+import { BloggerRepository } from './repository/blogger.repository';
+import { BloggerQueryRepository } from './repository/blogger.query-repository';
 
 const strategies = [BasicStrategy, JwtService, QuestJwtAccessStrategy];
 const useCases = [
@@ -43,6 +45,12 @@ const useCases = [
     UsersModule,
   ],
   controllers: [BloggerController],
-  providers: [...useCases, ...strategies, findBlog],
+  providers: [
+    BloggerRepository,
+    BloggerQueryRepository,
+    ...useCases,
+    ...strategies,
+    findBlog,
+  ],
 })
 export class BloggerModule {}

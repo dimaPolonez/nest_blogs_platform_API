@@ -1,7 +1,7 @@
 import { ForbiddenException, NotFoundException } from '@nestjs/common';
-import { BlogsRepository } from '../../../public/blogs/repository/blogs.repository';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { BlogModelType } from '../../../core/entity/blogs.entity';
+import { BloggerRepository } from '../repository/blogger.repository';
+import { BlogModelType } from '../../../core/entity';
 
 export class DeleteBlogToBloggerCommand {
   constructor(
@@ -14,13 +14,13 @@ export class DeleteBlogToBloggerCommand {
 export class DeleteBlogToBloggerUseCase
   implements ICommandHandler<DeleteBlogToBloggerCommand>
 {
-  constructor(protected blogRepository: BlogsRepository) {}
+  constructor(protected bloggerRepository: BloggerRepository) {}
 
   async execute(command: DeleteBlogToBloggerCommand) {
     const { bloggerId, blogID } = command;
 
     const findBlog: BlogModelType | null =
-      await this.blogRepository.findBlogById(blogID);
+      await this.bloggerRepository.findBlogById(blogID);
 
     if (!findBlog) {
       throw new NotFoundException('blog not found');
@@ -30,6 +30,6 @@ export class DeleteBlogToBloggerUseCase
       throw new ForbiddenException('The user is not the owner of the blog');
     }
 
-    await this.blogRepository.deleteBlog(blogID);
+    await this.bloggerRepository.deleteBlog(blogID);
   }
 }

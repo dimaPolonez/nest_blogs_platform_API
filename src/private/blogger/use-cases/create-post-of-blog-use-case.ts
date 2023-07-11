@@ -1,12 +1,10 @@
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { BlogModelType } from '../../../core/entity/blogs.entity';
 import { CreatePostOfBlogType } from '../../../core/models';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { AgregateRepository } from '../../../public/agregate/agregate.repository';
 import { ForbiddenException, NotFoundException } from '@nestjs/common';
-import { PostModel, PostModelType } from '../../../core/entity/posts.entity';
-import { PostsRepository } from '../../../public/posts/repository/posts.repository';
+import { BloggerRepository } from '../repository/blogger.repository';
+import { BlogModelType, PostModel, PostModelType } from 'src/core/entity';
 
 export class CreatePostOfBlogToBloggerCommand {
   constructor(
@@ -21,8 +19,7 @@ export class CreatePostOfBlogToBloggerUseCase
   implements ICommandHandler<CreatePostOfBlogToBloggerCommand>
 {
   constructor(
-    protected agregateRepository: AgregateRepository,
-    protected postRepository: PostsRepository,
+    protected bloggerRepository: BloggerRepository,
     @InjectModel(PostModel.name)
     private readonly PostModel: Model<PostModelType>,
   ) {}
@@ -31,7 +28,7 @@ export class CreatePostOfBlogToBloggerUseCase
     const { bloggerId, blogID, postDTO } = command;
 
     const findBlog: BlogModelType | null =
-      await this.agregateRepository.findBlogById(blogID);
+      await this.bloggerRepository.findBlogById(blogID);
 
     if (!findBlog) {
       throw new NotFoundException('blog not found');
@@ -46,7 +43,7 @@ export class CreatePostOfBlogToBloggerUseCase
       blogName: findBlog.name,
     });
 
-    await this.postRepository.save(createPostSmart);
+    await this.bloggerRepository.save(createPostSmart);
 
     return createPostSmart.id;
   }

@@ -1,9 +1,9 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { BlogsRepository } from '../../../public/blogs/repository/blogs.repository';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { BlogModel, BlogModelType } from '../../../core/entity/blogs.entity';
 import { CreateBlogType } from '../../../core/models';
+import { BlogModel, BlogModelType } from 'src/core/entity';
+import { BloggerRepository } from '../repository/blogger.repository';
 
 export class CreateBlogToBloggerCommand {
   constructor(
@@ -17,7 +17,7 @@ export class CreateBlogToBloggerUseCase
   implements ICommandHandler<CreateBlogToBloggerCommand>
 {
   constructor(
-    protected readonly blogRepository: BlogsRepository,
+    protected readonly bloggerRepository: BloggerRepository,
     @InjectModel(BlogModel.name)
     protected readonly BlogModel: Model<BlogModelType>,
   ) {}
@@ -30,7 +30,7 @@ export class CreateBlogToBloggerUseCase
       bloggerId: bloggerId,
     });
 
-    await this.blogRepository.save(createBlogSmart);
+    await this.bloggerRepository.save(createBlogSmart);
 
     return createBlogSmart.id;
   }

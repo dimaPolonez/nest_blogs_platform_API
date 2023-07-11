@@ -1,12 +1,9 @@
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { BlogModelType } from '../../../core/entity/blogs.entity';
-import { UpdatePostOfBlogType } from '../../../core/models';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { AgregateRepository } from '../../../public/agregate/agregate.repository';
 import { ForbiddenException, NotFoundException } from '@nestjs/common';
-import { PostModel, PostModelType } from '../../../core/entity/posts.entity';
-import { PostsRepository } from '../../../public/posts/repository/posts.repository';
+import { BloggerRepository } from '../repository/blogger.repository';
+import { BlogModelType, PostModel, PostModelType } from 'src/core/entity';
 
 export class DeletePostOfBlogToBloggerCommand {
   constructor(
@@ -21,8 +18,7 @@ export class DeletePostOfBlogToBloggerUseCase
   implements ICommandHandler<DeletePostOfBlogToBloggerCommand>
 {
   constructor(
-    protected agregateRepository: AgregateRepository,
-    protected postRepository: PostsRepository,
+    protected bloggerRepository: BloggerRepository,
     @InjectModel(PostModel.name)
     private readonly PostModel: Model<PostModelType>,
   ) {}
@@ -31,7 +27,7 @@ export class DeletePostOfBlogToBloggerUseCase
     const { bloggerId, blogID, postID } = command;
 
     const findBlog: BlogModelType | null =
-      await this.agregateRepository.findBlogById(blogID);
+      await this.bloggerRepository.findBlogById(blogID);
 
     if (!findBlog) {
       throw new NotFoundException('blog not found');
@@ -42,12 +38,12 @@ export class DeletePostOfBlogToBloggerUseCase
     }
 
     const findPost: PostModelType | null =
-      await this.postRepository.findPostById(postID);
+      await this.bloggerRepository.findPostById(postID);
 
     if (!findPost) {
       throw new NotFoundException('post not found');
     }
 
-    await this.postRepository.deletePost(postID);
+    await this.bloggerRepository.deletePost(postID);
   }
 }

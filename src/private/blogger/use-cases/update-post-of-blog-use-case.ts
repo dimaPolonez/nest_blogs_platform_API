@@ -1,12 +1,10 @@
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { BlogModelType } from '../../../core/entity/blogs.entity';
 import { UpdatePostOfBlogType } from '../../../core/models';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { AgregateRepository } from '../../../public/agregate/agregate.repository';
 import { ForbiddenException, NotFoundException } from '@nestjs/common';
-import { PostModel, PostModelType } from '../../../core/entity/posts.entity';
-import { PostsRepository } from '../../../public/posts/repository/posts.repository';
+import { BloggerRepository } from '../repository/blogger.repository';
+import { BlogModelType, PostModel, PostModelType } from 'src/core/entity';
 
 export class UpdatePostOfBlogToBloggerCommand {
   constructor(
@@ -22,8 +20,7 @@ export class UpdatePostOfBlogToBloggerUseCase
   implements ICommandHandler<UpdatePostOfBlogToBloggerCommand>
 {
   constructor(
-    protected agregateRepository: AgregateRepository,
-    protected postRepository: PostsRepository,
+    protected bloggerRepository: BloggerRepository,
     @InjectModel(PostModel.name)
     private readonly PostModel: Model<PostModelType>,
   ) {}
@@ -32,7 +29,7 @@ export class UpdatePostOfBlogToBloggerUseCase
     const { bloggerId, blogID, postID, postDTO } = command;
 
     const findBlog: BlogModelType | null =
-      await this.agregateRepository.findBlogById(blogID);
+      await this.bloggerRepository.findBlogById(blogID);
 
     if (!findBlog) {
       throw new NotFoundException('blog not found');
@@ -43,7 +40,7 @@ export class UpdatePostOfBlogToBloggerUseCase
     }
 
     const findPost: PostModelType | null =
-      await this.postRepository.findPostById(postID);
+      await this.bloggerRepository.findPostById(postID);
 
     if (!findPost) {
       throw new NotFoundException('post not found');
@@ -53,6 +50,6 @@ export class UpdatePostOfBlogToBloggerUseCase
 
     await findPost.updatePost(newPostDTO);
 
-    await this.postRepository.save(findPost);
+    await this.bloggerRepository.save(findPost);
   }
 }

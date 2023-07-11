@@ -1,4 +1,4 @@
-export enum MyLikeStatus {
+enum MyLikeStatus {
   None = 'None',
   Like = 'Like',
   Dislike = 'Dislike',
@@ -15,7 +15,7 @@ type CommentatorInfoType = {
   userLogin: string;
 };
 
-export type NewestLikesType = {
+type NewestLikesType = {
   userId: string;
   login: string;
   myStatus: MyLikeStatus;

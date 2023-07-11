@@ -29,6 +29,25 @@ export type GetPostType = {
   extendedLikesInfo: ExtendedLikesType;
 };
 
+export type GetPostOfBlogType = {
+  id: string;
+  title: string;
+  shortDescription: string;
+  content: string;
+  blogId: string;
+  blogName: string;
+  createdAt: string;
+  extendedLikesInfo: ExtendedLikesType;
+};
+
+export type GetAllPostsOfBlogType = {
+  pagesCount: number;
+  page: number;
+  pageSize: number;
+  totalCount: number;
+  items: GetPostOfBlogType[];
+};
+
 export type GetAllPostsType = {
   pagesCount: number;
   page: number;

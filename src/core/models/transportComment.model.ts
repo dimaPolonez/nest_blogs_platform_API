@@ -1,6 +1,6 @@
-import { MyLikeStatus } from './getComment.model';
+import { MyLikeStatus } from './getPost.model';
 
-export type CreateCommentOfPostType = {
+type CreateCommentOfPostType = {
   content: string;
   commentatorInfo: {
     userId: string;
@@ -13,7 +13,7 @@ export type UpdateCommentType = {
   content: string;
 };
 
-export type QueryCommentType = {
+type QueryCommentType = {
   sortBy: string;
   sortDirection: string;
   pageNumber: number;
