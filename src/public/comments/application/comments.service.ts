@@ -1,36 +1,27 @@
 import { CommentsRepository } from '../repository/comments.repository';
 import {
-  CommentModel,
-  CommentModelType,
-} from '../../../core/entity/comments.entity';
-import {
   ForbiddenException,
-  forwardRef,
-  Inject,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { PostsService } from '../../posts/application/posts.service';
 import { CommentsQueryRepository } from '../repository/comments.query-repository';
+import { CommentModel, CommentModelType } from 'src/core/entity';
 import {
   CreateCommentOfPostType,
   GetAllCommentsType,
-  GetCommentType,
   MyLikeStatus,
   NewestLikesType,
   QueryCommentType,
   UpdateCommentType,
-} from '../core/models';
+} from '../../../core/models';
 
 @Injectable()
 export class CommentsService {
   constructor(
     protected commentRepository: CommentsRepository,
     protected commentQueryRepository: CommentsQueryRepository,
-    @Inject(forwardRef(() => PostsService))
-    protected postsService: PostsService,
     @InjectModel(CommentModel.name)
     private readonly CommentModel: Model<CommentModelType>,
   ) {}

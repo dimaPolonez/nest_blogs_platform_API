@@ -6,34 +6,26 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { PostModel, PostModelType } from '../../../core/entity/posts.entity';
 import { PostsRepository } from '../repository/posts.repository';
 import { PostsQueryRepository } from '../repository/posts.query-repository';
-import { BlogsService } from '../../blogs/application/blogs.service';
 import { CommentsService } from '../../comments/application/comments.service';
+import { UsersService } from '../../users/application/users.service';
 import {
   CreateCommentOfPostType,
-  CreatePostType,
   GetAllCommentsOfPostType,
-  GetAllPostsType,
   GetCommentOfPostType,
-  GetPostType,
   MyLikeStatus,
   NewCommentObjectType,
   NewestLikesType,
   QueryCommentType,
-  QueryPostType,
-  UpdatePostType,
-} from '../core/models';
-import { UsersService } from '../../users/application/users.service';
+} from '../../../core/models';
+import { PostModel, PostModelType } from 'src/core/entity';
 
 @Injectable()
 export class PostsService {
   constructor(
     protected postRepository: PostsRepository,
     protected postQueryRepository: PostsQueryRepository,
-    @Inject(forwardRef(() => BlogsService))
-    protected blogService: BlogsService,
     @Inject(forwardRef(() => CommentsService))
     protected commentsService: CommentsService,
     @Inject(forwardRef(() => UsersService))
@@ -72,63 +64,8 @@ export class PostsService {
     }
   }
 
-  async createPost(postDTO: CreatePostType): Promise<string> {
-    const findBlogName: string = await this.blogService.findBlogName(
-      postDTO.blogId,
-    );
-
-    const newPostDTO = { ...postDTO, blogName: findBlogName };
-
-    const createPostSmart = await new this.PostModel(newPostDTO);
-
-    await this.postRepository.save(createPostSmart);
-
-    return createPostSmart.id;
-  }
-
-  async updatePost(postID: string, postDTO: UpdatePostType) {
-    const findPost: PostModelType | null =
-      await this.postRepository.findPostById(postID);
-
-    if (!findPost) {
-      throw new NotFoundException('post not found');
-    }
-
-    const findBlogName: string = await this.blogService.findBlogName(
-      postDTO.blogId,
-    );
-
-    const newPostDTO = { ...postDTO, blogName: findBlogName };
-
-    await findPost.updatePost(newPostDTO);
-
-    await this.postRepository.save(findPost);
-  }
-
-  async deletePost(postID: string) {
-    const findPost: PostModelType = await this.postRepository.findPostById(
-      postID,
-    );
-
-    if (!findPost) {
-      throw new NotFoundException('post not found');
-    }
-
-    await this.postRepository.deletePost(postID);
-  }
-
   async deleteAllPosts() {
     await this.postRepository.deleteAllPosts();
-  }
-
-  async createPostOfBlog(newPostDTO: CreatePostType): Promise<GetPostType> {
-    const createPostSmart: PostModelType | null = await new this.PostModel(
-      newPostDTO,
-    );
-
-    await this.postRepository.save(createPostSmart);
-
-    return await this.postQueryRepository.findPostById(createPostSmart.id);
   }
 
   async updateLikeStatusPost(

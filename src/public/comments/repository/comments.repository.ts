@@ -1,11 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import {
-  CommentModel,
-  CommentModelType,
-} from '../../../core/entity/comments.entity';
-import { MyLikeStatus } from '../core/models';
+import { CommentModel, CommentModelType } from 'src/core/entity';
 
 @Injectable()
 export class CommentsRepository {
@@ -16,21 +12,6 @@ export class CommentsRepository {
 
   async findCommentById(commentID: string): Promise<CommentModelType | null> {
     return this.CommentModel.findById({ _id: commentID });
-  }
-
-  async updateStatusLikeComment(
-    commentID: string,
-    userID: string,
-    likeStatus: MyLikeStatus,
-  ) {
-    await this.CommentModel.updateOne(
-      { 'commentID.likesInfo.newestLikes.userId': userID },
-      {
-        $set: {
-          'commentID.likesInfo.newestLikes.$.myStatus': likeStatus,
-        },
-      },
-    );
   }
 
   async deleteComment(commentID: string) {

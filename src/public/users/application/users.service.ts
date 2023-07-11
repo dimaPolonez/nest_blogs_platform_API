@@ -1,17 +1,13 @@
 import { UsersRepository } from '../repository/users.repository';
-import { UserModel, UserModelType } from '../../../core/entity/users.entity';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import {
-  ForbiddenException,
-  NotFoundException,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { ForbiddenException, NotFoundException } from '@nestjs/common';
 import {
   ActiveCodeAdapter,
   BcryptAdapter,
   MailerAdapter,
 } from '../../../adapters';
+import { UserModel, UserModelType } from 'src/core/entity';
 import {
   AboutMeType,
   ConfirmUserType,
@@ -22,8 +18,7 @@ import {
   SessionUserDTOType,
   SessionUserType,
   SessionUserUpdateDTOType,
-} from '../core/models';
-import { isAfter } from 'date-fns';
+} from '../../../core/models';
 
 export class UsersService {
   constructor(

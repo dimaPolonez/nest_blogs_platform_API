@@ -1,17 +1,14 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import {
-  CommentModel,
-  CommentModelType,
-} from '../../../core/entity/comments.entity';
+import { CommentModel, CommentModelType } from 'src/core/entity';
 import {
   GetAllCommentsType,
   GetCommentType,
   MyLikeStatus,
   NewestLikesType,
   QueryCommentType,
-} from '../core/models';
+} from '../../../core/models';
 
 @Injectable()
 export class CommentsQueryRepository {

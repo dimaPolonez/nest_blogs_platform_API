@@ -1,11 +1,9 @@
-import { forwardRef, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { PostModel, PostModelSchema } from '../../core/entity/posts.entity';
 import { PostsController } from './posts.controller';
 import { PostsService } from './application/posts.service';
 import { PostsRepository } from './repository/posts.repository';
 import { PostsQueryRepository } from './repository/posts.query-repository';
-import { BlogsModule } from '../blogs/blogs.module';
 import { CommentsModule } from '../comments/comments.module';
 import {
   BasicStrategy,
@@ -14,11 +12,7 @@ import {
 } from '../../guards-handlers/strategies';
 import { UsersModule } from '../users/users.module';
 import { findBlog } from '../../validation';
-import { AgregateModule } from '../agregate/agregate.module';
-import { CreateBlogToBloggerUseCase } from '../../private/blogger/use-cases/create-blog-to-blogger-use-case';
-import { UpdateBlogToBloggerUseCase } from '../../private/blogger/use-cases/update-blog-to-blogger-use-case';
-import { DeleteBlogToBloggerUseCase } from '../../private/blogger/use-cases/delete-blog-to-blogger-use-case';
-import { CreatePostOfBlogToBloggerUseCase } from '../../private/blogger/use-cases/create-post-of-blog-use-case';
+import { PostModel, PostModelSchema } from '../../core/entity';
 
 const useCases = [];
 
@@ -27,9 +21,8 @@ const useCases = [];
     MongooseModule.forFeature([
       { name: PostModel.name, schema: PostModelSchema },
     ]),
-    forwardRef(() => BlogsModule),
-    forwardRef(() => CommentsModule),
-    forwardRef(() => UsersModule),
+    CommentsModule,
+    UsersModule,
   ],
   controllers: [PostsController],
   providers: [

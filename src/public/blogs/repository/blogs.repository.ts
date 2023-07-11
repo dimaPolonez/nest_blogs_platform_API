@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { BlogModel, BlogModelType } from '../../../core/entity/blogs.entity';
+import { BlogModel, BlogModelType } from 'src/core/entity';
 
 @Injectable()
 export class BlogsRepository {
@@ -12,10 +12,6 @@ export class BlogsRepository {
 
   async findBlogById(blogID: string): Promise<BlogModelType | null> {
     return this.BlogModel.findById({ _id: blogID });
-  }
-
-  async deleteBlog(blogID: string) {
-    await this.BlogModel.deleteOne({ _id: blogID });
   }
 
   async deleteAllBlogs() {

@@ -17,7 +17,7 @@ import {
   EmailRecPassDto,
   NewPassDto,
   EmailResendDto,
-} from './dto';
+} from '../core/dto/auth';
 import {
   JwtAccessGuard,
   JwtRefreshGuard,

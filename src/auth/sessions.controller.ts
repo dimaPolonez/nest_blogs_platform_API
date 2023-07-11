@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { JwtRefreshGuard } from '../guards-handlers/guard';
 import { AuthService } from './application/auth.service';
-import { GetSessionUserType } from '../public/users/core/models';
+import { GetSessionUserType } from '../core/models';
 
 @Controller('security')
 export class SessionsController {

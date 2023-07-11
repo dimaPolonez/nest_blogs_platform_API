@@ -12,13 +12,15 @@ import {
 } from '@nestjs/common';
 import { CommentsService } from './application/comments.service';
 import { CommentsQueryRepository } from './repository/comments.query-repository';
-import { UpdateCommentDto } from '../../core/dto/comments';
+import {
+  UpdateCommentDto,
+  UpdateLikeStatusCommentDto,
+} from '../../core/dto/comments';
 import {
   JwtAccessGuard,
   QuestJwtAccessGuard,
 } from '../../guards-handlers/guard';
-import { GetCommentType } from './core/models';
-import { UpdateLikeStatusCommentDto } from '../../core/dto/comments/updateLikeStatusComment.dto';
+import { GetCommentType } from '../../core/models';
 
 @Controller('comments')
 export class CommentsController {

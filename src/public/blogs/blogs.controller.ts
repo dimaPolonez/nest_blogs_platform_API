@@ -1,35 +1,20 @@
 import {
-  Body,
   Controller,
-  Delete,
   Get,
   HttpCode,
   HttpStatus,
   Param,
-  Post,
-  Put,
   Query,
   Request,
   UseGuards,
 } from '@nestjs/common';
-import { BlogsService } from './application/blogs.service';
 import { BlogsQueryRepository } from './repository/blogs.query-repository';
-import {
-  CreateBlogDto,
-  CreatePostOfBlogDto,
-  QueryBlogsDto,
-  UpdateBlogDto,
-  QueryPostOfBlogDto,
-} from '../../core/dto/blogs';
-import {
-  BasicAuthGuard,
-  QuestJwtAccessGuard,
-} from '../../guards-handlers/guard';
+import { QueryBlogsDto, QueryPostOfBlogDto } from '../../core/dto/blogs';
+import { QuestJwtAccessGuard } from '../../guards-handlers/guard';
 import {
   GetAllBlogsType,
   GetAllPostsOfBlogType,
   GetBlogType,
-  GetPostOfBlogType,
 } from '../../core/models';
 import { PostsQueryRepository } from '../posts/repository/posts.query-repository';
 

@@ -14,7 +14,7 @@ import { UsersService } from './application/users.service';
 import { UsersQueryRepository } from './repository/users.query-repository';
 import { CreateUserDto, QueryUserDto } from '../../core/dto/users';
 import { BasicAuthGuard } from '../../guards-handlers/guard';
-import { GetAllUsersType, GetUserType } from './core/models';
+import { GetAllUsersType, GetUserType } from '../../core/models';
 
 @Controller('users')
 export class UsersController {

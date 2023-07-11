@@ -1,6 +1,6 @@
 import { IsNotEmpty, Matches, Validate } from 'class-validator';
-import { CheckedEmailToBase, trimDecorator } from '../../validation';
-import { EmailResendType } from '../models';
+import { CheckedEmailToBase, trimDecorator } from '../../../validation';
+import { EmailResendType } from '../../../auth/models';
 
 export class EmailResendDto implements EmailResendType {
   @Validate(CheckedEmailToBase)

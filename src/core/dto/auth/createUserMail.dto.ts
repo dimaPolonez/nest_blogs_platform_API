@@ -3,8 +3,8 @@ import {
   trimDecorator,
   CheckedUniqueEmail,
   CheckedUniqueLogin,
-} from '../../validation';
-import { CreateUserMailType } from '../models';
+} from '../../../validation';
+import { CreateUserMailType } from '../../../auth/models';
 
 export class CreateUserMailDto implements CreateUserMailType {
   @Validate(CheckedUniqueLogin)

@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { UserModel, UserModelSchema } from '../../core/entity/users.entity';
 import { UsersController } from './users.controller';
 import { UsersService } from './application/users.service';
 import { UsersRepository } from './repository/users.repository';
@@ -11,6 +10,7 @@ import {
   BcryptAdapter,
   MailerAdapter,
 } from '../../adapters';
+import { UserModel, UserModelSchema } from '../../core/entity';
 
 @Module({
   imports: [

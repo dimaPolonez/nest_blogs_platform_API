@@ -1,7 +1,6 @@
 import {
   Body,
   Controller,
-  Delete,
   Get,
   HttpCode,
   HttpStatus,
@@ -17,13 +16,11 @@ import { PostsService } from './application/posts.service';
 import { PostsQueryRepository } from './repository/posts.query-repository';
 import {
   CreateCommentOfPostDto,
-  CreatePostDto,
   QueryPostDto,
-  UpdatePostDto,
   QueryCommentDto,
+  UpdateLikeStatusPostDto,
 } from '../../core/dto/posts';
 import {
-  BasicAuthGuard,
   JwtAccessGuard,
   QuestJwtAccessGuard,
 } from '../../guards-handlers/guard';
@@ -32,8 +29,7 @@ import {
   GetAllPostsType,
   GetCommentOfPostType,
   GetPostType,
-} from './core/models';
-import { UpdateLikeStatusPostDto } from '../../core/dto/posts/updateLikeStatusPost.dto';
+} from '../../core/models';
 
 @Controller('posts')
 export class PostsController {
@@ -41,32 +37,6 @@ export class PostsController {
     protected postService: PostsService,
     protected postQueryRepository: PostsQueryRepository,
   ) {}
-
-  @UseGuards(BasicAuthGuard)
-  @Post()
-  @HttpCode(HttpStatus.CREATED)
-  async createPost(@Body() postDTO: CreatePostDto): Promise<GetPostType> {
-    const newPostID: string = await this.postService.createPost(postDTO);
-
-    return await this.postQueryRepository.findPostById(newPostID);
-  }
-
-  @UseGuards(BasicAuthGuard)
-  @Put(':id')
-  @HttpCode(HttpStatus.NO_CONTENT)
-  async updatePost(
-    @Param('id') postID: string,
-    @Body() postDTO: UpdatePostDto,
-  ) {
-    await this.postService.updatePost(postID, postDTO);
-  }
-
-  @UseGuards(BasicAuthGuard)
-  @Delete(':id')
-  @HttpCode(HttpStatus.NO_CONTENT)
-  async deletePost(@Param('id') postID: string) {
-    await this.postService.deletePost(postID);
-  }
 
   @UseGuards(QuestJwtAccessGuard)
   @Get(':id')

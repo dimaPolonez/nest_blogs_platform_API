@@ -8,14 +8,14 @@ import { UsersModule } from './public/users/users.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
-import { AgregateModule } from './public/agregate/agregate.module';
+import { BloggerModule } from './private/blogger/blogger.module';
 
 @Module({
   imports: [
     CONFIG.START_MODULE,
     MongooseModule.forRoot(CONFIG.MONGO_DB),
     AuthModule,
-    AgregateModule,
+    BloggerModule,
     BlogsModule,
     PostsModule,
     CommentsModule,
