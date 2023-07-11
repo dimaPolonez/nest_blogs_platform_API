@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { UsersService } from '../../features/users/application/users.service';
+import { UsersService } from '../../public/users/application/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { add } from 'date-fns';
 import { CONFIG } from '../../config/config';
@@ -15,7 +15,7 @@ import {
 import {
   GetSessionUserType,
   SessionUserType,
-} from '../../features/users/core/models';
+} from '../../public/users/core/models';
 
 @Injectable()
 export class AuthService {

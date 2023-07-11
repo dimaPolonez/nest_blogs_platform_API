@@ -69,10 +69,24 @@ export function startFlow(): TestObjectType {
         });
     });
 
-    it('post new blog status 201 (POST /blogs)', () => {
+    it('post aut user and get tokens status 200 (POST /auth/login)', () => {
       return request(app.getHttpServer())
-        .post('/blogs')
-        .set('Authorization', `Basic ${testObject.basic}`)
+        .post('/auth/login')
+        .send({
+          loginOrEmail: 'Polonez',
+          password: 'pass1234',
+        })
+        .expect(200)
+        .expect((res) => {
+          testObject.accessToken = res.body['accessToken'];
+          testObject.refreshToken = res.headers['set-cookie'][0];
+        });
+    });
+
+    it('post new blog status 201 (POST /blogger/blogs)', () => {
+      return request(app.getHttpServer())
+        .post('/blogger/blogs')
+        .set('Authorization', `Bearer ${testObject.accessToken}`)
         .send({
           name: 'Test blog',
           description: 'My test blog',
@@ -120,19 +134,6 @@ export function startFlow(): TestObjectType {
               newestLikes: [],
             },
           });
-        });
-    });
-    it('post aut user and get tokens status 200 (POST /auth/login)', () => {
-      return request(app.getHttpServer())
-        .post('/auth/login')
-        .send({
-          loginOrEmail: 'Polonez',
-          password: 'pass1234',
-        })
-        .expect(200)
-        .expect((res) => {
-          testObject.accessToken = res.body['accessToken'];
-          testObject.refreshToken = res.headers['set-cookie'][0];
         });
     });
   });
