@@ -1,6 +1,6 @@
 import { Type } from 'class-transformer';
 import { Min } from 'class-validator';
-import { QueryUserType } from '../../../public/users/core/models';
+import { QueryUserType } from '../../models';
 
 export class QueryUserDto implements QueryUserType {
   readonly searchLoginTerm = '';

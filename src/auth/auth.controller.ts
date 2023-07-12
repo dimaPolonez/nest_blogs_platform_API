@@ -29,7 +29,7 @@ import {
   AuthObjectType,
   AuthObjectUpdateType,
   TokensObjectType,
-} from './models';
+} from '../core/models';
 import { ThrottlerGuard } from '@nestjs/throttler';
 
 @Controller('auth')

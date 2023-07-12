@@ -5,7 +5,6 @@ import {
   BasicStrategy,
   QuestJwtAccessStrategy,
 } from '../../guards-handlers/strategies';
-import { findBlog } from '../../validation';
 import { JwtService } from '@nestjs/jwt';
 import {
   BlogModel,
@@ -50,7 +49,6 @@ const useCases = [
     BloggerQueryRepository,
     ...useCases,
     ...strategies,
-    findBlog,
   ],
 })
 export class BloggerModule {}

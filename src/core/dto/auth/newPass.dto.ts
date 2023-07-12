@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsUUID, Length, Validate } from 'class-validator';
 import { CheckedConfirmCode, trimDecorator } from '../../../validation';
-import { NewPassType } from '../../../auth/models';
+import { NewPassType } from '../../models';
 
 export class NewPassDto implements NewPassType {
   @trimDecorator()

@@ -1,6 +1,6 @@
 import { IsNotEmpty, Matches, Validate } from 'class-validator';
-import { EmailRecPassType } from '../../../auth/models';
 import { CheckedEmailToBase, trimDecorator } from '../../../validation';
+import { EmailRecPassType } from '../../models';
 
 export class EmailRecPassDto implements EmailRecPassType {
   @Validate(CheckedEmailToBase)

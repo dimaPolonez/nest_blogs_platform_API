@@ -1,11 +1,7 @@
 import { HydratedDocument } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { isAfter } from 'date-fns';
-import {
-  ConfirmUserType,
-  SessionUserType,
-  SessionUserUpdateDTOType,
-} from '../../public/users/core/models';
+import { ConfirmUserType, SessionUserType } from '../models';
 
 export type UserModelType = HydratedDocument<UserModel>;
 

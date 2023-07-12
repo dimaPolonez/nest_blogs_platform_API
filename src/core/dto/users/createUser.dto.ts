@@ -1,6 +1,6 @@
 import { IsNotEmpty, Length, Matches } from 'class-validator';
 import { trimDecorator } from '../../../validation';
-import { CreateUserType } from '../../../public/users/core/models';
+import { CreateUserType } from '../../models';
 
 export class CreateUserDto implements CreateUserType {
   @trimDecorator()

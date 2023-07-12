@@ -1,6 +1,6 @@
 import { IsNotEmpty, Length } from 'class-validator';
 import { trimDecorator } from '../../../validation';
-import { CreateCommentOfPostType } from '../../../public/posts/core/models';
+import { CreateCommentOfPostType } from '../../models';
 
 export class CreateCommentOfPostDto implements CreateCommentOfPostType {
   @trimDecorator()

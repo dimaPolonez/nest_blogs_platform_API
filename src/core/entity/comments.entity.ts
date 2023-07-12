@@ -1,10 +1,6 @@
 import { HydratedDocument } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import {
-  MyLikeStatus,
-  NewestLikesType,
-  UpdateCommentType,
-} from '../../public/comments/core/models';
+import { MyLikeStatus, NewestLikesType, UpdateCommentType } from '../models';
 
 export type CommentModelType = HydratedDocument<CommentModel>;
 

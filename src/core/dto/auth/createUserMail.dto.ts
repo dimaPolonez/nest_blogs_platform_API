@@ -4,7 +4,7 @@ import {
   CheckedUniqueEmail,
   CheckedUniqueLogin,
 } from '../../../validation';
-import { CreateUserMailType } from '../../../auth/models';
+import { CreateUserMailType } from '../../models';
 
 export class CreateUserMailDto implements CreateUserMailType {
   @Validate(CheckedUniqueLogin)

@@ -1,6 +1,6 @@
 import { Type } from 'class-transformer';
 import { Min } from 'class-validator';
-import { QueryCommentType } from '../../../public/posts/core/models';
+import { QueryCommentType } from '../../models';
 
 export class QueryCommentDto implements QueryCommentType {
   readonly sortBy = 'createdAt';

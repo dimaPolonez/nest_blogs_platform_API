@@ -1,5 +1,5 @@
-import { findBlog, trimDecorator } from '../../../validation';
-import { IsMongoId, IsNotEmpty, Length, Validate } from 'class-validator';
+import { trimDecorator } from '../../../validation';
+import { IsNotEmpty, Length } from 'class-validator';
 import { CreatePostOfBlogType } from '../../models';
 
 export class CreatePostOfBlogDto implements CreatePostOfBlogType {

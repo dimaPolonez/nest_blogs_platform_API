@@ -8,14 +8,11 @@ import {
   AuthObjectType,
   AuthObjectUpdateType,
   CreateUserMailType,
+  GetSessionUserType,
   LoginType,
   NewPassType,
   TokensObjectType,
-} from '../models';
-import {
-  GetSessionUserType,
-  SessionUserType,
-} from '../../public/users/core/models';
+} from '../../core/models';
 
 @Injectable()
 export class AuthService {

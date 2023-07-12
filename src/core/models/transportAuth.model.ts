@@ -15,12 +15,12 @@ export type EmailResendType = {
   email: string;
 };
 
-export type LoginType = {
+type LoginType = {
   loginOrEmail: string;
   password: string;
 };
 
-export type NewPassType = {
+type NewPassType = {
   newPassword: string;
   recoveryCode: string;
 };
@@ -49,7 +49,7 @@ export type TokensObjectType = {
   };
 };
 
-export type AboutMeType = {
+type AboutMeType = {
   email: string;
   login: string;
   userId: string;

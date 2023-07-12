@@ -1,6 +1,6 @@
 import { Type } from 'class-transformer';
 import { Min } from 'class-validator';
-import { QueryPostType } from '../../../public/posts/core/models';
+import { QueryPostType } from '../../models';
 
 export class QueryPostDto implements QueryPostType {
   readonly sortBy = 'createdAt';

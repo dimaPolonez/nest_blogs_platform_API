@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
+import { PostModel, PostModelSchema } from '../../core/entity';
 import { PostsController } from './posts.controller';
 import { PostsService } from './application/posts.service';
 import { PostsRepository } from './repository/posts.repository';
@@ -11,8 +12,6 @@ import {
   QuestJwtAccessStrategy,
 } from '../../guards-handlers/strategies';
 import { UsersModule } from '../users/users.module';
-import { findBlog } from '../../validation';
-import { PostModel, PostModelSchema } from '../../core/entity';
 
 const useCases = [];
 
@@ -32,7 +31,6 @@ const useCases = [];
     QuestJwtAccessStrategy,
     BasicStrategy,
     JwtAccessStrategy,
-    findBlog,
     ...useCases,
   ],
   exports: [PostsService, PostsQueryRepository],
