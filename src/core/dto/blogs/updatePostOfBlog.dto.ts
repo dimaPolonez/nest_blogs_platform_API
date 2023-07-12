@@ -1,19 +1,19 @@
-import { trimDecorator } from '../../../validation';
 import { IsNotEmpty, Length } from 'class-validator';
 import { UpdatePostOfBlogType } from '../../models';
+import { TrimDecorator } from '../../../validation/decorators/trim.decorator';
 
 export class UpdatePostOfBlogDto implements UpdatePostOfBlogType {
-  @trimDecorator()
+  @TrimDecorator()
   @Length(1, 30)
   @IsNotEmpty()
   readonly title: string;
 
-  @trimDecorator()
+  @TrimDecorator()
   @Length(1, 100)
   @IsNotEmpty()
   readonly shortDescription: string;
 
-  @trimDecorator()
+  @TrimDecorator()
   @Length(1, 1000)
   @IsNotEmpty()
   readonly content: string;

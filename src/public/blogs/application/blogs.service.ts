@@ -22,17 +22,6 @@ export class BlogsService {
     return true;
   }
 
-  async findBlogName(blogID: string): Promise<null | string> {
-    const findBlog: null | BlogModelType =
-      await this.blogRepository.findBlogById(blogID);
-
-    if (!findBlog) {
-      return null;
-    }
-
-    return findBlog.name;
-  }
-
   async deleteAllBlogs() {
     await this.blogRepository.deleteAllBlogs();
   }

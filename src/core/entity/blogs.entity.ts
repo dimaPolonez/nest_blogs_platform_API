@@ -1,6 +1,6 @@
 import { HydratedDocument } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { UpdateBlogType } from '../models';
+import { BindBlogType, UpdateBlogType } from '../models';
 
 export type BlogModelType = HydratedDocument<BlogModel>;
 
@@ -42,10 +42,15 @@ export class BlogModel {
     this.description = blogDTO.description;
     this.websiteUrl = blogDTO.websiteUrl;
   }
+  async bindBlog(blogDTO: BindBlogType) {
+    this.blogOwnerInfo.userId = blogDTO.userId;
+    this.blogOwnerInfo.userLogin = blogDTO.userLogin;
+  }
 }
 
 export const BlogModelSchema = SchemaFactory.createForClass(BlogModel);
 
 BlogModelSchema.methods = {
   updateBlog: BlogModel.prototype.updateBlog,
+  bindBlog: BlogModel.prototype.bindBlog,
 };

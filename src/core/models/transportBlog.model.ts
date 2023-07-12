@@ -16,18 +16,15 @@ export type UpdatePostOfBlogType = {
   content: string;
 };
 
-export type CreatePostOfBlogAllType = {
-  title: string;
-  shortDescription: string;
-  content: string;
-  blogId: string;
-  blogName?: string;
-};
-
 export type UpdateBlogType = {
   name: string;
   description: string;
   websiteUrl: string;
+};
+
+export type BindBlogType = {
+  userId: string;
+  userLogin: string;
 };
 
 export type QueryBlogType = {

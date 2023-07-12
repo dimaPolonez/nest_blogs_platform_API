@@ -9,6 +9,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { BloggerModule } from './private/blogger/blogger.module';
+import { SuperAdminModule } from './private/super-admin/super-admin.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { BloggerModule } from './private/blogger/blogger.module';
     MongooseModule.forRoot(CONFIG.MONGO_DB),
     AuthModule,
     BloggerModule,
+    SuperAdminModule,
     BlogsModule,
     PostsModule,
     CommentsModule,

@@ -1,9 +1,9 @@
-import { trimDecorator } from '../../../validation';
 import { IsEnum, IsNotEmpty } from 'class-validator';
 import { MyLikeStatus, UpdateLikeStatusCommentType } from '../../models';
+import { TrimDecorator } from '../../../validation/decorators/trim.decorator';
 
 export class UpdateLikeStatusCommentDto implements UpdateLikeStatusCommentType {
-  @trimDecorator()
+  @TrimDecorator()
   @IsNotEmpty()
   @IsEnum(MyLikeStatus)
   readonly likeStatus: MyLikeStatus;

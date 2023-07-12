@@ -1,9 +1,3 @@
-enum MyLikeStatus {
-  None = 'None',
-  Like = 'Like',
-  Dislike = 'Dislike',
-}
-
 export type GetBlogType = {
   id: string;
   name: string;
@@ -19,17 +13,4 @@ export type GetAllBlogsType = {
   pageSize: number;
   totalCount: number;
   items: GetBlogType[];
-};
-
-type NewestLikesType = {
-  addedAt: string;
-  userId: string;
-  login: string;
-};
-
-type ExtendedLikesType = {
-  likesCount: number;
-  dislikesCount: number;
-  myStatus: MyLikeStatus;
-  newestLikes: [] | NewestLikesType[];
 };

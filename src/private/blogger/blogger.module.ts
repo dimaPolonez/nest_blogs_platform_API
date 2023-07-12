@@ -2,11 +2,6 @@ import { CqrsModule } from '@nestjs/cqrs';
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import {
-  BasicStrategy,
-  QuestJwtAccessStrategy,
-} from '../../guards-handlers/strategies';
-import { JwtService } from '@nestjs/jwt';
-import {
   BlogModel,
   BlogModelSchema,
   PostModel,
@@ -24,8 +19,8 @@ import {
 } from './use-cases';
 import { BloggerRepository } from './repository/blogger.repository';
 import { BloggerQueryRepository } from './repository/blogger.query-repository';
+import { JwtAccessGuard } from '../../guards-handlers/guard';
 
-const strategies = [BasicStrategy, JwtService, QuestJwtAccessStrategy];
 const useCases = [
   CreateBlogToBloggerUseCase,
   UpdateBlogToBloggerUseCase,
@@ -48,7 +43,7 @@ const useCases = [
     BloggerRepository,
     BloggerQueryRepository,
     ...useCases,
-    ...strategies,
+    JwtAccessGuard,
   ],
 })
 export class BloggerModule {}

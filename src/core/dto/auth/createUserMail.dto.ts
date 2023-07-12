@@ -1,26 +1,26 @@
 import { IsNotEmpty, Length, Matches, Validate } from 'class-validator';
 import {
-  trimDecorator,
   CheckedUniqueEmail,
   CheckedUniqueLogin,
-} from '../../../validation';
+} from '../../../validation/class-validators';
 import { CreateUserMailType } from '../../models';
+import { TrimDecorator } from '../../../validation/decorators/trim.decorator';
 
 export class CreateUserMailDto implements CreateUserMailType {
   @Validate(CheckedUniqueLogin)
-  @trimDecorator()
+  @TrimDecorator()
   @Matches(/^[a-zA-Z0-9_-]*$/)
   @Length(3, 10)
   @IsNotEmpty()
   readonly login: string;
 
-  @trimDecorator()
+  @TrimDecorator()
   @Length(6, 20)
   @IsNotEmpty()
   readonly password: string;
 
   @Validate(CheckedUniqueEmail)
-  @trimDecorator()
+  @TrimDecorator()
   @Matches(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/)
   @IsNotEmpty()
   readonly email: string;

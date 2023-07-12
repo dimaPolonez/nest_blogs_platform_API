@@ -16,7 +16,7 @@ import {
   CheckedEmailToBase,
   CheckedUniqueEmail,
   CheckedUniqueLogin,
-} from '../validation';
+} from '../validation/class-validators';
 
 @Module({
   imports: [

@@ -18,7 +18,7 @@ import {
   SessionUserType,
   SessionUserUpdateDTOType,
 } from '../../../core/models';
-import { UserModel, UserModelType } from '../../../core/entity';
+import { BlogModelType, UserModel, UserModelType } from '../../../core/entity';
 
 export class UsersService {
   constructor(
@@ -29,6 +29,16 @@ export class UsersService {
     @InjectModel(UserModel.name)
     private readonly UserModel: Model<UserModelType>,
   ) {}
+
+  async checkUser(userID: string): Promise<boolean> {
+    const checkedUser: UserModelType | null =
+      await this.userRepository.findUserById(userID);
+
+    if (!checkedUser) {
+      return false;
+    }
+    return true;
+  }
 
   async addNewDevice(sessionUserDTO: SessionUserDTOType): Promise<string> {
     const deviceId: string = await this.activeCodeAdapter.generateId();

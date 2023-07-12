@@ -1,19 +1,19 @@
 import { IsNotEmpty, IsUrl, Length } from 'class-validator';
-import { trimDecorator } from '../../../validation';
 import { CreateBlogType } from '../../models';
+import { TrimDecorator } from '../../../validation/decorators/trim.decorator';
 
 export class CreateBlogDto implements CreateBlogType {
-  @trimDecorator()
+  @TrimDecorator()
   @Length(1, 15)
   @IsNotEmpty()
   readonly name: string;
 
-  @trimDecorator()
+  @TrimDecorator()
   @Length(1, 500)
   @IsNotEmpty()
   readonly description: string;
 
-  @trimDecorator()
+  @TrimDecorator()
   @Length(1, 100)
   @IsUrl()
   @IsNotEmpty()
