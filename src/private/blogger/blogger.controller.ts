@@ -51,7 +51,7 @@ export class BloggerController {
     @Request() req,
   ): Promise<GetBlogType> {
     const newBlogID: string = await this.commandBus.execute(
-      new CreateBlogToBloggerCommand(req.user.userID, blogDTO),
+      new CreateBlogToBloggerCommand(req.user.userID, req.user.login, blogDTO),
     );
     return await this.bloggerQueryRepository.findBlogById(newBlogID);
   }

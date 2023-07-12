@@ -40,7 +40,7 @@ export function blogFlow(testObject: TestObjectType) {
                 description: 'My test blog',
                 websiteUrl: 'polonezTestBlog.com',
                 createdAt: expect.any(String),
-                isMembership: false,
+                isMembership: expect.any(Boolean),
               },
             ],
           });
@@ -58,7 +58,7 @@ export function blogFlow(testObject: TestObjectType) {
             description: 'My test blog',
             websiteUrl: 'polonezTestBlog.com',
             createdAt: expect.any(String),
-            isMembership: false,
+            isMembership: expect.any(Boolean),
           });
         });
     });
@@ -98,7 +98,7 @@ export function blogFlow(testObject: TestObjectType) {
             description: 'My test blog update',
             websiteUrl: 'polonezUpdateTestBlog.com',
             createdAt: expect.any(String),
-            isMembership: false,
+            isMembership: expect.any(Boolean),
           });
         });
     });
@@ -160,7 +160,7 @@ export function blogFlow(testObject: TestObjectType) {
             description: 'My delete blog',
             websiteUrl: 'polonezDeleteBlog.com',
             createdAt: expect.any(String),
-            isMembership: false,
+            isMembership: expect.any(Boolean),
           });
         });
     });

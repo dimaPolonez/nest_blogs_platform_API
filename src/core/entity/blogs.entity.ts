@@ -5,6 +5,15 @@ import { UpdateBlogType } from '../models';
 export type BlogModelType = HydratedDocument<BlogModel>;
 
 @Schema()
+export class BlogOwnerInfo {
+  @Prop({ required: true })
+  userId: string;
+
+  @Prop({ required: true })
+  userLogin: string;
+}
+
+@Schema()
 export class BlogModel {
   @Prop({ required: true })
   name: string;
@@ -15,9 +24,6 @@ export class BlogModel {
   @Prop({ required: true })
   websiteUrl: string;
 
-  @Prop({ required: true })
-  bloggerId: string;
-
   @Prop({
     default: () => {
       return new Date().toISOString();
@@ -25,8 +31,11 @@ export class BlogModel {
   })
   createdAt: string;
 
-  @Prop({ default: false })
+  @Prop({ default: true })
   isMembership: boolean;
+
+  @Prop({ default: () => ({}) })
+  blogOwnerInfo: BlogOwnerInfo;
 
   async updateBlog(blogDTO: UpdateBlogType) {
     this.name = blogDTO.name;

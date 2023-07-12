@@ -26,7 +26,7 @@ export class DeleteBlogToBloggerUseCase
       throw new NotFoundException('blog not found');
     }
 
-    if (findBlog.bloggerId !== bloggerId) {
+    if (findBlog.blogOwnerInfo.userId !== bloggerId) {
       throw new ForbiddenException('The user is not the owner of the blog');
     }
 

@@ -7,7 +7,8 @@ import { BlogModel, BlogModelType } from '../../../core/entity';
 
 export class CreateBlogToBloggerCommand {
   constructor(
-    public readonly bloggerId: string,
+    public readonly userId: string,
+    public readonly userLogin: string,
     public readonly blogDTO: CreateBlogType,
   ) {}
 }
@@ -23,11 +24,14 @@ export class CreateBlogToBloggerUseCase
   ) {}
 
   async execute(command: CreateBlogToBloggerCommand): Promise<string> {
-    const { bloggerId, blogDTO } = command;
+    const { userId, userLogin, blogDTO } = command;
 
     const createBlogSmart: BlogModelType = new this.BlogModel({
       ...blogDTO,
-      bloggerId: bloggerId,
+      blogOwnerInfo: {
+        userId: userId,
+        userLogin: userLogin,
+      },
     });
 
     await this.bloggerRepository.save(createBlogSmart);
