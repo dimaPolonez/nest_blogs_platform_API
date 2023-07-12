@@ -2,8 +2,8 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateBlogType } from '../../../core/models';
-import { BlogModel, BlogModelType } from 'src/core/entity';
 import { BloggerRepository } from '../repository/blogger.repository';
+import { BlogModel, BlogModelType } from '../../../core/entity';
 
 export class CreateBlogToBloggerCommand {
   constructor(

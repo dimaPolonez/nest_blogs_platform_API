@@ -1,4 +1,4 @@
-import { HydratedDocument, Model } from 'mongoose';
+import { HydratedDocument } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { MyLikeStatus, NewestLikesType, UpdatePostType } from '../models';
 

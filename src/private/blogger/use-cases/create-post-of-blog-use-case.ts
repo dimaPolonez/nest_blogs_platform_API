@@ -4,7 +4,7 @@ import { CreatePostOfBlogType } from '../../../core/models';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { ForbiddenException, NotFoundException } from '@nestjs/common';
 import { BloggerRepository } from '../repository/blogger.repository';
-import { BlogModelType, PostModel, PostModelType } from 'src/core/entity';
+import { BlogModelType, PostModel, PostModelType } from '../../../core/entity';
 
 export class CreatePostOfBlogToBloggerCommand {
   constructor(
@@ -40,6 +40,7 @@ export class CreatePostOfBlogToBloggerUseCase
 
     const createPostSmart: PostModelType = new this.PostModel({
       ...postDTO,
+      blogId: blogID,
       blogName: findBlog.name,
     });
 

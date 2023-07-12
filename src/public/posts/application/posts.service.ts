@@ -19,7 +19,7 @@ import {
   NewestLikesType,
   QueryCommentType,
 } from '../../../core/models';
-import { PostModel, PostModelType } from 'src/core/entity';
+import { PostModel, PostModelType } from '../../../core/entity';
 
 @Injectable()
 export class PostsService {

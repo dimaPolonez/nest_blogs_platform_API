@@ -7,7 +7,6 @@ import {
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CommentsQueryRepository } from '../repository/comments.query-repository';
-import { CommentModel, CommentModelType } from 'src/core/entity';
 import {
   CreateCommentOfPostType,
   GetAllCommentsType,
@@ -16,6 +15,7 @@ import {
   QueryCommentType,
   UpdateCommentType,
 } from '../../../core/models';
+import { CommentModel, CommentModelType } from '../../../core/entity';
 
 @Injectable()
 export class CommentsService {

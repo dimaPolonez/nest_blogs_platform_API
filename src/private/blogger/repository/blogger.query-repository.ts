@@ -4,6 +4,7 @@ import { Model } from 'mongoose';
 import {
   GetAllBlogsType,
   GetBlogType,
+  GetPostType,
   MyLikeStatus,
   NewestLikesType,
   QueryBlogType,
@@ -14,7 +15,7 @@ import {
   PostModel,
   PostModelType,
 } from '../../../core/entity';
-import { GetPostType } from '../../../core/models/getPost.model';
+
 @Injectable()
 export class BloggerQueryRepository {
   constructor(

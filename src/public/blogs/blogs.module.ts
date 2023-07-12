@@ -14,8 +14,6 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { UsersModule } from '../users/users.module';
 
-import { PostsQueryRepository } from '../posts/repository/posts.query-repository';
-
 const strategies = [BasicStrategy, JwtService, QuestJwtAccessStrategy];
 @Module({
   imports: [

@@ -7,7 +7,6 @@ import {
   BcryptAdapter,
   MailerAdapter,
 } from '../../../adapters';
-import { UserModel, UserModelType } from 'src/core/entity';
 import {
   AboutMeType,
   ConfirmUserType,
@@ -19,6 +18,7 @@ import {
   SessionUserType,
   SessionUserUpdateDTOType,
 } from '../../../core/models';
+import { UserModel, UserModelType } from '../../../core/entity';
 
 export class UsersService {
   constructor(

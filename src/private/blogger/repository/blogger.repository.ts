@@ -6,7 +6,7 @@ import {
   BlogModelType,
   PostModel,
   PostModelType,
-} from 'src/core/entity';
+} from '../../../core/entity';
 
 @Injectable()
 export class BloggerRepository {

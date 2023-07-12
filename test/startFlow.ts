@@ -106,15 +106,14 @@ export function startFlow(): TestObjectType {
         });
     });
 
-    it('post new post status 201 (POST /posts)', () => {
+    it('post new post of blog status 201 (POST /blogger/blogs/:id/posts)', () => {
       return request(app.getHttpServer())
-        .post('/posts')
-        .set('Authorization', `Basic ${testObject.basic}`)
+        .post(`/blogger/blogs/${testObject.blogID}/posts`)
+        .set('Authorization', `Bearer ${testObject.accessToken}`)
         .send({
           title: 'Test post',
           shortDescription: 'My test post',
           content: 'My test content',
-          blogId: testObject.blogID,
         })
         .expect(201)
         .expect((res) => {
