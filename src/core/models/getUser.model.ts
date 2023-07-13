@@ -26,3 +26,11 @@ export type GetAllUsersType = {
   totalCount: number;
   items: GetUserType[];
 };
+
+export type GetAllUsersAdminType = {
+  pagesCount: number;
+  page: number;
+  pageSize: number;
+  totalCount: number;
+  items: GetUserAdminType[];
+};

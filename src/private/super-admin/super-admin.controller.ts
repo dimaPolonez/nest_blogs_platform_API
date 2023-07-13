@@ -16,18 +16,25 @@ import { BasicAuthGuard } from '../../guards-handlers/guard';
 import { QueryBlogsDto } from '../../core/dto/blogs';
 import {
   GetAllBlogsType,
+  GetAllUsersAdminType,
+  GetAllUsersType,
   GetUserAdminType,
   GetUserType,
 } from '../../core/models';
 import { SuperAdminQueryRepository } from './repository/super-admin.query-repository';
 import {
+  BanUserCommand,
   BindBlogCommand,
   CreateUserCommand,
   DeleteUserCommand,
 } from './use-cases';
 import { BlogIdPipe } from '../../validation/pipes/blogId.pipe';
 import { UserIdPipe } from '../../validation/pipes/userId.pipe';
-import { CreateUserDto } from '../../core/dto/users';
+import {
+  BanUserDto,
+  CreateUserDto,
+  QueryUsersAdminDto,
+} from '../../core/dto/users';
 
 @Controller('sa')
 export class SuperAdminController {
@@ -56,6 +63,16 @@ export class SuperAdminController {
   }
 
   @UseGuards(BasicAuthGuard)
+  @Put('users/:id/ban')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async banUser(
+    @Body() banUserDTO: BanUserDto,
+    @Param('id', UserIdPipe) userID: string,
+  ) {
+    await this.commandBus.execute(new BanUserCommand(banUserDTO, userID));
+  }
+
+  @UseGuards(BasicAuthGuard)
   @Post('users')
   @HttpCode(HttpStatus.CREATED)
   async createUser(@Body() userDTO: CreateUserDto): Promise<GetUserAdminType> {
@@ -71,5 +88,14 @@ export class SuperAdminController {
   @HttpCode(HttpStatus.NO_CONTENT)
   async deleteUser(@Param('id') userID: string) {
     await this.commandBus.execute(new DeleteUserCommand(userID));
+  }
+
+  @UseGuards(BasicAuthGuard)
+  @Get('users')
+  @HttpCode(HttpStatus.OK)
+  async getAllUsersToAdmin(
+    @Query() queryAll: QueryUsersAdminDto,
+  ): Promise<GetAllUsersAdminType> {
+    return await this.superAdminQueryRepository.getAllUsersAdmin(queryAll);
   }
 }

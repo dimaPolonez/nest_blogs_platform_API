@@ -33,7 +33,28 @@ export type CreateUserType = {
   email: string;
 };
 
+export type BanUserType = {
+  isBanned: boolean;
+  banReason: string;
+};
+
 export type QueryUserType = {
+  searchLoginTerm: string;
+  searchEmailTerm: string;
+  sortBy: string;
+  sortDirection: string;
+  pageNumber: number;
+  pageSize: number;
+};
+
+export enum banStatus {
+  all = 'all',
+  banned = 'banned',
+  notBanned = 'notBanned',
+}
+
+export type QueryUsersAdminType = {
+  banStatus: string;
   searchLoginTerm: string;
   searchEmailTerm: string;
   sortBy: string;

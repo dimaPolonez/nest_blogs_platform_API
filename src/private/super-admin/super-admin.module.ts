@@ -10,6 +10,7 @@ import {
 import { BasicAuthGuard } from '../../guards-handlers/guard';
 import { SuperAdminController } from './super-admin.controller';
 import {
+  BanUserUseCase,
   BindBlogUseCase,
   CreateUserUseCase,
   DeleteUserUseCase,
@@ -22,7 +23,12 @@ import { BlogsModule } from '../../public/blogs/blogs.module';
 import { UsersModule } from '../../public/users/users.module';
 import { BcryptAdapter } from '../../adapters';
 
-const useCases = [BindBlogUseCase, CreateUserUseCase, DeleteUserUseCase];
+const useCases = [
+  BindBlogUseCase,
+  BanUserUseCase,
+  CreateUserUseCase,
+  DeleteUserUseCase,
+];
 const pipes = [BlogIdPipe, UserIdPipe];
 @Module({
   imports: [
