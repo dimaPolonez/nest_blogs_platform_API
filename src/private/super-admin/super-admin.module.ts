@@ -9,15 +9,20 @@ import {
 } from '../../core/entity';
 import { BasicAuthGuard } from '../../guards-handlers/guard';
 import { SuperAdminController } from './super-admin.controller';
-import { BindBlogUseCase } from './use-cases';
+import {
+  BindBlogUseCase,
+  CreateUserUseCase,
+  DeleteUserUseCase,
+} from './use-cases';
 import { SuperAdminRepository } from './repository/super-admin.repository';
 import { SuperAdminQueryRepository } from './repository/super-admin.query-repository';
 import { BlogIdPipe } from '../../validation/pipes/blogId.pipe';
 import { UserIdPipe } from '../../validation/pipes/userId.pipe';
 import { BlogsModule } from '../../public/blogs/blogs.module';
 import { UsersModule } from '../../public/users/users.module';
+import { BcryptAdapter } from '../../adapters';
 
-const useCases = [BindBlogUseCase];
+const useCases = [BindBlogUseCase, CreateUserUseCase, DeleteUserUseCase];
 const pipes = [BlogIdPipe, UserIdPipe];
 @Module({
   imports: [
@@ -33,6 +38,7 @@ const pipes = [BlogIdPipe, UserIdPipe];
   providers: [
     SuperAdminRepository,
     SuperAdminQueryRepository,
+    BcryptAdapter,
     ...useCases,
     ...pipes,
     BasicAuthGuard,

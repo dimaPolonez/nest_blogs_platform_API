@@ -50,7 +50,7 @@ export function startFlow(): TestObjectType {
 
     it('post new user status 201 (POST /users)', () => {
       return request(app.getHttpServer())
-        .post('/users')
+        .post('/sa/users')
         .set('Authorization', `Basic ${testObject.basic}`)
         .send({
           login: 'Polonez',
@@ -65,6 +65,11 @@ export function startFlow(): TestObjectType {
             login: 'Polonez',
             email: 'testPolonez@yandex.ru',
             createdAt: res.body.createdAt,
+            banInfo: {
+              isBanned: expect.any(Boolean),
+              banDate: expect.any(String),
+              banReason: expect.any(String),
+            },
           };
         });
     });

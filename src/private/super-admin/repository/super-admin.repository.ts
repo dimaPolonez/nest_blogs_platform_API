@@ -25,6 +25,10 @@ export class SuperAdminRepository {
     return this.UserModel.findById({ _id: userID });
   }
 
+  async deleteUser(userID: string) {
+    await this.UserModel.deleteOne({ _id: userID });
+  }
+
   async save(model: BlogModelType | UserModelType) {
     return await model.save();
   }

@@ -21,21 +21,6 @@ export class UsersQueryRepository {
     return (pageNum - 1) * pageSize;
   }
 
-  async findUserById(userID: string): Promise<GetUserType> {
-    const findUserSmart = await this.UserModel.findById(userID);
-
-    if (!findUserSmart) {
-      throw new NotFoundException('user not found');
-    }
-
-    return {
-      id: findUserSmart.id,
-      login: findUserSmart.login,
-      email: findUserSmart.email,
-      createdAt: findUserSmart.createdAt,
-    };
-  }
-
   async getOneUserTest(userID: string) {
     return await this.UserModel.findById(userID);
   }

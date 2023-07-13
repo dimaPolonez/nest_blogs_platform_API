@@ -5,6 +5,20 @@ export type GetUserType = {
   createdAt: string;
 };
 
+type BanInfo = {
+  isBanned: boolean;
+  banDate: string;
+  banReason: string;
+};
+
+export type GetUserAdminType = {
+  id: string;
+  login: string;
+  email: string;
+  createdAt: string;
+  banInfo: BanInfo;
+};
+
 export type GetAllUsersType = {
   pagesCount: number;
   page: number;

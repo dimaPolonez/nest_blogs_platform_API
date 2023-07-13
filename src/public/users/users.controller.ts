@@ -23,22 +23,6 @@ export class UsersController {
     protected userQueryRepository: UsersQueryRepository,
   ) {}
 
-  @UseGuards(BasicAuthGuard)
-  @Post()
-  @HttpCode(HttpStatus.CREATED)
-  async createUser(@Body() userDTO: CreateUserDto): Promise<GetUserType> {
-    const newUserID: string = await this.userService.createUser(userDTO);
-
-    return await this.userQueryRepository.findUserById(newUserID);
-  }
-
-  @UseGuards(BasicAuthGuard)
-  @Delete(':id')
-  @HttpCode(HttpStatus.NO_CONTENT)
-  async deleteUser(@Param('id') userID: string) {
-    await this.userService.deleteUser(userID);
-  }
-
   @Get(':id')
   @HttpCode(HttpStatus.OK)
   async getUserID(@Param('id') userID: string) {

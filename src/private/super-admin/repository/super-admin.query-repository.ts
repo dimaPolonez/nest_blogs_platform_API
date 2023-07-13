@@ -1,10 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import {
   GetAllBlogsType,
   GetBlogAdminType,
-  GetBlogType,
+  GetUserAdminType,
+  GetUserType,
   QueryBlogType,
 } from '../../../core/models';
 import {
@@ -66,6 +67,26 @@ export class SuperAdminQueryRepository {
       pageSize: queryAll.pageSize,
       totalCount: allCount,
       items: allMapsBlogs,
+    };
+  }
+
+  async findUserById(userID: string): Promise<GetUserAdminType> {
+    const findUserSmart = await this.UserModel.findById(userID);
+
+    if (!findUserSmart) {
+      throw new NotFoundException('user not found');
+    }
+
+    return {
+      id: findUserSmart.id,
+      login: findUserSmart.login,
+      email: findUserSmart.email,
+      createdAt: findUserSmart.createdAt,
+      banInfo: {
+        isBanned: findUserSmart.banInfo.isBanned,
+        banDate: findUserSmart.banInfo.banDate,
+        banReason: findUserSmart.banInfo.banReason,
+      },
     };
   }
 }

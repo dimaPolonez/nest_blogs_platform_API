@@ -151,23 +151,6 @@ export class UsersService {
     await this.userRepository.save(findUser);
   }
 
-  async createUser(userDTO: CreateUserType): Promise<string> {
-    const hushPass: string = await this.bcryptAdapter.hushGenerate(
-      userDTO.password,
-    );
-
-    const newUserDTO = {
-      login: userDTO.login,
-      hushPass: hushPass,
-      email: userDTO.email,
-    };
-
-    const createUserSmart: UserModelType = await new this.UserModel(newUserDTO);
-
-    await this.userRepository.save(createUserSmart);
-
-    return createUserSmart.id;
-  }
   async registrationUser(userDTO: CreateUserType) {
     const hushPass: string = await this.bcryptAdapter.hushGenerate(
       userDTO.password,
@@ -262,18 +245,6 @@ export class UsersService {
     await findUserByCode.updateActivateUserAndPassword(newUserDTO, newPass);
 
     await this.userRepository.save(findUserByCode);
-  }
-
-  async deleteUser(userID: string) {
-    const findUser: UserModelType = await this.userRepository.findUserById(
-      userID,
-    );
-
-    if (!findUser) {
-      throw new NotFoundException('user not found');
-    }
-
-    await this.userRepository.deleteUser(userID);
   }
 
   async getUserInf(userID: string): Promise<AboutMeType> {

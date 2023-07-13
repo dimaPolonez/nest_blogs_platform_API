@@ -34,10 +34,6 @@ export class UsersRepository {
     return this.UserModel.findOne({ 'sessionsUser.deviceId': sessionID });
   }
 
-  async deleteUser(userID: string) {
-    await this.UserModel.deleteOne({ _id: userID });
-  }
-
   async deleteAllUsers() {
     await this.UserModel.deleteMany();
   }
