@@ -2,15 +2,13 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import {
+  banStatus,
   GetAllBlogsType,
   GetAllUsersAdminType,
-  GetAllUsersType,
   GetBlogAdminType,
   GetUserAdminType,
-  GetUserType,
   QueryBlogType,
   QueryUsersAdminType,
-  QueryUserType,
 } from '../../../core/models';
 import {
   BlogModel,
@@ -18,7 +16,6 @@ import {
   UserModel,
   UserModelType,
 } from '../../../core/entity';
-import { QueryUsersAdminDto } from '../../../core/dto/users';
 
 @Injectable()
 export class SuperAdminQueryRepository {
@@ -34,6 +31,14 @@ export class SuperAdminQueryRepository {
   }
   skippedObject(pageNum: number, pageSize: number) {
     return (pageNum - 1) * pageSize;
+  }
+
+  banFilter(options: string): boolean {
+    if (options === banStatus.banned) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   async getAllBlogsToAdmin(queryAll: QueryBlogType): Promise<GetAllBlogsType> {
@@ -97,10 +102,6 @@ export class SuperAdminQueryRepository {
   async getAllUsersAdmin(
     queryAll: QueryUsersAdminType,
   ): Promise<GetAllUsersAdminType> {
-    /*    if (queryAll.banStatus === 'banned'){
-
-    }*/
-
     const allUsers: UserModelType[] = await this.UserModel.find({
       $or: [
         { login: new RegExp(queryAll.searchLoginTerm, 'gi') },
@@ -111,33 +112,47 @@ export class SuperAdminQueryRepository {
       .limit(queryAll.pageSize)
       .sort({ [queryAll.sortBy]: this.sortObject(queryAll.sortDirection) });
 
+    let allCountNumber = 0;
+
     const allMapsUsers: GetUserAdminType[] = allUsers.map((field) => {
-      return {
-        id: field.id,
-        login: field.login,
-        email: field.email,
-        createdAt: field.createdAt,
-        banInfo: {
-          isBanned: field.banInfo.isBanned,
-          banDate: field.banInfo.banDate,
-          banReason: field.banInfo.banReason,
-        },
-      };
+      if (queryAll.banStatus === banStatus.all) {
+        allCountNumber++;
+        return {
+          id: field.id,
+          login: field.login,
+          email: field.email,
+          createdAt: field.createdAt,
+          banInfo: {
+            isBanned: field.banInfo.isBanned,
+            banDate: field.banInfo.banDate,
+            banReason: field.banInfo.banReason,
+          },
+        };
+      }
+
+      if (field.banInfo.isBanned === this.banFilter(queryAll.banStatus)) {
+        allCountNumber++;
+        return {
+          id: field.id,
+          login: field.login,
+          email: field.email,
+          createdAt: field.createdAt,
+          banInfo: {
+            isBanned: field.banInfo.isBanned,
+            banDate: field.banInfo.banDate,
+            banReason: field.banInfo.banReason,
+          },
+        };
+      }
     });
 
-    const allCount: number = await this.UserModel.countDocuments({
-      $or: [
-        { login: new RegExp(queryAll.searchLoginTerm, 'gi') },
-        { email: new RegExp(queryAll.searchEmailTerm, 'gi') },
-      ],
-    });
-    const pagesCount: number = Math.ceil(allCount / queryAll.pageSize);
+    const pagesCount: number = Math.ceil(allCountNumber / queryAll.pageSize);
 
     return {
       pagesCount: pagesCount,
       page: queryAll.pageNumber,
       pageSize: queryAll.pageSize,
-      totalCount: allCount,
+      totalCount: allCountNumber,
       items: allMapsUsers,
     };
   }
