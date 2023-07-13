@@ -1,7 +1,7 @@
 import { HydratedDocument } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { isAfter } from 'date-fns';
-import { ConfirmUserType, SessionUserType } from '../models';
+import { ConfirmUserType, MyLikeStatus, SessionUserType } from '../models';
 
 export type UserModelType = HydratedDocument<UserModel>;
 
@@ -19,13 +19,13 @@ export class ActivateUser {
 
 @Schema()
 export class BanInfo {
-  @Prop()
+  @Prop({ required: true, default: false })
   isBanned: boolean;
 
-  @Prop()
+  @Prop({ default: null })
   banDate: string;
 
-  @Prop()
+  @Prop({ default: null })
   banReason: string;
 }
 
@@ -47,7 +47,7 @@ export class UserModel {
   })
   createdAt: string;
 
-  @Prop({ default: () => ({}) })
+  @Prop()
   banInfo: BanInfo;
 
   @Prop({ default: () => ({}) })
