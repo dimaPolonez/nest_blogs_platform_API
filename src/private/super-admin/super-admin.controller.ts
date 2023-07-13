@@ -7,7 +7,6 @@ import {
   Param,
   Put,
   Query,
-  Request,
   UseGuards,
 } from '@nestjs/common';
 import { BasicAuthGuard } from '../../guards-handlers/guard';
@@ -36,15 +35,11 @@ export class SuperAdminController {
   }
 
   @UseGuards(BasicAuthGuard)
-  @Get()
+  @Get('blogs')
   @HttpCode(HttpStatus.OK)
-  async getAllBlogsToBlogger(
+  async getAllBlogsToAdmin(
     @Query() queryAll: QueryBlogsDto,
-    @Request() req,
   ): Promise<GetAllBlogsType> {
-    return await this.superAdminQueryRepository.getAllBlogsToBlogger(
-      req.user.userID,
-      queryAll,
-    );
+    return await this.superAdminQueryRepository.getAllBlogsToAdmin(queryAll);
   }
 }

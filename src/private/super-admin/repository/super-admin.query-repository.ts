@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import {
   GetAllBlogsType,
+  GetBlogAdminType,
   GetBlogType,
   QueryBlogType,
 } from '../../../core/models';
@@ -29,17 +30,9 @@ export class SuperAdminQueryRepository {
     return (pageNum - 1) * pageSize;
   }
 
-  async getAllBlogsToBlogger(
-    blogerId: string,
-    queryAll: QueryBlogType,
-  ): Promise<GetAllBlogsType> {
+  async getAllBlogsToAdmin(queryAll: QueryBlogType): Promise<GetAllBlogsType> {
     const allBlogs: BlogModelType[] = await this.BlogModel.find({
-      $and: [
-        {
-          bloggerId: blogerId,
-        },
-        { name: new RegExp(queryAll.searchNameTerm, 'gi') },
-      ],
+      name: new RegExp(queryAll.searchNameTerm, 'gi'),
     })
       .skip(this.skippedObject(queryAll.pageNumber, queryAll.pageSize))
       .limit(queryAll.pageSize)
@@ -47,7 +40,7 @@ export class SuperAdminQueryRepository {
         [queryAll.sortBy]: this.sortObject(queryAll.sortDirection),
       });
 
-    const allMapsBlogs: GetBlogType[] = allBlogs.map((field) => {
+    const allMapsBlogs: GetBlogAdminType[] = allBlogs.map((field) => {
       return {
         id: field.id,
         name: field.name,
@@ -55,6 +48,10 @@ export class SuperAdminQueryRepository {
         websiteUrl: field.websiteUrl,
         createdAt: field.createdAt,
         isMembership: field.isMembership,
+        blogOwnerInfo: {
+          userId: field.blogOwnerInfo.userId,
+          userLogin: field.blogOwnerInfo.userLogin,
+        },
       };
     });
 

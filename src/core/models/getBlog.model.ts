@@ -7,6 +7,21 @@ export type GetBlogType = {
   isMembership: boolean;
 };
 
+type BlogOwnerType = {
+  userId: string;
+  userLogin: string;
+};
+
+export type GetBlogAdminType = {
+  id: string;
+  name: string;
+  description: string;
+  websiteUrl: string;
+  createdAt: string;
+  isMembership: boolean;
+  blogOwnerInfo: BlogOwnerType;
+};
+
 export type GetAllBlogsType = {
   pagesCount: number;
   page: number;
