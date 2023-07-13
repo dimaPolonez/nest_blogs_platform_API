@@ -19,7 +19,7 @@ export class ActivateUser {
 
 @Schema()
 export class BanInfo {
-  @Prop({ required: true, default: false })
+  @Prop({ default: false })
   isBanned: boolean;
 
   @Prop({ default: null })
@@ -47,7 +47,7 @@ export class UserModel {
   })
   createdAt: string;
 
-  @Prop()
+  @Prop({ default: () => ({}) })
   banInfo: BanInfo;
 
   @Prop({ default: () => ({}) })
