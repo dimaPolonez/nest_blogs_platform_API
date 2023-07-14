@@ -90,9 +90,15 @@ export class UserModel {
   }
 
   async banUser(banUserDTO: BanUserType) {
-    this.banInfo.isBanned = banUserDTO.isBanned;
-    this.banInfo.banDate = new Date().toISOString();
-    this.banInfo.banReason = banUserDTO.banReason;
+    if (banUserDTO.isBanned === false) {
+      this.banInfo.isBanned = banUserDTO.isBanned;
+      this.banInfo.banDate = null;
+      this.banInfo.banReason = null;
+    } else {
+      this.banInfo.isBanned = banUserDTO.isBanned;
+      this.banInfo.banDate = new Date().toISOString();
+      this.banInfo.banReason = banUserDTO.banReason;
+    }
   }
 }
 
