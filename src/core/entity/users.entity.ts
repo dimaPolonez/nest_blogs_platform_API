@@ -1,7 +1,13 @@
 import { HydratedDocument } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { isAfter } from 'date-fns';
-import { ConfirmUserType, MyLikeStatus, SessionUserType } from '../models';
+import {
+  banStatus,
+  BanUserType,
+  ConfirmUserType,
+  SessionUserType,
+} from '../models';
+import { BanUserDto } from '../dto/users';
 
 export type UserModelType = HydratedDocument<UserModel>;
 
@@ -82,6 +88,12 @@ export class UserModel {
     this.activateUser.lifeTimeCode = userActivateDTO.lifeTimeCode;
     this.activateUser.confirm = userActivateDTO.confirm;
   }
+
+  async banUser(banUserDTO: BanUserType) {
+    this.banInfo.isBanned = banUserDTO.isBanned;
+    this.banInfo.banDate = new Date().toISOString();
+    this.banInfo.banReason = banUserDTO.banReason;
+  }
 }
 
 export const UserModelSchema = SchemaFactory.createForClass(UserModel);
@@ -91,4 +103,5 @@ UserModelSchema.methods = {
   updateActivateUser: UserModel.prototype.updateActivateUser,
   updateActivateUserAndPassword:
     UserModel.prototype.updateActivateUserAndPassword,
+  banUser: UserModel.prototype.banUser,
 };
