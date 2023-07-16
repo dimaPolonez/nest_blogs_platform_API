@@ -18,10 +18,6 @@ export class CommentsRepository {
     await this.CommentModel.deleteOne({ _id: commentID });
   }
 
-  async deleteAllComments() {
-    await this.CommentModel.deleteMany();
-  }
-
   async save(model: CommentModelType) {
     return await model.save();
   }

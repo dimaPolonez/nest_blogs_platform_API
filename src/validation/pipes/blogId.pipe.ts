@@ -1,11 +1,12 @@
 import { PipeTransform, Injectable, BadRequestException } from '@nestjs/common';
-import { BlogsService } from '../../public/blogs/application/blogs.service';
+import { SuperAdminService } from '../../private/super-admin/application/super-admin.service';
 
 @Injectable()
 export class BlogIdPipe implements PipeTransform<string, string> {
-  constructor(protected blogService: BlogsService) {}
+  constructor(protected superAdminService: SuperAdminService) {}
   transform(value: string): string {
-    const checkBlogId: Promise<boolean> = this.blogService.checkBlog(value);
+    const checkBlogId: Promise<boolean> =
+      this.superAdminService.checkBlog(value);
 
     if (!checkBlogId) {
       throw new BadRequestException('Incorrect BlogId');

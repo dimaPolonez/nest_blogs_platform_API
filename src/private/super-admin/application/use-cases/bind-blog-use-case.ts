@@ -1,7 +1,7 @@
 import { NotFoundException } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { SuperAdminRepository } from '../repository/super-admin.repository';
-import { BlogModelType, UserModelType } from '../../../core/entity';
+import { SuperAdminRepository } from '../../repository/super-admin.repository';
+import { BlogModelType, UserModelType } from '../../../../core/entity';
 
 export class BindBlogCommand {
   constructor(public readonly blogID: string, public readonly userID: string) {}

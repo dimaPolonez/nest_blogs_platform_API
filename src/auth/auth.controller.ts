@@ -36,6 +36,20 @@ import { ThrottlerGuard } from '@nestjs/throttler';
 export class AuthController {
   constructor(protected authService: AuthService) {}
 
+  //@UseGuards(ThrottlerGuard)
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @Post('password-recovery')
+  async userCreateNewPass(@Body() userEmailDTO: EmailRecPassDto) {
+    await this.authService.passwordRecovery(userEmailDTO.email);
+  }
+
+  //@UseGuards(ThrottlerGuard)
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @Post('new-password')
+  async userUpdateNewPass(@Body() newPassDTO: NewPassDto) {
+    await this.authService.createNewPassword(newPassDTO);
+  }
+
   @UseGuards(/*ThrottlerGuard,*/ LocalAuthGuard)
   @HttpCode(HttpStatus.OK)
   @Post('login')
@@ -91,20 +105,6 @@ export class AuthController {
     );
 
     return tokensObject.accessDTO;
-  }
-
-  //@UseGuards(ThrottlerGuard)
-  @HttpCode(HttpStatus.NO_CONTENT)
-  @Post('password-recovery')
-  async userCreateNewPass(@Body() userEmailDTO: EmailRecPassDto) {
-    await this.authService.passwordRecovery(userEmailDTO.email);
-  }
-
-  //@UseGuards(ThrottlerGuard)
-  @HttpCode(HttpStatus.NO_CONTENT)
-  @Post('new-password')
-  async userUpdateNewPass(@Body() newPassDTO: NewPassDto) {
-    await this.authService.createNewPassword(newPassDTO);
   }
 
   //@UseGuards(ThrottlerGuard)

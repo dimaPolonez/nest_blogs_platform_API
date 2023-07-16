@@ -1,25 +1,23 @@
 import { ForbiddenException, NotFoundException } from '@nestjs/common';
-import { UpdateBlogType } from '../../../core/models';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { BloggerRepository } from '../repository/blogger.repository';
-import { BlogModelType } from '../../../core/entity';
+import { BloggerRepository } from '../../repository/blogger.repository';
+import { BlogModelType } from '../../../../core/entity';
 
-export class UpdateBlogToBloggerCommand {
+export class DeleteBlogToBloggerCommand {
   constructor(
     public readonly bloggerId: string,
     public readonly blogID: string,
-    public readonly blogDTO: UpdateBlogType,
   ) {}
 }
 
-@CommandHandler(UpdateBlogToBloggerCommand)
-export class UpdateBlogToBloggerUseCase
-  implements ICommandHandler<UpdateBlogToBloggerCommand>
+@CommandHandler(DeleteBlogToBloggerCommand)
+export class DeleteBlogToBloggerUseCase
+  implements ICommandHandler<DeleteBlogToBloggerCommand>
 {
   constructor(protected bloggerRepository: BloggerRepository) {}
 
-  async execute(command: UpdateBlogToBloggerCommand) {
-    const { bloggerId, blogID, blogDTO } = command;
+  async execute(command: DeleteBlogToBloggerCommand) {
+    const { bloggerId, blogID } = command;
 
     const findBlog: BlogModelType | null =
       await this.bloggerRepository.findBlogById(blogID);
@@ -32,8 +30,6 @@ export class UpdateBlogToBloggerUseCase
       throw new ForbiddenException('The user is not the owner of the blog');
     }
 
-    await findBlog.updateBlog(blogDTO);
-
-    await this.bloggerRepository.save(findBlog);
+    await this.bloggerRepository.deleteBlog(blogID);
   }
 }

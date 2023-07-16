@@ -34,7 +34,7 @@ import {
   DeletePostOfBlogToBloggerCommand,
   UpdateBlogToBloggerCommand,
   UpdatePostOfBlogToBloggerCommand,
-} from './use-cases';
+} from './application/use-cases';
 
 @Controller('blogger')
 export class BloggerController {

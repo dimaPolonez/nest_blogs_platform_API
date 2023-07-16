@@ -1,7 +1,7 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { SuperAdminRepository } from '../repository/super-admin.repository';
-import { BanUserType } from '../../../core/models';
-import { UserModelType } from '../../../core/entity';
+import { SuperAdminRepository } from '../../repository/super-admin.repository';
+import { BanUserType } from '../../../../core/models';
+import { UserModelType } from '../../../../core/entity';
 import { NotFoundException } from '@nestjs/common';
 
 export class BanUserCommand {

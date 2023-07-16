@@ -7,8 +7,9 @@ import {
   PostModel,
   PostModelSchema,
 } from '../../core/entity';
-import { UsersModule } from '../../public/users/users.module';
 import { BloggerController } from './blogger.controller';
+import { BloggerRepository } from './repository/blogger.repository';
+import { BloggerQueryRepository } from './repository/blogger.query-repository';
 import {
   CreateBlogToBloggerUseCase,
   CreatePostOfBlogToBloggerUseCase,
@@ -16,10 +17,13 @@ import {
   DeletePostOfBlogToBloggerUseCase,
   UpdateBlogToBloggerUseCase,
   UpdatePostOfBlogToBloggerUseCase,
-} from './use-cases';
-import { BloggerRepository } from './repository/blogger.repository';
-import { BloggerQueryRepository } from './repository/blogger.query-repository';
+} from './application/use-cases';
 import { JwtAccessGuard } from '../../guards-handlers/guard';
+import { AuthModule } from '../../auth/auth.module';
+
+const modules = [CqrsModule, AuthModule];
+
+const guards = [JwtAccessGuard];
 
 const useCases = [
   CreateBlogToBloggerUseCase,
@@ -31,19 +35,18 @@ const useCases = [
 ];
 @Module({
   imports: [
-    CqrsModule,
     MongooseModule.forFeature([
       { name: BlogModel.name, schema: BlogModelSchema },
       { name: PostModel.name, schema: PostModelSchema },
     ]),
-    UsersModule,
+    ...modules,
   ],
   controllers: [BloggerController],
   providers: [
     BloggerRepository,
     BloggerQueryRepository,
+    ...guards,
     ...useCases,
-    JwtAccessGuard,
   ],
 })
 export class BloggerModule {}

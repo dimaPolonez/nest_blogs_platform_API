@@ -4,6 +4,10 @@ import { MongooseModule } from '@nestjs/mongoose';
 import {
   BlogModel,
   BlogModelSchema,
+  CommentModel,
+  CommentModelSchema,
+  PostModel,
+  PostModelSchema,
   UserModel,
   UserModelSchema,
 } from '../../core/entity';
@@ -14,14 +18,23 @@ import {
   BindBlogUseCase,
   CreateUserUseCase,
   DeleteUserUseCase,
-} from './use-cases';
+} from './application/use-cases';
 import { SuperAdminRepository } from './repository/super-admin.repository';
 import { SuperAdminQueryRepository } from './repository/super-admin.query-repository';
 import { BlogIdPipe } from '../../validation/pipes/blogId.pipe';
 import { UserIdPipe } from '../../validation/pipes/userId.pipe';
 import { BlogsModule } from '../../public/blogs/blogs.module';
-import { UsersModule } from '../../public/users/users.module';
 import { BcryptAdapter } from '../../adapters';
+import { SuperAdminService } from './application/super-admin.service';
+import { AuthModule } from '../../auth/auth.module';
+
+const modules = [CqrsModule, AuthModule, BlogsModule];
+
+const pipes = [BlogIdPipe, UserIdPipe];
+
+const guards = [BasicAuthGuard];
+
+const adapters = [BcryptAdapter];
 
 const useCases = [
   BindBlogUseCase,
@@ -29,25 +42,27 @@ const useCases = [
   CreateUserUseCase,
   DeleteUserUseCase,
 ];
-const pipes = [BlogIdPipe, UserIdPipe];
+
 @Module({
   imports: [
-    CqrsModule,
     MongooseModule.forFeature([
       { name: BlogModel.name, schema: BlogModelSchema },
+      { name: PostModel.name, schema: PostModelSchema },
       { name: UserModel.name, schema: UserModelSchema },
+      { name: CommentModel.name, schema: CommentModelSchema },
     ]),
-    BlogsModule,
-    UsersModule,
+    ...modules,
   ],
   controllers: [SuperAdminController],
   providers: [
     SuperAdminRepository,
     SuperAdminQueryRepository,
-    BcryptAdapter,
-    ...useCases,
+    SuperAdminService,
     ...pipes,
-    BasicAuthGuard,
+    ...guards,
+    ...adapters,
+    ...useCases,
   ],
+  exports: [SuperAdminService],
 })
 export class SuperAdminModule {}

@@ -4,6 +4,10 @@ import { Model } from 'mongoose';
 import {
   BlogModel,
   BlogModelType,
+  CommentModel,
+  CommentModelType,
+  PostModel,
+  PostModelType,
   UserModel,
   UserModelType,
 } from '../../../core/entity';
@@ -13,6 +17,10 @@ export class SuperAdminRepository {
   constructor(
     @InjectModel(BlogModel.name)
     private readonly BlogModel: Model<BlogModelType>,
+    @InjectModel(PostModel.name)
+    private readonly PostModel: Model<PostModelType>,
+    @InjectModel(CommentModel.name)
+    private readonly CommentModel: Model<CommentModelType>,
     @InjectModel(UserModel.name)
     private readonly UserModel: Model<UserModelType>,
   ) {}
@@ -31,5 +39,12 @@ export class SuperAdminRepository {
 
   async save(model: BlogModelType | UserModelType) {
     return await model.save();
+  }
+
+  async deleteAllCollections() {
+    await this.BlogModel.deleteMany();
+    await this.PostModel.deleteMany();
+    await this.CommentModel.deleteMany();
+    await this.UserModel.deleteMany();
   }
 }

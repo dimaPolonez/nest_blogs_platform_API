@@ -3,15 +3,15 @@ import { Strategy } from 'passport-jwt';
 import { CONFIG } from '../../config/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { questAccessHelper } from '../request-handlers';
-import { UsersService } from '../../public/users/application/users.service';
 import { JwtService } from '@nestjs/jwt';
+import { AuthService } from '../../auth/application/auth.service';
 
 @Injectable()
 export class QuestJwtAccessStrategy extends PassportStrategy(
   Strategy,
   'questJwt',
 ) {
-  constructor(protected userService: UsersService) {
+  constructor(protected authService: AuthService) {
     super({
       jwtFromRequest: questAccessHelper,
       ignoreExpiration: true,
@@ -25,7 +25,7 @@ export class QuestJwtAccessStrategy extends PassportStrategy(
     }
 
     JwtService;
-    const userName: string = await this.userService.findUserLogin(
+    const userName: string = await this.authService.findUserLogin(
       payload.userID,
     );
     return userName

@@ -2,11 +2,9 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import {
-  GetAllCommentsType,
   GetCommentType,
   MyLikeStatus,
   NewestLikesType,
-  QueryCommentType,
 } from '../../../core/models';
 import { CommentModel, CommentModelType } from '../../../core/entity';
 
@@ -16,13 +14,6 @@ export class CommentsQueryRepository {
     @InjectModel(CommentModel.name)
     private readonly CommentModel: Model<CommentModelType>,
   ) {}
-
-  sortObject(sortDir: string) {
-    return sortDir === 'desc' ? -1 : 1;
-  }
-  skippedObject(pageNum: number, pageSize: number) {
-    return (pageNum - 1) * pageSize;
-  }
 
   async findCommentById(
     commentID: string,
@@ -58,61 +49,6 @@ export class CommentsQueryRepository {
         dislikesCount: findCommentSmart.likesInfo.dislikesCount,
         myStatus: userStatus,
       },
-    };
-  }
-
-  async getAllCommentsOfPost(
-    userID: string,
-    postID: string,
-    queryAll: QueryCommentType,
-  ): Promise<GetAllCommentsType> {
-    const allComments: CommentModelType[] = await this.CommentModel.find({
-      postId: postID,
-    })
-      .skip(this.skippedObject(queryAll.pageNumber, queryAll.pageSize))
-      .limit(queryAll.pageSize)
-      .sort({ [queryAll.sortBy]: this.sortObject(queryAll.sortDirection) });
-
-    const allMapsComments: GetCommentType[] = allComments.map((field) => {
-      let userStatus = MyLikeStatus.None;
-
-      if (userID !== 'quest') {
-        const findUserLike: null | NewestLikesType =
-          field.likesInfo.newestLikes.find((v) => v.userId === userID);
-
-        if (findUserLike) {
-          userStatus = findUserLike.myStatus;
-        }
-      }
-
-      return {
-        id: field.id,
-        content: field.content,
-        commentatorInfo: {
-          userId: field.commentatorInfo.userId,
-          userLogin: field.commentatorInfo.userLogin,
-        },
-        createdAt: field.createdAt,
-        likesInfo: {
-          likesCount: field.likesInfo.likesCount,
-          dislikesCount: field.likesInfo.dislikesCount,
-          myStatus: userStatus,
-        },
-      };
-    });
-
-    const allCount: number = await this.CommentModel.countDocuments({
-      postId: postID,
-    });
-
-    const pagesCount: number = Math.ceil(allCount / queryAll.pageSize);
-
-    return {
-      pagesCount: pagesCount,
-      page: queryAll.pageNumber,
-      pageSize: queryAll.pageSize,
-      totalCount: allCount,
-      items: allMapsComments,
     };
   }
 }

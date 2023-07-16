@@ -2,14 +2,8 @@ import { Module } from '@nestjs/common';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { PassportModule } from '@nestjs/passport';
 import { AuthService } from './application/auth.service';
-import { UsersModule } from '../public/users/users.module';
-import { JwtModule, JwtService } from '@nestjs/jwt';
+import { JwtModule } from '@nestjs/jwt';
 import { AuthController } from './auth.controller';
-import {
-  JwtAccessStrategy,
-  JwtRefreshStrategy,
-  LocalStrategy,
-} from '../guards-handlers/strategies';
 import { SessionsController } from './sessions.controller';
 import {
   CheckedConfirmCode,
@@ -17,27 +11,52 @@ import {
   CheckedUniqueEmail,
   CheckedUniqueLogin,
 } from '../validation/class-validators';
+import {
+  BasicAuthGuard,
+  JwtAccessGuard,
+  JwtRefreshGuard,
+  LocalAuthGuard,
+} from '../guards-handlers/guard';
+import { ActiveCodeAdapter, BcryptAdapter, MailerAdapter } from '../adapters';
+import { MongooseModule } from '@nestjs/mongoose';
+import { UserModel, UserModelSchema } from '../core/entity';
+import { AuthRepository } from './repository/auth.repository';
+
+const modules = [PassportModule, JwtModule];
+
+const validators = [
+  CheckedUniqueLogin,
+  CheckedConfirmCode,
+  CheckedEmailToBase,
+  CheckedUniqueEmail,
+];
+
+const guards = [
+  BasicAuthGuard,
+  JwtAccessGuard,
+  LocalAuthGuard,
+  JwtRefreshGuard,
+];
+
+const adapters = [BcryptAdapter, MailerAdapter, ActiveCodeAdapter];
 
 @Module({
   imports: [
+    MongooseModule.forFeature([
+      { name: UserModel.name, schema: UserModelSchema },
+    ]),
     ThrottlerModule.forRoot({
       ttl: 10,
       limit: 5,
     }),
-    UsersModule,
-    PassportModule,
-    JwtModule,
+    ...modules,
   ],
   providers: [
     AuthService,
-    LocalStrategy,
-    JwtAccessStrategy,
-    JwtService,
-    JwtRefreshStrategy,
-    CheckedUniqueLogin,
-    CheckedConfirmCode,
-    CheckedEmailToBase,
-    CheckedUniqueEmail,
+    AuthRepository,
+    ...guards,
+    ...validators,
+    ...adapters,
   ],
   controllers: [AuthController, SessionsController],
   exports: [AuthService],

@@ -1,21 +1,27 @@
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { UpdatePostOfBlogType } from '../../../../core/models';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { ForbiddenException, NotFoundException } from '@nestjs/common';
-import { BloggerRepository } from '../repository/blogger.repository';
-import { BlogModelType, PostModel, PostModelType } from '../../../core/entity';
+import { BloggerRepository } from '../../repository/blogger.repository';
+import {
+  BlogModelType,
+  PostModel,
+  PostModelType,
+} from '../../../../core/entity';
 
-export class DeletePostOfBlogToBloggerCommand {
+export class UpdatePostOfBlogToBloggerCommand {
   constructor(
     public readonly bloggerId: string,
     public readonly blogID: string,
     public readonly postID: string,
+    public readonly postDTO: UpdatePostOfBlogType,
   ) {}
 }
 
-@CommandHandler(DeletePostOfBlogToBloggerCommand)
-export class DeletePostOfBlogToBloggerUseCase
-  implements ICommandHandler<DeletePostOfBlogToBloggerCommand>
+@CommandHandler(UpdatePostOfBlogToBloggerCommand)
+export class UpdatePostOfBlogToBloggerUseCase
+  implements ICommandHandler<UpdatePostOfBlogToBloggerCommand>
 {
   constructor(
     protected bloggerRepository: BloggerRepository,
@@ -23,8 +29,8 @@ export class DeletePostOfBlogToBloggerUseCase
     private readonly PostModel: Model<PostModelType>,
   ) {}
 
-  async execute(command: DeletePostOfBlogToBloggerCommand) {
-    const { bloggerId, blogID, postID } = command;
+  async execute(command: UpdatePostOfBlogToBloggerCommand) {
+    const { bloggerId, blogID, postID, postDTO } = command;
 
     const findBlog: BlogModelType | null =
       await this.bloggerRepository.findBlogById(blogID);
@@ -44,6 +50,10 @@ export class DeletePostOfBlogToBloggerUseCase
       throw new NotFoundException('post not found');
     }
 
-    await this.bloggerRepository.deletePost(postID);
+    const newPostDTO = { ...postDTO, blogId: blogID, blogName: findBlog.name };
+
+    await findPost.updatePost(newPostDTO);
+
+    await this.bloggerRepository.save(findPost);
   }
 }

@@ -15,13 +15,6 @@ type CommentatorInfoType = {
   userLogin: string;
 };
 
-type NewestLikesType = {
-  userId: string;
-  login: string;
-  myStatus: MyLikeStatus;
-  addedAt: string;
-};
-
 export type GetCommentType = {
   id: string;
   content: string;
@@ -36,9 +29,4 @@ export type GetAllCommentsType = {
   pageSize: number;
   totalCount: number;
   items: GetCommentType[];
-};
-
-export type UserObject = {
-  userID: string;
-  login: string;
 };

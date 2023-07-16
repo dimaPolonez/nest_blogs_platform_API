@@ -10,7 +10,6 @@ import {
   Request,
   UseGuards,
 } from '@nestjs/common';
-import { CommentsService } from './application/comments.service';
 import { CommentsQueryRepository } from './repository/comments.query-repository';
 import {
   UpdateCommentDto,
@@ -21,24 +20,35 @@ import {
   QuestJwtAccessGuard,
 } from '../../guards-handlers/guard';
 import { GetCommentType } from '../../core/models';
+import { CommandBus } from '@nestjs/cqrs';
+import {
+  DeleteCommentCommand,
+  UpdateCommentCommand,
+  UpdateLikeStatusCommentCommand,
+} from './application/use-cases';
 
 @Controller('comments')
 export class CommentsController {
   constructor(
-    protected commentService: CommentsService,
+    protected commandBus: CommandBus,
     protected commentQueryRepository: CommentsQueryRepository,
   ) {}
 
-  @UseGuards(QuestJwtAccessGuard)
-  @Get(':id')
-  @HttpCode(HttpStatus.OK)
-  async getOneComment(
+  @UseGuards(JwtAccessGuard)
+  @Put(':id/like-status')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async likeStatusComment(
     @Request() req,
     @Param('id') commentID: string,
-  ): Promise<GetCommentType> {
-    return await this.commentQueryRepository.findCommentById(
-      commentID,
-      req.user.userID,
+    @Body() bodyLikeStatus: UpdateLikeStatusCommentDto,
+  ) {
+    await this.commandBus.execute(
+      new UpdateLikeStatusCommentCommand(
+        req.user.userID,
+        req.user.login,
+        commentID,
+        bodyLikeStatus.likeStatus,
+      ),
     );
   }
 
@@ -50,10 +60,8 @@ export class CommentsController {
     @Param('id') commentID: string,
     @Body() commentDTO: UpdateCommentDto,
   ) {
-    await this.commentService.updateComment(
-      req.user.userID,
-      commentID,
-      commentDTO,
+    await this.commandBus.execute(
+      new UpdateCommentCommand(req.user.userID, commentID, commentDTO),
     );
   }
 
@@ -61,22 +69,21 @@ export class CommentsController {
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   async deleteComment(@Request() req, @Param('id') commentID: string) {
-    await this.commentService.deleteComment(req.user.userID, commentID);
+    await this.commandBus.execute(
+      new DeleteCommentCommand(req.user.userID, commentID),
+    );
   }
 
-  @UseGuards(JwtAccessGuard)
-  @Put(':id/like-status')
-  @HttpCode(HttpStatus.NO_CONTENT)
-  async likeStatusComment(
+  @UseGuards(QuestJwtAccessGuard)
+  @Get(':id')
+  @HttpCode(HttpStatus.OK)
+  async getOneComment(
     @Request() req,
     @Param('id') commentID: string,
-    @Body() bodyLikeStatus: UpdateLikeStatusCommentDto,
-  ) {
-    return this.commentService.updateLikeStatusComment(
-      req.user.userID,
-      req.user.login,
+  ): Promise<GetCommentType> {
+    return await this.commentQueryRepository.findCommentById(
       commentID,
-      bodyLikeStatus.likeStatus,
+      req.user.userID,
     );
   }
 }

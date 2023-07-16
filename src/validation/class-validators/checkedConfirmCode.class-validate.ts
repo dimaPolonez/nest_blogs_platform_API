@@ -3,15 +3,15 @@ import {
   ValidatorConstraintInterface,
 } from 'class-validator';
 import { Injectable } from '@nestjs/common';
-import { UsersService } from '../../public/users/application/users.service';
+import { AuthService } from '../../auth/application/auth.service';
 
 @ValidatorConstraint()
 @Injectable()
 export class CheckedConfirmCode implements ValidatorConstraintInterface {
-  constructor(protected userService: UsersService) {}
+  constructor(protected authService: AuthService) {}
 
   async validate(value: any) {
-    return await this.userService.checkedConfirmCode(value);
+    return await this.authService.checkedConfirmCode(value);
   }
 
   defaultMessage() {

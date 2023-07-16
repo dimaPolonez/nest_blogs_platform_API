@@ -1,14 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import {
-  SessionUserType,
-  SessionUserUpdateDTOType,
-} from '../../../core/models';
-import { UserModel, UserModelType } from '../../../core/entity';
+import { UserModel, UserModelType } from '../../core/entity';
+import { SessionUserType, SessionUserUpdateDTOType } from '../../core/models';
 
 @Injectable()
-export class UsersRepository {
+export class AuthRepository {
   constructor(
     @InjectModel(UserModel.name)
     private readonly UserModel: Model<UserModelType>,
@@ -32,10 +29,6 @@ export class UsersRepository {
 
   async findUserSession(sessionID: string): Promise<SessionUserType | null> {
     return this.UserModel.findOne({ 'sessionsUser.deviceId': sessionID });
-  }
-
-  async deleteAllUsers() {
-    await this.UserModel.deleteMany();
   }
 
   async findUserByCode(code: string): Promise<UserModelType | null> {

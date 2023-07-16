@@ -1,7 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { PostModel, PostModelType } from '../../../core/entity';
+import {
+  CommentModelType,
+  PostModel,
+  PostModelType,
+} from '../../../core/entity';
 
 @Injectable()
 export class PostsRepository {
@@ -14,11 +18,7 @@ export class PostsRepository {
     return this.PostModel.findById({ _id: postID });
   }
 
-  async deleteAllPosts() {
-    await this.PostModel.deleteMany();
-  }
-
-  async save(model: PostModelType) {
+  async save(model: PostModelType | CommentModelType) {
     return await model.save();
   }
 }

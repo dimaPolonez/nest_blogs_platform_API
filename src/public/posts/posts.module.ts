@@ -1,38 +1,41 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { PostsController } from './posts.controller';
-import { PostsService } from './application/posts.service';
 import { PostsRepository } from './repository/posts.repository';
 import { PostsQueryRepository } from './repository/posts.query-repository';
-import { CommentsModule } from '../comments/comments.module';
 import {
-  BasicStrategy,
-  JwtAccessStrategy,
-  QuestJwtAccessStrategy,
-} from '../../guards-handlers/strategies';
-import { UsersModule } from '../users/users.module';
-import { PostModel, PostModelSchema } from '../../core/entity';
+  CommentModel,
+  CommentModelSchema,
+  PostModel,
+  PostModelSchema,
+} from '../../core/entity';
+import { CqrsModule } from '@nestjs/cqrs';
+import {
+  CreateCommentOfPostUseCase,
+  UpdateLikeStatusPostUseCase,
+} from './application/use-cases';
+import {
+  JwtAccessGuard,
+  QuestJwtAccessGuard,
+} from '../../guards-handlers/guard';
+import { AuthModule } from '../../auth/auth.module';
 
-const useCases = [];
+const modules = [CqrsModule, AuthModule];
+
+const guards = [QuestJwtAccessGuard, JwtAccessGuard];
+
+const useCases = [UpdateLikeStatusPostUseCase, CreateCommentOfPostUseCase];
 
 @Module({
   imports: [
     MongooseModule.forFeature([
       { name: PostModel.name, schema: PostModelSchema },
+      { name: CommentModel.name, schema: CommentModelSchema },
     ]),
-    CommentsModule,
-    UsersModule,
+    ...modules,
   ],
   controllers: [PostsController],
-  providers: [
-    PostsService,
-    PostsRepository,
-    PostsQueryRepository,
-    QuestJwtAccessStrategy,
-    BasicStrategy,
-    JwtAccessStrategy,
-    ...useCases,
-  ],
-  exports: [PostsService, PostsQueryRepository],
+  providers: [PostsRepository, PostsQueryRepository, ...guards, ...useCases],
+  exports: [PostsQueryRepository],
 })
 export class PostsModule {}

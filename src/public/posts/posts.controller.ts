@@ -11,8 +11,6 @@ import {
   Request,
   UseGuards,
 } from '@nestjs/common';
-
-import { PostsService } from './application/posts.service';
 import { PostsQueryRepository } from './repository/posts.query-repository';
 import {
   CreateCommentOfPostDto,
@@ -30,22 +28,68 @@ import {
   GetCommentOfPostType,
   GetPostType,
 } from '../../core/models';
+import {
+  CreateCommentOfPostCommand,
+  UpdateLikeStatusPostCommand,
+} from './application/use-cases';
+import { CommandBus } from '@nestjs/cqrs';
 
 @Controller('posts')
 export class PostsController {
   constructor(
-    protected postService: PostsService,
+    protected commandBus: CommandBus,
     protected postQueryRepository: PostsQueryRepository,
   ) {}
 
-  @UseGuards(QuestJwtAccessGuard)
-  @Get(':id')
-  @HttpCode(HttpStatus.OK)
-  async getOnePost(
+  @UseGuards(JwtAccessGuard)
+  @Put(':id/like-status')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async likeStatusPost(
     @Request() req,
     @Param('id') postID: string,
-  ): Promise<GetPostType> {
-    return await this.postQueryRepository.findPostById(postID, req.user.userID);
+    @Body() bodyLikeStatus: UpdateLikeStatusPostDto,
+  ) {
+    await this.commandBus.execute(
+      new UpdateLikeStatusPostCommand(
+        req.user.userID,
+        req.user.login,
+        postID,
+        bodyLikeStatus.likeStatus,
+      ),
+    );
+  }
+
+  @UseGuards(QuestJwtAccessGuard)
+  @Get(':id/comments')
+  @HttpCode(HttpStatus.OK)
+  async getAllCommentsOfPost(
+    @Request() req,
+    @Param('id') postID: string,
+    @Query() queryAll: QueryCommentDto,
+  ): Promise<GetAllCommentsOfPostType> {
+    return await this.postQueryRepository.getAllCommentsOfPost(
+      req.user.userID,
+      postID,
+      queryAll,
+    );
+  }
+
+  @UseGuards(JwtAccessGuard)
+  @Post(':id/comments')
+  @HttpCode(HttpStatus.CREATED)
+  async createCommentOfPost(
+    @Request() req,
+    @Param('id') postID: string,
+    @Body() commentDTO: CreateCommentOfPostDto,
+  ): Promise<GetCommentOfPostType> {
+    return await this.commandBus.execute(
+      new CreateCommentOfPostCommand(
+        postID,
+        commentDTO,
+        req.user.userID,
+        req.user.login,
+      ),
+    );
   }
 
   @UseGuards(QuestJwtAccessGuard)
@@ -61,50 +105,13 @@ export class PostsController {
     );
   }
 
-  @UseGuards(JwtAccessGuard)
-  @Post(':id/comments')
-  @HttpCode(HttpStatus.CREATED)
-  async createCommentOfPost(
-    @Request() req,
-    @Param('id') postID: string,
-    @Body() commentDTO: CreateCommentOfPostDto,
-  ): Promise<GetCommentOfPostType> {
-    return await this.postService.createCommentOfPost(
-      postID,
-      commentDTO,
-      req.user.userID,
-      req.user.login,
-    );
-  }
-
   @UseGuards(QuestJwtAccessGuard)
-  @Get(':id/comments')
+  @Get(':id')
   @HttpCode(HttpStatus.OK)
-  async getAllCommentsOfPost(
+  async getOnePost(
     @Request() req,
     @Param('id') postID: string,
-    @Query() queryAll: QueryCommentDto,
-  ): Promise<GetAllCommentsOfPostType> {
-    return await this.postService.getAllCommentsOfPost(
-      req.user.userID,
-      postID,
-      queryAll,
-    );
-  }
-
-  @UseGuards(JwtAccessGuard)
-  @Put(':id/like-status')
-  @HttpCode(HttpStatus.NO_CONTENT)
-  async likeStatusPost(
-    @Request() req,
-    @Param('id') postID: string,
-    @Body() bodyLikeStatus: UpdateLikeStatusPostDto,
-  ) {
-    await this.postService.updateLikeStatusPost(
-      req.user.userID,
-      req.user.login,
-      postID,
-      bodyLikeStatus.likeStatus,
-    );
+  ): Promise<GetPostType> {
+    return await this.postQueryRepository.findPostById(postID, req.user.userID);
   }
 }

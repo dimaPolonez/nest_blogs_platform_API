@@ -17,9 +17,7 @@ import { QueryBlogsDto } from '../../core/dto/blogs';
 import {
   GetAllBlogsType,
   GetAllUsersAdminType,
-  GetAllUsersType,
   GetUserAdminType,
-  GetUserType,
 } from '../../core/models';
 import { SuperAdminQueryRepository } from './repository/super-admin.query-repository';
 import {
@@ -27,7 +25,7 @@ import {
   BindBlogCommand,
   CreateUserCommand,
   DeleteUserCommand,
-} from './use-cases';
+} from './application/use-cases';
 import { BlogIdPipe } from '../../validation/pipes/blogId.pipe';
 import { UserIdPipe } from '../../validation/pipes/userId.pipe';
 import {

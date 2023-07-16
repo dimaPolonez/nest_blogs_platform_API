@@ -2,28 +2,23 @@ import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { BlogModel, BlogModelSchema } from '../../core/entity';
 import { PostsModule } from '../posts/posts.module';
-import { BlogsService } from './application/blogs.service';
-import { BlogsRepository } from './repository/blogs.repository';
-import { BlogsQueryRepository } from './repository/blogs.query-repository';
+import { BlogsQueryRepository } from './blogs.query-repository';
 import { BlogsController } from './blogs.controller';
-import { QuestJwtAccessStrategy } from '../../guards-handlers/strategies';
-import { UsersModule } from '../users/users.module';
+import { QuestJwtAccessGuard } from '../../guards-handlers/guard';
+import { AuthModule } from '../../auth/auth.module';
+
+const modules = [AuthModule, PostsModule];
+
+const guards = [QuestJwtAccessGuard];
 
 @Module({
   imports: [
     MongooseModule.forFeature([
       { name: BlogModel.name, schema: BlogModelSchema },
     ]),
-    PostsModule,
-    UsersModule,
+    ...modules,
   ],
   controllers: [BlogsController],
-  providers: [
-    BlogsService,
-    BlogsRepository,
-    BlogsQueryRepository,
-    QuestJwtAccessStrategy,
-  ],
-  exports: [BlogsService],
+  providers: [BlogsQueryRepository, ...guards],
 })
 export class BlogsModule {}

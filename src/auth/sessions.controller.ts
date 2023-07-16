@@ -24,21 +24,21 @@ export class SessionsController {
 
   @HttpCode(HttpStatus.NO_CONTENT)
   @UseGuards(JwtRefreshGuard)
-  @Delete('devices/:id')
-  async deleteUserOneSession(@Request() req, @Param('id') deviceID: string) {
-    return await this.authService.deleteActiveSession(
-      req.user.userID,
-      deviceID,
-    );
-  }
-
-  @HttpCode(HttpStatus.NO_CONTENT)
-  @UseGuards(JwtRefreshGuard)
   @Delete('devices')
   async deleteUserAllSession(@Request() req) {
     return await this.authService.deleteAllSessions(
       req.user.userID,
       req.user.deviceId,
+    );
+  }
+
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @UseGuards(JwtRefreshGuard)
+  @Delete('devices/:id')
+  async deleteUserOneSession(@Request() req, @Param('id') deviceID: string) {
+    return await this.authService.deleteActiveSession(
+      req.user.userID,
+      deviceID,
     );
   }
 }

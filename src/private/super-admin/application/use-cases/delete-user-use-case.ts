@@ -1,6 +1,6 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { SuperAdminRepository } from '../repository/super-admin.repository';
-import { UserModelType } from '../../../core/entity';
+import { SuperAdminRepository } from '../../repository/super-admin.repository';
+import { UserModelType } from '../../../../core/entity';
 import { NotFoundException } from '@nestjs/common';
 
 export class DeleteUserCommand {

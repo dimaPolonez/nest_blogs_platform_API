@@ -8,7 +8,7 @@ import {
   Request,
   UseGuards,
 } from '@nestjs/common';
-import { BlogsQueryRepository } from './repository/blogs.query-repository';
+import { BlogsQueryRepository } from './blogs.query-repository';
 import { QueryBlogsDto, QueryPostOfBlogDto } from '../../core/dto/blogs';
 import { QuestJwtAccessGuard } from '../../guards-handlers/guard';
 import {

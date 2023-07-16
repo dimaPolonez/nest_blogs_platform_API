@@ -1,10 +1,14 @@
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { CreatePostOfBlogType } from '../../../core/models';
+import { CreatePostOfBlogType } from '../../../../core/models';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { ForbiddenException, NotFoundException } from '@nestjs/common';
-import { BloggerRepository } from '../repository/blogger.repository';
-import { BlogModelType, PostModel, PostModelType } from '../../../core/entity';
+import { BloggerRepository } from '../../repository/blogger.repository';
+import {
+  BlogModelType,
+  PostModel,
+  PostModelType,
+} from '../../../../core/entity';
 
 export class CreatePostOfBlogToBloggerCommand {
   constructor(

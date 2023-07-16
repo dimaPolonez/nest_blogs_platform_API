@@ -1,23 +1,25 @@
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { UpdatePostOfBlogType } from '../../../core/models';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { ForbiddenException, NotFoundException } from '@nestjs/common';
-import { BloggerRepository } from '../repository/blogger.repository';
-import { BlogModelType, PostModel, PostModelType } from '../../../core/entity';
+import { BloggerRepository } from '../../repository/blogger.repository';
+import {
+  BlogModelType,
+  PostModel,
+  PostModelType,
+} from '../../../../core/entity';
 
-export class UpdatePostOfBlogToBloggerCommand {
+export class DeletePostOfBlogToBloggerCommand {
   constructor(
     public readonly bloggerId: string,
     public readonly blogID: string,
     public readonly postID: string,
-    public readonly postDTO: UpdatePostOfBlogType,
   ) {}
 }
 
-@CommandHandler(UpdatePostOfBlogToBloggerCommand)
-export class UpdatePostOfBlogToBloggerUseCase
-  implements ICommandHandler<UpdatePostOfBlogToBloggerCommand>
+@CommandHandler(DeletePostOfBlogToBloggerCommand)
+export class DeletePostOfBlogToBloggerUseCase
+  implements ICommandHandler<DeletePostOfBlogToBloggerCommand>
 {
   constructor(
     protected bloggerRepository: BloggerRepository,
@@ -25,8 +27,8 @@ export class UpdatePostOfBlogToBloggerUseCase
     private readonly PostModel: Model<PostModelType>,
   ) {}
 
-  async execute(command: UpdatePostOfBlogToBloggerCommand) {
-    const { bloggerId, blogID, postID, postDTO } = command;
+  async execute(command: DeletePostOfBlogToBloggerCommand) {
+    const { bloggerId, blogID, postID } = command;
 
     const findBlog: BlogModelType | null =
       await this.bloggerRepository.findBlogById(blogID);
@@ -46,10 +48,6 @@ export class UpdatePostOfBlogToBloggerUseCase
       throw new NotFoundException('post not found');
     }
 
-    const newPostDTO = { ...postDTO, blogId: blogID, blogName: findBlog.name };
-
-    await findPost.updatePost(newPostDTO);
-
-    await this.bloggerRepository.save(findPost);
+    await this.bloggerRepository.deletePost(postID);
   }
 }

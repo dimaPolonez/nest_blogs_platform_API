@@ -1,8 +1,8 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { SuperAdminRepository } from '../repository/super-admin.repository';
-import { UserModel, UserModelType } from '../../../core/entity';
-import { CreateUserType } from '../../../core/models';
-import { BcryptAdapter } from '../../../adapters';
+import { SuperAdminRepository } from '../../repository/super-admin.repository';
+import { UserModel, UserModelType } from '../../../../core/entity';
+import { CreateUserType } from '../../../../core/models';
+import { BcryptAdapter } from '../../../../adapters';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
