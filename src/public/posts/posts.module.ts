@@ -14,15 +14,9 @@ import {
   CreateCommentOfPostUseCase,
   UpdateLikeStatusPostUseCase,
 } from './application/use-cases';
-import {
-  JwtAccessGuard,
-  QuestJwtAccessGuard,
-} from '../../guards-handlers/guard';
 import { AuthModule } from '../../auth/auth.module';
 
 const modules = [CqrsModule, AuthModule];
-
-const guards = [QuestJwtAccessGuard, JwtAccessGuard];
 
 const useCases = [UpdateLikeStatusPostUseCase, CreateCommentOfPostUseCase];
 
@@ -35,7 +29,7 @@ const useCases = [UpdateLikeStatusPostUseCase, CreateCommentOfPostUseCase];
     ...modules,
   ],
   controllers: [PostsController],
-  providers: [PostsRepository, PostsQueryRepository, ...guards, ...useCases],
+  providers: [PostsRepository, PostsQueryRepository, ...useCases],
   exports: [PostsQueryRepository],
 })
 export class PostsModule {}

@@ -32,8 +32,6 @@ const modules = [CqrsModule, AuthModule, BlogsModule];
 
 const pipes = [BlogIdPipe, UserIdPipe];
 
-const guards = [BasicAuthGuard];
-
 const adapters = [BcryptAdapter];
 
 const useCases = [
@@ -59,7 +57,6 @@ const useCases = [
     SuperAdminQueryRepository,
     SuperAdminService,
     ...pipes,
-    ...guards,
     ...adapters,
     ...useCases,
   ],

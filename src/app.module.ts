@@ -9,6 +9,13 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { BloggerModule } from './private/blogger/blogger.module';
 import { SuperAdminModule } from './private/super-admin/super-admin.module';
+import {
+  BasicStrategy,
+  JwtAccessStrategy,
+  JwtRefreshStrategy,
+  LocalStrategy,
+  QuestJwtAccessStrategy,
+} from './guards-handlers/strategies';
 
 const modules = [
   AuthModule,
@@ -19,6 +26,14 @@ const modules = [
   CommentsModule,
 ];
 
+const strategies = [
+  BasicStrategy,
+  JwtAccessStrategy,
+  LocalStrategy,
+  JwtRefreshStrategy,
+  QuestJwtAccessStrategy,
+];
+
 @Module({
   imports: [
     CONFIG.START_MODULE,
@@ -26,6 +41,6 @@ const modules = [
     ...modules,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, ...strategies],
 })
 export class AppModule {}

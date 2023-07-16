@@ -18,8 +18,6 @@ import { AuthModule } from '../../auth/auth.module';
 
 const modules = [CqrsModule, AuthModule];
 
-const guards = [QuestJwtAccessGuard, JwtAccessGuard];
-
 const useCases = [
   UpdateLikeStatusCommentUseCase,
   UpdateCommentUseCase,
@@ -34,11 +32,6 @@ const useCases = [
     ...modules,
   ],
   controllers: [CommentsController],
-  providers: [
-    CommentsRepository,
-    CommentsQueryRepository,
-    ...guards,
-    ...useCases,
-  ],
+  providers: [CommentsRepository, CommentsQueryRepository, ...useCases],
 })
 export class CommentsModule {}

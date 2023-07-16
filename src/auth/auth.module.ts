@@ -11,12 +11,6 @@ import {
   CheckedUniqueEmail,
   CheckedUniqueLogin,
 } from '../validation/class-validators';
-import {
-  BasicAuthGuard,
-  JwtAccessGuard,
-  JwtRefreshGuard,
-  LocalAuthGuard,
-} from '../guards-handlers/guard';
 import { ActiveCodeAdapter, BcryptAdapter, MailerAdapter } from '../adapters';
 import { MongooseModule } from '@nestjs/mongoose';
 import { UserModel, UserModelSchema } from '../core/entity';
@@ -30,14 +24,6 @@ const validators = [
   CheckedEmailToBase,
   CheckedUniqueEmail,
 ];
-
-const guards = [
-  BasicAuthGuard,
-  JwtAccessGuard,
-  LocalAuthGuard,
-  JwtRefreshGuard,
-];
-
 const adapters = [BcryptAdapter, MailerAdapter, ActiveCodeAdapter];
 
 @Module({
@@ -51,13 +37,7 @@ const adapters = [BcryptAdapter, MailerAdapter, ActiveCodeAdapter];
     }),
     ...modules,
   ],
-  providers: [
-    AuthService,
-    AuthRepository,
-    ...guards,
-    ...validators,
-    ...adapters,
-  ],
+  providers: [AuthService, AuthRepository, ...validators, ...adapters],
   controllers: [AuthController, SessionsController],
   exports: [AuthService],
 })

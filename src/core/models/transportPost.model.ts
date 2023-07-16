@@ -1,13 +1,5 @@
 import { MyLikeStatus } from './getPost.model';
 
-export type CreatePostType = {
-  title: string;
-  shortDescription: string;
-  content: string;
-  blogId: string;
-  blogName?: string;
-};
-
 export type QueryPostType = {
   sortBy: string;
   sortDirection: string;

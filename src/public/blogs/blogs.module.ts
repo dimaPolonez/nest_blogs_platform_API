@@ -4,12 +4,9 @@ import { BlogModel, BlogModelSchema } from '../../core/entity';
 import { PostsModule } from '../posts/posts.module';
 import { BlogsQueryRepository } from './blogs.query-repository';
 import { BlogsController } from './blogs.controller';
-import { QuestJwtAccessGuard } from '../../guards-handlers/guard';
 import { AuthModule } from '../../auth/auth.module';
 
 const modules = [AuthModule, PostsModule];
-
-const guards = [QuestJwtAccessGuard];
 
 @Module({
   imports: [
@@ -19,6 +16,6 @@ const guards = [QuestJwtAccessGuard];
     ...modules,
   ],
   controllers: [BlogsController],
-  providers: [BlogsQueryRepository, ...guards],
+  providers: [BlogsQueryRepository],
 })
 export class BlogsModule {}

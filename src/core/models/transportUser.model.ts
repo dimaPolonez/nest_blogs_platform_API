@@ -38,15 +38,6 @@ export type BanUserType = {
   banReason: string;
 };
 
-export type QueryUserType = {
-  searchLoginTerm: string;
-  searchEmailTerm: string;
-  sortBy: string;
-  sortDirection: string;
-  pageNumber: number;
-  pageSize: number;
-};
-
 export enum banStatus {
   all = 'all',
   banned = 'banned',
@@ -83,11 +74,4 @@ export type AboutMeType = {
   email: string;
   login: string;
   userId: string;
-};
-
-export type GetSessionType = {
-  ip: string;
-  title: string;
-  lastActiveDate: string;
-  deviceId: string;
 };

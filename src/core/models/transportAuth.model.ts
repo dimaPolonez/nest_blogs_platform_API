@@ -15,16 +15,6 @@ export type EmailResendType = {
   email: string;
 };
 
-type LoginType = {
-  loginOrEmail: string;
-  password: string;
-};
-
-type NewPassType = {
-  newPassword: string;
-  recoveryCode: string;
-};
-
 export type AuthObjectType = {
   ip: string;
   nameDevice: string;
@@ -47,10 +37,4 @@ export type TokensObjectType = {
     httpOnly: boolean;
     secure: boolean;
   };
-};
-
-type AboutMeType = {
-  email: string;
-  login: string;
-  userId: string;
 };

@@ -18,12 +18,9 @@ import {
   UpdateBlogToBloggerUseCase,
   UpdatePostOfBlogToBloggerUseCase,
 } from './application/use-cases';
-import { JwtAccessGuard } from '../../guards-handlers/guard';
 import { AuthModule } from '../../auth/auth.module';
 
 const modules = [CqrsModule, AuthModule];
-
-const guards = [JwtAccessGuard];
 
 const useCases = [
   CreateBlogToBloggerUseCase,
@@ -42,11 +39,6 @@ const useCases = [
     ...modules,
   ],
   controllers: [BloggerController],
-  providers: [
-    BloggerRepository,
-    BloggerQueryRepository,
-    ...guards,
-    ...useCases,
-  ],
+  providers: [BloggerRepository, BloggerQueryRepository, ...useCases],
 })
 export class BloggerModule {}
