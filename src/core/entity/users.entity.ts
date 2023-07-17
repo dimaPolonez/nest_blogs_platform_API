@@ -32,8 +32,6 @@ export class BanInfo {
 
 @Schema()
 export class UserModel {
-  constructor(protected superAdminRepository: SuperAdminRepository) {}
-
   @Prop({ required: true })
   login: string;
 
@@ -86,7 +84,7 @@ export class UserModel {
     this.activateUser.confirm = userActivateDTO.confirm;
   }
 
-  async banUser(banUserDTO: BanUserType, userID: string) {
+  async banUser(banUserDTO: BanUserType) {
     if (banUserDTO.isBanned === false) {
       this.banInfo.isBanned = banUserDTO.isBanned;
       this.banInfo.banDate = null;
@@ -97,10 +95,6 @@ export class UserModel {
       this.banInfo.banReason = banUserDTO.banReason;
       this.sessionsUser = [];
     }
-    await this.superAdminRepository.banedActivityUser(
-      banUserDTO.isBanned,
-      userID,
-    );
   }
 }
 
