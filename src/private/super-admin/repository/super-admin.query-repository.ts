@@ -2,7 +2,6 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import {
-  banStatus,
   GetAllBlogsType,
   GetAllUsersAdminType,
   GetBlogAdminType,
@@ -31,14 +30,6 @@ export class SuperAdminQueryRepository {
   }
   skippedObject(pageNum: number, pageSize: number) {
     return (pageNum - 1) * pageSize;
-  }
-
-  banFilter(options: string): boolean {
-    if (options === banStatus.banned) {
-      return true;
-    } else {
-      return false;
-    }
   }
 
   async getAllBlogsToAdmin(queryAll: QueryBlogType): Promise<GetAllBlogsType> {

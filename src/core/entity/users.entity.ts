@@ -98,6 +98,7 @@ export class UserModel {
       this.banInfo.isBanned = banUserDTO.isBanned;
       this.banInfo.banDate = new Date().toISOString();
       this.banInfo.banReason = banUserDTO.banReason;
+      this.sessionsUser = [];
     }
   }
 }

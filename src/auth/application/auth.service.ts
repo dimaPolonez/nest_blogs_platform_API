@@ -87,7 +87,7 @@ export class AuthService {
     const findUser: UserModelType | null =
       await this.authRepository.findUserByEmailOrLogin(loginDTO.loginOrEmail);
 
-    if (!findUser) {
+    if (!findUser || findUser.banInfo.isBanned === true) {
       return null;
     }
 
