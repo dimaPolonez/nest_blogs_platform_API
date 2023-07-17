@@ -23,31 +23,44 @@ import {
   JwtRefreshGuard,
   LocalAuthGuard,
 } from '../guards-handlers/guard';
-import { AuthService } from './application/auth.service';
 import { Response } from 'express';
 import {
+  AboutMeType,
   AuthObjectType,
   AuthObjectUpdateType,
   TokensObjectType,
 } from '../core/models';
-import { ThrottlerGuard } from '@nestjs/throttler';
+import { CommandBus } from '@nestjs/cqrs';
+import {
+  ConfirmEmailCommand,
+  CreateNewPasswordCommand,
+  CreateTokensCommand,
+  DeleteActiveSessionCommand,
+  EmailResendingCommand,
+  GetUserInfCommand,
+  PasswordRecoveryCommand,
+  RegistrationUserCommand,
+  UpdateTokensCommand,
+} from './application/use-cases';
 
 @Controller('auth')
 export class AuthController {
-  constructor(protected authService: AuthService) {}
+  constructor(protected commandBus: CommandBus) {}
 
   //@UseGuards(ThrottlerGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   @Post('password-recovery')
   async userCreateNewPass(@Body() userEmailDTO: EmailRecPassDto) {
-    await this.authService.passwordRecovery(userEmailDTO.email);
+    await this.commandBus.execute(
+      new PasswordRecoveryCommand(userEmailDTO.email),
+    );
   }
 
   //@UseGuards(ThrottlerGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   @Post('new-password')
   async userUpdateNewPass(@Body() newPassDTO: NewPassDto) {
-    await this.authService.createNewPassword(newPassDTO);
+    await this.commandBus.execute(new CreateNewPasswordCommand(newPassDTO));
   }
 
   @UseGuards(/*ThrottlerGuard,*/ LocalAuthGuard)
@@ -66,8 +79,8 @@ export class AuthController {
       userID: req.user,
     };
 
-    const tokensObject: TokensObjectType = await this.authService.createTokens(
-      authObjectDTO,
+    const tokensObject: TokensObjectType = await this.commandBus.execute(
+      new CreateTokensCommand(authObjectDTO),
     );
     response.cookie(
       'refreshToken',
@@ -94,8 +107,8 @@ export class AuthController {
       deviceID: req.user.deviceId,
     };
 
-    const tokensObject: TokensObjectType = await this.authService.updateTokens(
-      authObjectDTO,
+    const tokensObject: TokensObjectType = await this.commandBus.execute(
+      new UpdateTokensCommand(authObjectDTO),
     );
 
     response.cookie(
@@ -111,21 +124,23 @@ export class AuthController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @Post('registration-confirmation')
   async userRegistrationConfirm(@Body() codeConfirm: CodeConfirmDto) {
-    await this.authService.confirmEmail(codeConfirm.code);
+    await this.commandBus.execute(new ConfirmEmailCommand(codeConfirm.code));
   }
 
   //@UseGuards(ThrottlerGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   @Post('registration')
   async userRegistration(@Body() userRegDTO: CreateUserMailDto) {
-    await this.authService.registrationUser(userRegDTO);
+    await this.commandBus.execute(new RegistrationUserCommand(userRegDTO));
   }
 
   //@UseGuards(ThrottlerGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   @Post('registration-email-resending')
   async userRegistrationResending(@Body() userEmailDTO: EmailResendDto) {
-    await this.authService.emailResending(userEmailDTO.email);
+    await this.commandBus.execute(
+      new EmailResendingCommand(userEmailDTO.email),
+    );
   }
 
   @HttpCode(HttpStatus.NO_CONTENT)
@@ -135,9 +150,8 @@ export class AuthController {
     @Request() req,
     @Res({ passthrough: true }) response: Response,
   ) {
-    await this.authService.deleteActiveSession(
-      req.user.userID,
-      req.user.deviceId,
+    await this.commandBus.execute(
+      new DeleteActiveSessionCommand(req.user.userID, req.user.deviceId),
     );
 
     await response.clearCookie('refreshToken');
@@ -146,7 +160,9 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(JwtAccessGuard)
   @Get('me')
-  async getUserInf(@Request() req) {
-    return await this.authService.getUserInf(req.user.userID);
+  async getUserInf(@Request() req): Promise<AboutMeType> {
+    return await this.commandBus.execute(
+      new GetUserInfCommand(req.user.userID),
+    );
   }
 }

@@ -15,8 +15,22 @@ import { ActiveCodeAdapter, BcryptAdapter, MailerAdapter } from '../adapters';
 import { MongooseModule } from '@nestjs/mongoose';
 import { UserModel, UserModelSchema } from '../core/entity';
 import { AuthRepository } from './repository/auth.repository';
+import {
+  ConfirmEmailUseCase,
+  CreateNewPasswordUseCase,
+  CreateTokensUseCase,
+  DeleteActiveSessionUseCase,
+  DeleteAllSessionUseCase,
+  EmailResendingUseCase,
+  GetAllSessionUseCase,
+  GetUserInfUseCase,
+  PasswordRecoveryUseCase,
+  RegistrationUserUseCase,
+  UpdateTokensUseCase,
+} from './application/use-cases';
+import { CqrsModule } from '@nestjs/cqrs';
 
-const modules = [PassportModule, JwtModule];
+const modules = [CqrsModule, PassportModule, JwtModule];
 
 const validators = [
   CheckedUniqueLogin,
@@ -25,6 +39,20 @@ const validators = [
   CheckedUniqueEmail,
 ];
 const adapters = [BcryptAdapter, MailerAdapter, ActiveCodeAdapter];
+
+const useCases = [
+  PasswordRecoveryUseCase,
+  CreateNewPasswordUseCase,
+  CreateTokensUseCase,
+  UpdateTokensUseCase,
+  ConfirmEmailUseCase,
+  RegistrationUserUseCase,
+  EmailResendingUseCase,
+  DeleteActiveSessionUseCase,
+  GetUserInfUseCase,
+  GetAllSessionUseCase,
+  DeleteAllSessionUseCase,
+];
 
 @Module({
   imports: [
@@ -37,7 +65,13 @@ const adapters = [BcryptAdapter, MailerAdapter, ActiveCodeAdapter];
     }),
     ...modules,
   ],
-  providers: [AuthService, AuthRepository, ...validators, ...adapters],
+  providers: [
+    AuthService,
+    AuthRepository,
+    ...validators,
+    ...adapters,
+    ...useCases,
+  ],
   controllers: [AuthController, SessionsController],
   exports: [AuthService],
 })
