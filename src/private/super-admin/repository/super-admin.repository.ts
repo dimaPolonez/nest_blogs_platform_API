@@ -26,14 +26,12 @@ export class SuperAdminRepository {
   ) {}
 
   async banedActivityUser(isBanned: boolean, userID: string) {
-    const userCommentArray: CommentModelType[] = await this.CommentModel.find({
-      'commentatorInfo.userId': userID,
-    });
-
-    userCommentArray.map((field) => {
-      field.commentatorInfo.isBanned = isBanned;
-      field.save();
-    });
+    await this.CommentModel.updateMany(
+      {
+        'commentatorInfo.userId': userID,
+      },
+      { 'commentatorInfo.isBanned': isBanned },
+    );
   }
 
   async findBlogById(blogID: string): Promise<BlogModelType | null> {
