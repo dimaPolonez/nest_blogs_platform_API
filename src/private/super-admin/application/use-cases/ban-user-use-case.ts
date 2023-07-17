@@ -24,7 +24,7 @@ export class BanUserUseCase implements ICommandHandler<BanUserCommand> {
     if (!findUser) {
       throw new NotFoundException('user not found');
     }
-    await findUser.banUser(banUserDTO);
+    await findUser.banUser(banUserDTO, findUser.id);
 
     await this.superAdminRepository.save(findUser);
   }

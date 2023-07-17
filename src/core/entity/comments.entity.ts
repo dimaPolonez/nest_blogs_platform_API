@@ -26,6 +26,8 @@ export class CommentatorInfo {
 
   @Prop({ default: 'none' })
   userLogin: string;
+  @Prop({ default: false })
+  isBanned: boolean;
 }
 
 @Schema()

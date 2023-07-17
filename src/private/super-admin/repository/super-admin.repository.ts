@@ -25,6 +25,17 @@ export class SuperAdminRepository {
     private readonly UserModel: Model<UserModelType>,
   ) {}
 
+  async banedActivityUser(isBanned: boolean, userID: string) {
+    const userCommentArray: CommentModelType[] = await this.CommentModel.find({
+      'commentatorInfo.userId': userID,
+    });
+
+    userCommentArray.map((field) => {
+      field.commentatorInfo.isBanned = isBanned;
+      field.save();
+    });
+  }
+
   async findBlogById(blogID: string): Promise<BlogModelType | null> {
     return this.BlogModel.findById({ _id: blogID });
   }

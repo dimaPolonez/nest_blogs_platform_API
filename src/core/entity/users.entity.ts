@@ -1,13 +1,8 @@
 import { HydratedDocument } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { isAfter } from 'date-fns';
-import {
-  banStatus,
-  BanUserType,
-  ConfirmUserType,
-  SessionUserType,
-} from '../models';
-import { BanUserDto } from '../dto/users';
+import { BanUserType, ConfirmUserType, SessionUserType } from '../models';
+import { SuperAdminRepository } from '../../private/super-admin/repository/super-admin.repository';
 
 export type UserModelType = HydratedDocument<UserModel>;
 
@@ -37,6 +32,8 @@ export class BanInfo {
 
 @Schema()
 export class UserModel {
+  constructor(protected superAdminRepository: SuperAdminRepository) {}
+
   @Prop({ required: true })
   login: string;
 
@@ -89,7 +86,7 @@ export class UserModel {
     this.activateUser.confirm = userActivateDTO.confirm;
   }
 
-  async banUser(banUserDTO: BanUserType) {
+  async banUser(banUserDTO: BanUserType, userID: string) {
     if (banUserDTO.isBanned === false) {
       this.banInfo.isBanned = banUserDTO.isBanned;
       this.banInfo.banDate = null;
@@ -100,6 +97,10 @@ export class UserModel {
       this.banInfo.banReason = banUserDTO.banReason;
       this.sessionsUser = [];
     }
+    await this.superAdminRepository.banedActivityUser(
+      banUserDTO.isBanned,
+      userID,
+    );
   }
 }
 

@@ -179,7 +179,7 @@ export class PostsQueryRepository {
     queryAll: QueryCommentType,
   ): Promise<GetAllCommentsType> {
     const allComments: CommentModelType[] = await this.CommentModel.find({
-      postId: postID,
+      $and: [{ postId: postID }, { 'commentatorInfo.isBanned': false }],
     })
       .skip(this.skippedObject(queryAll.pageNumber, queryAll.pageSize))
       .limit(queryAll.pageSize)

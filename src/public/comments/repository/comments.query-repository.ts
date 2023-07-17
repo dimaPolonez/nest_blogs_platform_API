@@ -19,9 +19,14 @@ export class CommentsQueryRepository {
     commentID: string,
     userID?: string,
   ): Promise<GetCommentType> {
-    const findCommentSmart = await this.CommentModel.findById(commentID);
+    const findCommentSmart: CommentModelType = await this.CommentModel.findById(
+      commentID,
+    );
 
-    if (!findCommentSmart) {
+    if (
+      !findCommentSmart ||
+      findCommentSmart.commentatorInfo.isBanned === true
+    ) {
       throw new NotFoundException('comment not found');
     }
 
