@@ -102,7 +102,19 @@ export class SuperAdminQueryRepository {
   async getAllUsersAdmin(
     queryAll: QueryUsersAdminType,
   ): Promise<GetAllUsersAdminType> {
+    let bannedParams = {};
+
+    switch (queryAll.banStatus) {
+      case 'banned':
+        bannedParams = true;
+        break;
+      case 'notBanned':
+        bannedParams = false;
+        break;
+    }
+
     const allUsers: UserModelType[] = await this.UserModel.find({
+      'BanInfo.isBanned': bannedParams,
       $or: [
         { login: new RegExp(queryAll.searchLoginTerm, 'gi') },
         { email: new RegExp(queryAll.searchEmailTerm, 'gi') },
@@ -112,47 +124,35 @@ export class SuperAdminQueryRepository {
       .limit(queryAll.pageSize)
       .sort({ [queryAll.sortBy]: this.sortObject(queryAll.sortDirection) });
 
-    let allCountNumber = 0;
-
     const allMapsUsers: GetUserAdminType[] = allUsers.map((field) => {
-      if (queryAll.banStatus === banStatus.all) {
-        allCountNumber++;
-        return {
-          id: field.id,
-          login: field.login,
-          email: field.email,
-          createdAt: field.createdAt,
-          banInfo: {
-            isBanned: field.banInfo.isBanned,
-            banDate: field.banInfo.banDate,
-            banReason: field.banInfo.banReason,
-          },
-        };
-      }
-
-      if (field.banInfo.isBanned === this.banFilter(queryAll.banStatus)) {
-        allCountNumber++;
-        return {
-          id: field.id,
-          login: field.login,
-          email: field.email,
-          createdAt: field.createdAt,
-          banInfo: {
-            isBanned: field.banInfo.isBanned,
-            banDate: field.banInfo.banDate,
-            banReason: field.banInfo.banReason,
-          },
-        };
-      }
+      return {
+        id: field.id,
+        login: field.login,
+        email: field.email,
+        createdAt: field.createdAt,
+        banInfo: {
+          isBanned: field.banInfo.isBanned,
+          banDate: field.banInfo.banDate,
+          banReason: field.banInfo.banReason,
+        },
+      };
     });
 
-    const pagesCount: number = Math.ceil(allCountNumber / queryAll.pageSize);
+    const allCount: number = await this.UserModel.countDocuments({
+      'BanInfo.isBanned': bannedParams,
+      $or: [
+        { login: new RegExp(queryAll.searchLoginTerm, 'gi') },
+        { email: new RegExp(queryAll.searchEmailTerm, 'gi') },
+      ],
+    });
+
+    const pagesCount: number = Math.ceil(allCount / queryAll.pageSize);
 
     return {
       pagesCount: pagesCount,
       page: queryAll.pageNumber,
       pageSize: queryAll.pageSize,
-      totalCount: allCountNumber,
+      totalCount: allCount,
       items: allMapsUsers,
     };
   }
