@@ -97,15 +97,15 @@ export class SuperAdminQueryRepository {
 
     switch (queryAll.banStatus) {
       case 'banned':
-        bannedParams = true;
+        bannedParams = { 'banInfo.isBanned': true };
         break;
       case 'notBanned':
-        bannedParams = false;
+        bannedParams = { 'banInfo.isBanned': false };
         break;
     }
 
     const allUsers: UserModelType[] = await this.UserModel.find({
-      'banInfo.isBanned': bannedParams,
+      bannedParams,
       $or: [
         { login: new RegExp(queryAll.searchLoginTerm, 'gi') },
         { email: new RegExp(queryAll.searchEmailTerm, 'gi') },
@@ -130,7 +130,7 @@ export class SuperAdminQueryRepository {
     });
 
     const allCount: number = await this.UserModel.countDocuments({
-      'banInfo.isBanned': bannedParams,
+      bannedParams,
       $or: [
         { login: new RegExp(queryAll.searchLoginTerm, 'gi') },
         { email: new RegExp(queryAll.searchEmailTerm, 'gi') },
