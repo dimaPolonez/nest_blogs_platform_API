@@ -1,6 +1,10 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { SuperAdminRepository } from '../../repository/super-admin.repository';
-import { BanUserType, MyLikeStatus } from '../../../../core/models';
+import {
+  BanUserType,
+  MyLikeStatus,
+  UpdateArrayPostsType,
+} from '../../../../core/models';
 import { PostModelType, UserModelType } from '../../../../core/entity';
 import { NotFoundException } from '@nestjs/common';
 
@@ -32,10 +36,12 @@ export class BanUserUseCase implements ICommandHandler<BanUserCommand> {
     );
 
     const allPosts: PostModelType[] =
-      await this.superAdminRepository.updateAllPosts(
+      await this.superAdminRepository.updateAllPostsIsBanned(
         banUserDTO.isBanned,
         userID,
       );
+
+    const updateArrayPosts: UpdateArrayPostsType[] = [];
 
     allPosts.map((field) => {
       const likesCount = field.extendedLikesInfo.newestLikes.filter(
@@ -45,11 +51,18 @@ export class BanUserUseCase implements ICommandHandler<BanUserCommand> {
         (v) => v.myStatus === MyLikeStatus.Dislike,
       );
 
-      field.extendedLikesInfo.likesCount = likesCount.length;
-      field.extendedLikesInfo.dislikesCount = dislikesCount.length;
+      const arrayPostsDTO: UpdateArrayPostsType = {
+        postID: field.id,
+        likesCount: likesCount.length,
+        dislikesCount: dislikesCount.length,
+      };
 
-      field.save();
+      updateArrayPosts.push(arrayPostsDTO);
     });
+
+    await this.superAdminRepository.updateAllPostsCounterLikes(
+      updateArrayPosts,
+    );
 
     await this.superAdminRepository.save(findUser);
   }

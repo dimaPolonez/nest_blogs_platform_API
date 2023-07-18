@@ -22,6 +22,12 @@ export type UpdatePostType = {
   blogName?: string;
 };
 
+export type UpdateArrayPostsType = {
+  postID: string;
+  likesCount: number;
+  dislikesCount: number;
+};
+
 export type CreateCommentOfPostType = {
   content: string;
 };

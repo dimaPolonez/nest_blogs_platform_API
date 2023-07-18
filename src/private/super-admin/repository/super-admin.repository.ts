@@ -11,6 +11,7 @@ import {
   UserModel,
   UserModelType,
 } from '../../../core/entity';
+import { UpdateArrayPostsType } from '../../../core/models';
 
 @Injectable()
 export class SuperAdminRepository {
@@ -38,13 +39,25 @@ export class SuperAdminRepository {
     }
   }
 
-  async updateAllPosts(isBanned: boolean, userID: string) {
+  async updateAllPostsIsBanned(isBanned: boolean, userID: string) {
     await this.PostModel.updateMany(
       { 'extendedLikesInfo.newestLikes.userId': userID },
       { 'extendedLikesInfo.newestLikes.isBanned': isBanned },
     );
 
     return this.PostModel.find({});
+  }
+
+  async updateAllPostsCounterLikes(updateArrayPosts: UpdateArrayPostsType[]) {
+    for (let i = 0; i < updateArrayPosts.length; i++) {
+      await this.PostModel.updateMany(
+        { _id: updateArrayPosts[i].postID },
+        {
+          'extendedLikesInfo.likesCount': updateArrayPosts[i].likesCount,
+          'extendedLikesInfo.dislikesCount': updateArrayPosts[i].dislikesCount,
+        },
+      );
+    }
   }
 
   async findBlogById(blogID: string): Promise<BlogModelType | null> {
