@@ -69,6 +69,7 @@ export class UpdateLikeStatusCommentUseCase
       login: login,
       myStatus: likeStatus,
       addedAt: new Date().toISOString(),
+      isBanned: false,
     };
 
     if (!userActive) {

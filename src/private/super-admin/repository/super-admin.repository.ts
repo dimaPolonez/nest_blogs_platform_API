@@ -32,7 +32,19 @@ export class SuperAdminRepository {
       },
       { 'commentatorInfo.isBanned': isBanned },
     );
-    await this.UserModel.updateOne({ _id: userID }, { sessionsUser: [] });
+
+    if (isBanned === true) {
+      await this.UserModel.updateOne({ _id: userID }, { sessionsUser: [] });
+    }
+  }
+
+  async updateAllPosts(isBanned: boolean, userID: string) {
+    await this.PostModel.updateMany(
+      { 'extendedLikesInfo.newestLikes.userId': userID },
+      { 'extendedLikesInfo.newestLikes.isBanned': isBanned },
+    );
+
+    return this.PostModel.find({});
   }
 
   async findBlogById(blogID: string): Promise<BlogModelType | null> {
@@ -47,7 +59,7 @@ export class SuperAdminRepository {
     await this.UserModel.deleteOne({ _id: userID });
   }
 
-  async save(model: BlogModelType | UserModelType) {
+  async save(model: BlogModelType | PostModelType | UserModelType) {
     return await model.save();
   }
 

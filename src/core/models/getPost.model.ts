@@ -9,6 +9,7 @@ export type NewestLikesType = {
   login: string;
   myStatus: MyLikeStatus;
   addedAt: string;
+  isBanned: boolean;
 };
 
 type ExtendedLikesType = {
