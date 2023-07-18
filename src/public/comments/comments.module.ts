@@ -4,10 +4,6 @@ import { CommentsController } from './comments.controller';
 import { CommentsRepository } from './repository/comments.repository';
 import { CommentsQueryRepository } from './repository/comments.query-repository';
 import { CommentModel, CommentModelSchema } from '../../core/entity';
-import {
-  JwtAccessGuard,
-  QuestJwtAccessGuard,
-} from '../../guards-handlers/guard';
 import { CqrsModule } from '@nestjs/cqrs';
 import {
   DeleteCommentUseCase,
