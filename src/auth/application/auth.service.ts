@@ -78,13 +78,10 @@ export class AuthService {
     const findUser: UserModelType | null =
       await this.authRepository.findUserById(userID);
 
-    if (!findUser) {
-      return null;
-    }
-
-    if (findUser.sessionsUser.length === 0) {
+    if (!findUser || findUser.sessionsUser.length === 0) {
       throw new UnauthorizedException();
     }
+
     return findUser.login;
   }
   async validateUser(loginDTO: LoginType): Promise<null | string> {

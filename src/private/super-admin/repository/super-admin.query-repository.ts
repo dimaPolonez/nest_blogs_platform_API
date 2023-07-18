@@ -105,7 +105,7 @@ export class SuperAdminQueryRepository {
     }
 
     const allUsers: UserModelType[] = await this.UserModel.find({
-      'BanInfo.isBanned': bannedParams,
+      'banInfo.isBanned': bannedParams,
       $or: [
         { login: new RegExp(queryAll.searchLoginTerm, 'gi') },
         { email: new RegExp(queryAll.searchEmailTerm, 'gi') },
@@ -130,7 +130,7 @@ export class SuperAdminQueryRepository {
     });
 
     const allCount: number = await this.UserModel.countDocuments({
-      'BanInfo.isBanned': bannedParams,
+      'banInfo.isBanned': bannedParams,
       $or: [
         { login: new RegExp(queryAll.searchLoginTerm, 'gi') },
         { email: new RegExp(queryAll.searchEmailTerm, 'gi') },

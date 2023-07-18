@@ -31,7 +31,7 @@ export class BlogModel {
   })
   createdAt: string;
 
-  @Prop({ default: true })
+  @Prop({ default: false })
   isMembership: boolean;
 
   @Prop({ default: () => ({}) })
