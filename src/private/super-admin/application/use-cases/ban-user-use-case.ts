@@ -45,10 +45,10 @@ export class BanUserUseCase implements ICommandHandler<BanUserCommand> {
 
     allPosts.map((field) => {
       const likesCount = field.extendedLikesInfo.newestLikes.filter(
-        (v) => v.myStatus === MyLikeStatus.Like,
+        (v) => v.myStatus === MyLikeStatus.Like && v.isBanned === false,
       );
       const dislikesCount = field.extendedLikesInfo.newestLikes.filter(
-        (v) => v.myStatus === MyLikeStatus.Dislike,
+        (v) => v.myStatus === MyLikeStatus.Dislike && v.isBanned === false,
       );
 
       const arrayPostsDTO: UpdateArrayPostsType = {
