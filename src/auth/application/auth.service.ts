@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { LoginType } from '../../core/models';
 import { BcryptAdapter } from '../../adapters';
 import { UserModel, UserModelType } from '../../core/entity';
@@ -80,6 +80,10 @@ export class AuthService {
 
     if (!findUser) {
       return null;
+    }
+
+    if (findUser.sessionsUser.length === 0) {
+      throw new UnauthorizedException();
     }
     return findUser.login;
   }

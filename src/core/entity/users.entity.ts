@@ -2,7 +2,6 @@ import { HydratedDocument } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { isAfter } from 'date-fns';
 import { BanUserType, ConfirmUserType, SessionUserType } from '../models';
-import { SuperAdminRepository } from '../../private/super-admin/repository/super-admin.repository';
 
 export type UserModelType = HydratedDocument<UserModel>;
 

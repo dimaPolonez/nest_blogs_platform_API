@@ -180,7 +180,6 @@ export function banFlow(testObject: TestObjectType) {
     it('get id comment status 404 (GET /comments/:id)', () => {
       return request(app.getHttpServer())
         .get(`/comments/${commentId1}`)
-        .set('Authorization', `Bearer ${testObject.accessToken}`)
         .expect(404);
     });
 

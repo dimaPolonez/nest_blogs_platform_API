@@ -32,6 +32,7 @@ export class SuperAdminRepository {
       },
       { 'commentatorInfo.isBanned': isBanned },
     );
+    await this.UserModel.updateOne({ _id: userID }, { sessionsUser: [] });
   }
 
   async findBlogById(blogID: string): Promise<BlogModelType | null> {
