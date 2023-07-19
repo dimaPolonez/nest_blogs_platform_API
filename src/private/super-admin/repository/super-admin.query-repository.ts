@@ -95,25 +95,17 @@ export class SuperAdminQueryRepository {
   ): Promise<GetAllUsersAdminType> {
     let bannedParams = {};
 
-    if (queryAll.banStatus === 'notBanned') {
-      bannedParams = { 'banInfo.isBanned': true };
-    }
-
-    if (queryAll.banStatus === 'banned') {
-      bannedParams = { 'banInfo.isBanned': false };
-    }
-
-    /*    switch (queryAll.banStatus) {
+    switch (queryAll.banStatus) {
       case 'banned':
         bannedParams = { 'banInfo.isBanned': true };
         break;
       case 'notBanned':
         bannedParams = { 'banInfo.isBanned': false };
         break;
-    }*/
+    }
 
     const allUsers: UserModelType[] = await this.UserModel.find({
-      bannedParams,
+      ...bannedParams,
       $or: [
         { login: new RegExp(queryAll.searchLoginTerm, 'gi') },
         { email: new RegExp(queryAll.searchEmailTerm, 'gi') },
