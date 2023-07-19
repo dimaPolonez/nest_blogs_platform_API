@@ -49,14 +49,17 @@ export class SuperAdminRepository {
   }
 
   async updateAllPostsCounterLikes(updateArrayPosts: UpdateArrayPostsType[]) {
-    for (let i = 0; i < updateArrayPosts.length; i++) {
-      await this.PostModel.updateMany(
-        { _id: updateArrayPosts[i].postID },
-        {
-          'extendedLikesInfo.likesCount': updateArrayPosts[i].likesCount,
-          'extendedLikesInfo.dislikesCount': updateArrayPosts[i].dislikesCount,
-        },
-      );
+    if (updateArrayPosts.length > 0) {
+      for (let i = 0; i < updateArrayPosts.length; i++) {
+        await this.PostModel.updateMany(
+          { _id: updateArrayPosts[i].postID },
+          {
+            'extendedLikesInfo.likesCount': updateArrayPosts[i].likesCount,
+            'extendedLikesInfo.dislikesCount':
+              updateArrayPosts[i].dislikesCount,
+          },
+        );
+      }
     }
   }
 
