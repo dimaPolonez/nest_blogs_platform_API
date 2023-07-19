@@ -130,7 +130,7 @@ export class SuperAdminQueryRepository {
     });
 
     const allCount: number = await this.UserModel.countDocuments({
-      bannedParams,
+      ...bannedParams,
       $or: [
         { login: new RegExp(queryAll.searchLoginTerm, 'gi') },
         { email: new RegExp(queryAll.searchEmailTerm, 'gi') },
