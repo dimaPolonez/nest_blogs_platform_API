@@ -7,3 +7,9 @@ export type UpdateCommentType = {
 export type UpdateLikeStatusCommentType = {
   likeStatus: MyLikeStatus;
 };
+
+export type UpdateArrayCommentsType = {
+  commentID: string;
+  likesCount: number;
+  dislikesCount: number;
+};

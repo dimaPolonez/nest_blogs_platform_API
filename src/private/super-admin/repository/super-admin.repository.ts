@@ -11,7 +11,10 @@ import {
   UserModel,
   UserModelType,
 } from '../../../core/entity';
-import { UpdateArrayPostsType } from '../../../core/models';
+import {
+  UpdateArrayCommentsType,
+  UpdateArrayPostsType,
+} from '../../../core/models';
 
 @Injectable()
 export class SuperAdminRepository {
@@ -42,10 +45,19 @@ export class SuperAdminRepository {
   async updateAllPostsIsBanned(isBanned: boolean, userID: string) {
     await this.PostModel.updateMany(
       { 'extendedLikesInfo.newestLikes.userId': userID },
-      { $set: { 'extendedLikesInfo.newestLikes.isBanned': isBanned } },
+      { $set: { 'extendedLikesInfo.newestLikes.$.isBanned': isBanned } },
     );
 
     return this.PostModel.find({});
+  }
+
+  async updateAllCommentIsBanned(isBanned: boolean, userID: string) {
+    await this.CommentModel.updateMany(
+      { 'likesInfo.newestLikes.userId': userID },
+      { $set: { 'likesInfo.newestLikes.$.isBanned': isBanned } },
+    );
+
+    return this.CommentModel.find({});
   }
 
   async updateAllPostsCounterLikes(updateArrayPosts: UpdateArrayPostsType[]) {
@@ -58,6 +70,24 @@ export class SuperAdminRepository {
               'extendedLikesInfo.likesCount': updateArrayPosts[i].likesCount,
               'extendedLikesInfo.dislikesCount':
                 updateArrayPosts[i].dislikesCount,
+            },
+          },
+        );
+      }
+    }
+  }
+
+  async updateAllCommentsCounterLikes(
+    updateArrayComments: UpdateArrayCommentsType[],
+  ) {
+    if (updateArrayComments.length > 0) {
+      for (let i = 0; i < updateArrayComments.length; i++) {
+        await this.CommentModel.updateMany(
+          { _id: updateArrayComments[i].commentID },
+          {
+            $set: {
+              'likesInfo.likesCount': updateArrayComments[i].likesCount,
+              'likesInfo.dislikesCount': updateArrayComments[i].dislikesCount,
             },
           },
         );
