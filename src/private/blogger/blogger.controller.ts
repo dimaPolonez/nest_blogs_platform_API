@@ -106,10 +106,10 @@ export class BloggerController {
   }
 
   @UseGuards(JwtAccessGuard)
-  @Post('blogs/:idBlog/posts/:idPost')
+  @Post('blogs/:id/posts/:idPost')
   @HttpCode(HttpStatus.NO_CONTENT)
   async updatePostOfBlog(
-    @Param('idBlog') blogID: string,
+    @Param('id') blogID: string,
     @Param('idPost') postID: string,
     @Body() postDTO: UpdatePostOfBlogDto,
     @Request() req,
@@ -125,10 +125,10 @@ export class BloggerController {
   }
 
   @UseGuards(JwtAccessGuard)
-  @Post('blogs/:idBlog/posts/:idPost')
+  @Post('blogs/:id/posts/:idPost')
   @HttpCode(HttpStatus.NO_CONTENT)
   async deletePostOfBlog(
-    @Param('idBlog') blogID: string,
+    @Param('id') blogID: string,
     @Param('idPost') postID: string,
     @Request() req,
   ) {
