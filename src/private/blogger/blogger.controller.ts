@@ -78,7 +78,7 @@ export class BloggerController {
     );
   }
   @UseGuards(JwtAccessGuard)
-  @Get()
+  @Get('blogs')
   @HttpCode(HttpStatus.OK)
   async getAllBlogsToBlogger(
     @Query() queryAll: QueryBlogsDto,
