@@ -31,7 +31,7 @@ export class SuperAdminRepository {
       {
         'commentatorInfo.userId': userID,
       },
-      { 'commentatorInfo.isBanned': isBanned },
+      { $set: { 'commentatorInfo.isBanned': isBanned } },
     );
 
     if (isBanned === true) {
@@ -42,7 +42,7 @@ export class SuperAdminRepository {
   async updateAllPostsIsBanned(isBanned: boolean, userID: string) {
     await this.PostModel.updateMany(
       { 'extendedLikesInfo.newestLikes.userId': userID },
-      { 'extendedLikesInfo.newestLikes.isBanned': isBanned },
+      { $set: { 'extendedLikesInfo.newestLikes.isBanned': isBanned } },
     );
 
     return this.PostModel.find({});

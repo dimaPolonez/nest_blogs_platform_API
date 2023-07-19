@@ -65,6 +65,17 @@ export function banFlow(testObject: TestObjectType) {
           });
         });
     });
+
+    it(`put like Polonez of post status 204 /posts/:id/like-status`, () => {
+      return request(app.getHttpServer())
+        .put(`/posts/${testObject.postID}/like-status`)
+        .set('Authorization', `Bearer ${testObject.accessToken}`)
+        .send({
+          likeStatus: 'Like',
+        })
+        .expect(204);
+    });
+
     it('post new comment by id post status 201 (POST /posts/:id/comments)', () => {
       return request(app.getHttpServer())
         .post(`/posts/${postIdByBlogId}/comments`)
