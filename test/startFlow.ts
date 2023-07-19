@@ -50,7 +50,7 @@ export function startFlow(): TestObjectType {
 
     it('post new user status 201 (POST /users)', () => {
       return request(app.getHttpServer())
-        .post('/users')
+        .post('/sa/users')
         .set('Authorization', `Basic ${testObject.basic}`)
         .send({
           login: 'Polonez',
@@ -65,14 +65,33 @@ export function startFlow(): TestObjectType {
             login: 'Polonez',
             email: 'testPolonez@yandex.ru',
             createdAt: res.body.createdAt,
+            banInfo: {
+              isBanned: expect.any(Boolean),
+              banDate: expect.any(String),
+              banReason: expect.any(String),
+            },
           };
         });
     });
 
-    it('post new blog status 201 (POST /blogs)', () => {
+    it('post aut user and get tokens status 200 (POST /auth/login)', () => {
       return request(app.getHttpServer())
-        .post('/blogs')
-        .set('Authorization', `Basic ${testObject.basic}`)
+        .post('/auth/login')
+        .send({
+          loginOrEmail: 'Polonez',
+          password: 'pass1234',
+        })
+        .expect(200)
+        .expect((res) => {
+          testObject.accessToken = res.body['accessToken'];
+          testObject.refreshToken = res.headers['set-cookie'][0];
+        });
+    });
+
+    it('post new blog status 201 (POST /blogger/blogs)', () => {
+      return request(app.getHttpServer())
+        .post('/blogger/blogs')
+        .set('Authorization', `Bearer ${testObject.accessToken}`)
         .send({
           name: 'Test blog',
           description: 'My test blog',
@@ -92,15 +111,14 @@ export function startFlow(): TestObjectType {
         });
     });
 
-    it('post new post status 201 (POST /posts)', () => {
+    it('post new post of blog status 201 (POST /blogger/blogs/:id/posts)', () => {
       return request(app.getHttpServer())
-        .post('/posts')
-        .set('Authorization', `Basic ${testObject.basic}`)
+        .post(`/blogger/blogs/${testObject.blogID}/posts`)
+        .set('Authorization', `Bearer ${testObject.accessToken}`)
         .send({
           title: 'Test post',
           shortDescription: 'My test post',
           content: 'My test content',
-          blogId: testObject.blogID,
         })
         .expect(201)
         .expect((res) => {
@@ -120,19 +138,6 @@ export function startFlow(): TestObjectType {
               newestLikes: [],
             },
           });
-        });
-    });
-    it('post aut user and get tokens status 200 (POST /auth/login)', () => {
-      return request(app.getHttpServer())
-        .post('/auth/login')
-        .send({
-          loginOrEmail: 'Polonez',
-          password: 'pass1234',
-        })
-        .expect(200)
-        .expect((res) => {
-          testObject.accessToken = res.body['accessToken'];
-          testObject.refreshToken = res.headers['set-cookie'][0];
         });
     });
   });

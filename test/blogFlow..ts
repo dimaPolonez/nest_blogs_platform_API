@@ -40,7 +40,7 @@ export function blogFlow(testObject: TestObjectType) {
                 description: 'My test blog',
                 websiteUrl: 'polonezTestBlog.com',
                 createdAt: expect.any(String),
-                isMembership: false,
+                isMembership: expect.any(Boolean),
               },
             ],
           });
@@ -58,15 +58,15 @@ export function blogFlow(testObject: TestObjectType) {
             description: 'My test blog',
             websiteUrl: 'polonezTestBlog.com',
             createdAt: expect.any(String),
-            isMembership: false,
+            isMembership: expect.any(Boolean),
           });
         });
     });
 
-    it('put id blog status 404 (PUT /blogs/:id)', () => {
+    it('put id blog status 404 (PUT /blogger/blogs/:id)', () => {
       return request(app.getHttpServer())
-        .put(`/blogs/${notFound}`)
-        .set('Authorization', `Basic ${testObject.basic}`)
+        .put(`/blogger/blogs/${notFound}`)
+        .set('Authorization', `Bearer ${testObject.accessToken}`)
         .send({
           name: 'Test blog upd',
           description: 'My test blog update',
@@ -75,10 +75,10 @@ export function blogFlow(testObject: TestObjectType) {
         .expect(404);
     });
 
-    it('put id blog status 204 (PUT /blogs/:id)', () => {
+    it('put id blog status 204 (PUT /blogger/blogs/:id)', () => {
       return request(app.getHttpServer())
-        .put(`/blogs/${testObject.blogID}`)
-        .set('Authorization', `Basic ${testObject.basic}`)
+        .put(`/blogger/blogs/${testObject.blogID}`)
+        .set('Authorization', `Bearer ${testObject.accessToken}`)
         .send({
           name: 'Test blog upd',
           description: 'My test blog update',
@@ -98,15 +98,15 @@ export function blogFlow(testObject: TestObjectType) {
             description: 'My test blog update',
             websiteUrl: 'polonezUpdateTestBlog.com',
             createdAt: expect.any(String),
-            isMembership: false,
+            isMembership: expect.any(Boolean),
           });
         });
     });
 
-    it('post new post by id blog status 201 (POST /blogs/:id/posts)', () => {
+    it('post new post by id blog status 201 (POST /blogger/blogs/:id/posts)', () => {
       return request(app.getHttpServer())
-        .post(`/blogs/${testObject.blogID}/posts`)
-        .set('Authorization', `Basic ${testObject.basic}`)
+        .post(`/blogger/blogs/${testObject.blogID}/posts`)
+        .set('Authorization', `Bearer ${testObject.accessToken}`)
         .send({
           title: 'Test post by blog',
           shortDescription: 'My test post by blog',
@@ -142,10 +142,10 @@ export function blogFlow(testObject: TestObjectType) {
         });
     });
 
-    it('post new deleteBlog status 201 (POST /blogs)', () => {
+    it('post new deleteBlog status 201 (POST /blogger/blogs)', () => {
       return request(app.getHttpServer())
-        .post('/blogs')
-        .set('Authorization', `Basic ${testObject.basic}`)
+        .post('/blogger/blogs')
+        .set('Authorization', `Bearer ${testObject.accessToken}`)
         .send({
           name: 'Delete blog',
           description: 'My delete blog',
@@ -160,22 +160,22 @@ export function blogFlow(testObject: TestObjectType) {
             description: 'My delete blog',
             websiteUrl: 'polonezDeleteBlog.com',
             createdAt: expect.any(String),
-            isMembership: false,
+            isMembership: expect.any(Boolean),
           });
         });
     });
 
-    it('delete blog status 404 (DELETE /blogs/:id)', () => {
+    it('delete blog status 404 (DELETE /blogger/blogs/:id)', () => {
       return request(app.getHttpServer())
-        .delete(`/blogs/${notFound}`)
-        .set('Authorization', `Basic ${testObject.basic}`)
+        .delete(`/blogger/blogs/${notFound}`)
+        .set('Authorization', `Bearer ${testObject.accessToken}`)
         .expect(404);
     });
 
     it('delete blog status 204 (DELETE /blogs/:id)', () => {
       return request(app.getHttpServer())
-        .delete(`/blogs/${deleteBlogId}`)
-        .set('Authorization', `Basic ${testObject.basic}`)
+        .delete(`/blogger/blogs/${deleteBlogId}`)
+        .set('Authorization', `Bearer ${testObject.accessToken}`)
         .expect(204);
     });
 

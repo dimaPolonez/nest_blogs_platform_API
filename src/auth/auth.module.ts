@@ -1,43 +1,76 @@
 import { Module } from '@nestjs/common';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { PassportModule } from '@nestjs/passport';
-import { AuthService } from './auth.service';
-import { UsersModule } from '../features/users/users.module';
-import { JwtModule, JwtService } from '@nestjs/jwt';
+import { AuthService } from './application/auth.service';
+import { JwtModule } from '@nestjs/jwt';
 import { AuthController } from './auth.controller';
-import {
-  JwtAccessStrategy,
-  JwtRefreshStrategy,
-  LocalStrategy,
-} from '../guards-handlers/strategies';
 import { SessionsController } from './sessions.controller';
 import {
   CheckedConfirmCode,
   CheckedEmailToBase,
   CheckedUniqueEmail,
   CheckedUniqueLogin,
-} from '../validation';
+} from '../validation/class-validators';
+import { ActiveCodeAdapter, BcryptAdapter, MailerAdapter } from '../adapters';
+import { MongooseModule } from '@nestjs/mongoose';
+import { UserModel, UserModelSchema } from '../core/entity';
+import { AuthRepository } from './repository/auth.repository';
+import {
+  ConfirmEmailUseCase,
+  CreateNewPasswordUseCase,
+  CreateTokensUseCase,
+  DeleteActiveSessionUseCase,
+  DeleteAllSessionUseCase,
+  EmailResendingUseCase,
+  GetAllSessionUseCase,
+  GetUserInfUseCase,
+  PasswordRecoveryUseCase,
+  RegistrationUserUseCase,
+  UpdateTokensUseCase,
+} from './application/use-cases';
+import { CqrsModule } from '@nestjs/cqrs';
+
+const modules = [CqrsModule, PassportModule, JwtModule];
+
+const validators = [
+  CheckedUniqueLogin,
+  CheckedConfirmCode,
+  CheckedEmailToBase,
+  CheckedUniqueEmail,
+];
+const adapters = [BcryptAdapter, MailerAdapter, ActiveCodeAdapter];
+
+const useCases = [
+  PasswordRecoveryUseCase,
+  CreateNewPasswordUseCase,
+  CreateTokensUseCase,
+  UpdateTokensUseCase,
+  ConfirmEmailUseCase,
+  RegistrationUserUseCase,
+  EmailResendingUseCase,
+  DeleteActiveSessionUseCase,
+  GetUserInfUseCase,
+  GetAllSessionUseCase,
+  DeleteAllSessionUseCase,
+];
 
 @Module({
   imports: [
+    MongooseModule.forFeature([
+      { name: UserModel.name, schema: UserModelSchema },
+    ]),
     ThrottlerModule.forRoot({
       ttl: 10,
       limit: 5,
     }),
-    UsersModule,
-    PassportModule,
-    JwtModule,
+    ...modules,
   ],
   providers: [
     AuthService,
-    LocalStrategy,
-    JwtAccessStrategy,
-    JwtService,
-    JwtRefreshStrategy,
-    CheckedUniqueLogin,
-    CheckedConfirmCode,
-    CheckedEmailToBase,
-    CheckedUniqueEmail,
+    AuthRepository,
+    ...validators,
+    ...adapters,
+    ...useCases,
   ],
   controllers: [AuthController, SessionsController],
   exports: [AuthService],
