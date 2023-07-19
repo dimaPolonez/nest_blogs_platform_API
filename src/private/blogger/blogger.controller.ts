@@ -13,16 +13,21 @@ import {
   Request,
   UseGuards,
 } from '@nestjs/common';
-import { JwtAccessGuard } from '../../guards-handlers/guard';
+import {
+  JwtAccessGuard,
+  QuestJwtAccessGuard,
+} from '../../guards-handlers/guard';
 import {
   CreateBlogDto,
   CreatePostOfBlogDto,
   QueryBlogsDto,
+  QueryPostOfBlogDto,
   UpdateBlogDto,
   UpdatePostOfBlogDto,
 } from '../../core/dto/blogs';
 import {
   GetAllBlogsType,
+  GetAllPostsOfBlogType,
   GetBlogType,
   GetPostOfBlogType,
 } from '../../core/models';
@@ -44,19 +49,6 @@ export class BloggerController {
   ) {}
 
   @UseGuards(JwtAccessGuard)
-  @Post('blogs')
-  @HttpCode(HttpStatus.CREATED)
-  async createBlog(
-    @Body() blogDTO: CreateBlogDto,
-    @Request() req,
-  ): Promise<GetBlogType> {
-    const newBlogID: string = await this.commandBus.execute(
-      new CreateBlogToBloggerCommand(req.user.userID, req.user.login, blogDTO),
-    );
-    return await this.bloggerQueryRepository.findBlogById(newBlogID);
-  }
-
-  @UseGuards(JwtAccessGuard)
   @Put('blogs/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
   async updateBlog(
@@ -76,6 +68,19 @@ export class BloggerController {
     await this.commandBus.execute(
       new DeleteBlogToBloggerCommand(req.user.userID, blogID),
     );
+  }
+
+  @UseGuards(JwtAccessGuard)
+  @Post('blogs')
+  @HttpCode(HttpStatus.CREATED)
+  async createBlog(
+    @Body() blogDTO: CreateBlogDto,
+    @Request() req,
+  ): Promise<GetBlogType> {
+    const newBlogID: string = await this.commandBus.execute(
+      new CreateBlogToBloggerCommand(req.user.userID, req.user.login, blogDTO),
+    );
+    return await this.bloggerQueryRepository.findBlogById(newBlogID);
   }
   @UseGuards(JwtAccessGuard)
   @Get('blogs')
@@ -103,6 +108,21 @@ export class BloggerController {
     );
 
     return await this.bloggerQueryRepository.findPostById(newPostOfBlogID);
+  }
+
+  @UseGuards(JwtAccessGuard)
+  @Get('blogs/:id/posts')
+  @HttpCode(HttpStatus.OK)
+  async getAllPostsOfBlogToBlogger(
+    @Request() req,
+    @Param('id') blogID: string,
+    @Query() queryAll: QueryPostOfBlogDto,
+  ): Promise<GetAllPostsOfBlogType> {
+    return await this.bloggerQueryRepository.getAllPostsOfBlogToBlogger(
+      req.user.userID,
+      queryAll,
+      blogID,
+    );
   }
 
   @UseGuards(JwtAccessGuard)

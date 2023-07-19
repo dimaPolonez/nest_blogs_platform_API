@@ -1,13 +1,19 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import {
   GetAllBlogsType,
+  GetAllPostsType,
   GetBlogType,
   GetPostType,
   MyLikeStatus,
   NewestLikesType,
   QueryBlogType,
+  QueryPostType,
 } from '../../../core/models';
 import {
   BlogModel,
@@ -154,6 +160,94 @@ export class BloggerQueryRepository {
       pageSize: queryAll.pageSize,
       totalCount: allCount,
       items: allMapsBlogs,
+    };
+  }
+
+  async getAllPostsOfBlogToBlogger(
+    userID: string,
+    queryAll: QueryPostType,
+    blogID: string,
+  ): Promise<GetAllPostsType> {
+    const findBlogSmart: BlogModelType | null = await this.BlogModel.findById(
+      blogID,
+    );
+
+    if (!findBlogSmart) {
+      throw new NotFoundException();
+    }
+
+    if (findBlogSmart.blogOwnerInfo.userId !== userID) {
+      throw new ForbiddenException('The user is not the owner of the blog');
+    }
+
+    const allPosts: PostModelType[] = await this.PostModel.find({
+      blogId: blogID,
+    })
+      .skip(this.skippedObject(queryAll.pageNumber, queryAll.pageSize))
+      .limit(queryAll.pageSize)
+      .sort({ [queryAll.sortBy]: this.sortObject(queryAll.sortDirection) });
+
+    const allMapsPosts: GetPostType[] = allPosts.map((field) => {
+      let userStatus = MyLikeStatus.None;
+
+      const findUserLike: null | NewestLikesType =
+        field.extendedLikesInfo.newestLikes.find((v) => v.userId === userID);
+
+      if (findUserLike) {
+        userStatus = findUserLike.myStatus;
+      }
+
+      let newestLikesArray = [];
+
+      if (field.extendedLikesInfo.newestLikes.length > 0) {
+        let newestLikes: NewestLikesType[] | [] =
+          field.extendedLikesInfo.newestLikes.filter(
+            (v) => v.myStatus === MyLikeStatus.Like && v.isBanned === false,
+          );
+
+        newestLikes.sort(function (a: NewestLikesType, b: NewestLikesType) {
+          return a.addedAt < b.addedAt ? 1 : a.addedAt > b.addedAt ? -1 : 0;
+        });
+
+        newestLikes = newestLikes.slice(0, 3);
+
+        newestLikesArray = newestLikes.map((v: NewestLikesType) => {
+          return {
+            userId: v.userId,
+            login: v.login,
+            addedAt: v.addedAt,
+          };
+        });
+      }
+
+      return {
+        id: field.id,
+        title: field.title,
+        shortDescription: field.shortDescription,
+        content: field.content,
+        blogId: field.blogId,
+        blogName: field.blogName,
+        createdAt: field.createdAt,
+        extendedLikesInfo: {
+          likesCount: field.extendedLikesInfo.likesCount,
+          dislikesCount: field.extendedLikesInfo.dislikesCount,
+          myStatus: userStatus,
+          newestLikes: newestLikesArray,
+        },
+      };
+    });
+
+    const allCount: number = await this.PostModel.countDocuments({
+      blogId: blogID,
+    });
+    const pagesCount: number = Math.ceil(allCount / queryAll.pageSize);
+
+    return {
+      pagesCount: pagesCount,
+      page: queryAll.pageNumber,
+      pageSize: queryAll.pageSize,
+      totalCount: allCount,
+      items: allMapsPosts,
     };
   }
 }
