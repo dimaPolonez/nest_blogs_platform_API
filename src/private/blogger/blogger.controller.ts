@@ -106,7 +106,7 @@ export class BloggerController {
   }
 
   @UseGuards(JwtAccessGuard)
-  @Post('blogs/:blogId/posts/:postId')
+  @Put('blogs/:blogId/posts/:postId')
   @HttpCode(HttpStatus.NO_CONTENT)
   async updatePostOfBlog(
     @Param('blogId') blogID: string,
@@ -125,7 +125,7 @@ export class BloggerController {
   }
 
   @UseGuards(JwtAccessGuard)
-  @Post('blogs/:blogId/posts/:postId')
+  @Delete('blogs/:blogId/posts/:postId')
   @HttpCode(HttpStatus.NO_CONTENT)
   async deletePostOfBlog(
     @Param('blogId') blogID: string,

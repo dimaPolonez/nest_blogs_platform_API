@@ -116,7 +116,7 @@ export class BloggerQueryRepository {
     const allBlogs: BlogModelType[] = await this.BlogModel.find({
       $and: [
         {
-          bloggerId: blogerId,
+          'blogOwnerInfo.userId': blogerId,
         },
         { name: new RegExp(queryAll.searchNameTerm, 'gi') },
       ],
@@ -141,7 +141,7 @@ export class BloggerQueryRepository {
     const allCount: number = await this.BlogModel.countDocuments({
       $and: [
         {
-          bloggerId: blogerId,
+          'blogOwnerInfo.userId': blogerId,
         },
         { name: new RegExp(queryAll.searchNameTerm, 'gi') },
       ],
