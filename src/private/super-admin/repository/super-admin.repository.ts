@@ -54,9 +54,11 @@ export class SuperAdminRepository {
         await this.PostModel.updateMany(
           { _id: updateArrayPosts[i].postID },
           {
-            'extendedLikesInfo.likesCount': updateArrayPosts[i].likesCount,
-            'extendedLikesInfo.dislikesCount':
-              updateArrayPosts[i].dislikesCount,
+            $set: {
+              'extendedLikesInfo.likesCount': updateArrayPosts[i].likesCount,
+              'extendedLikesInfo.dislikesCount':
+                updateArrayPosts[i].dislikesCount,
+            },
           },
         );
       }
