@@ -139,7 +139,12 @@ export class BloggerQueryRepository {
     });
 
     const allCount: number = await this.BlogModel.countDocuments({
-      name: new RegExp(queryAll.searchNameTerm, 'gi'),
+      $and: [
+        {
+          bloggerId: blogerId,
+        },
+        { name: new RegExp(queryAll.searchNameTerm, 'gi') },
+      ],
     });
     const pagesCount: number = Math.ceil(allCount / queryAll.pageSize);
 

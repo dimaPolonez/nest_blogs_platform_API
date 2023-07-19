@@ -106,11 +106,11 @@ export class BloggerController {
   }
 
   @UseGuards(JwtAccessGuard)
-  @Post('blogs/:id/posts/:idPost')
+  @Post('blogs/:blogId/posts/:postId')
   @HttpCode(HttpStatus.NO_CONTENT)
   async updatePostOfBlog(
-    @Param('id') blogID: string,
-    @Param('idPost') postID: string,
+    @Param('blogId') blogID: string,
+    @Param('postId') postID: string,
     @Body() postDTO: UpdatePostOfBlogDto,
     @Request() req,
   ) {
@@ -125,11 +125,11 @@ export class BloggerController {
   }
 
   @UseGuards(JwtAccessGuard)
-  @Post('blogs/:id/posts/:idPost')
+  @Post('blogs/:blogId/posts/:postId')
   @HttpCode(HttpStatus.NO_CONTENT)
   async deletePostOfBlog(
-    @Param('id') blogID: string,
-    @Param('idPost') postID: string,
+    @Param('blogId') blogID: string,
+    @Param('postId') postID: string,
     @Request() req,
   ) {
     await this.commandBus.execute(
