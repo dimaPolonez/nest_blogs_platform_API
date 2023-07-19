@@ -59,7 +59,7 @@ export class PostsQueryRepository {
     if (findPostSmart.extendedLikesInfo.newestLikes.length > 0) {
       let newestLikes: NewestLikesType[] | [] =
         findPostSmart.extendedLikesInfo.newestLikes.filter(
-          (v) => v.myStatus === MyLikeStatus.Like,
+          (v) => v.myStatus === MyLikeStatus.Like && v.isBanned === false,
         );
 
       newestLikes.sort(function (a: NewestLikesType, b: NewestLikesType) {
@@ -127,7 +127,7 @@ export class PostsQueryRepository {
       if (field.extendedLikesInfo.newestLikes.length > 0) {
         let newestLikes: NewestLikesType[] | [] =
           field.extendedLikesInfo.newestLikes.filter(
-            (v) => v.myStatus === MyLikeStatus.Like,
+            (v) => v.myStatus === MyLikeStatus.Like && v.isBanned === false,
           );
 
         newestLikes.sort(function (a: NewestLikesType, b: NewestLikesType) {
