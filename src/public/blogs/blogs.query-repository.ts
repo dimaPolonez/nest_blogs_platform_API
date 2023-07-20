@@ -17,9 +17,10 @@ export class BlogsQueryRepository {
     return (pageNum - 1) * pageSize;
   }
   async findBlogById(blogID: string): Promise<GetBlogType> {
-    const findBlogSmart: BlogModelType | null = await this.BlogModel.findById(
-      blogID,
-    );
+    const findBlogSmart: BlogModelType | null = await this.BlogModel.findById({
+      blogID: blogID,
+      isBanned: false,
+    });
 
     if (!findBlogSmart) {
       throw new NotFoundException();
@@ -37,6 +38,7 @@ export class BlogsQueryRepository {
 
   async getAllBlogs(queryAll: QueryBlogType): Promise<GetAllBlogsType> {
     const allBlogs: BlogModelType[] = await this.BlogModel.find({
+      isBanned: false,
       name: new RegExp(queryAll.searchNameTerm, 'gi'),
     })
       .skip(this.skippedObject(queryAll.pageNumber, queryAll.pageSize))
