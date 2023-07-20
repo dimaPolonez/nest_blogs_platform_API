@@ -348,7 +348,11 @@ export class BloggerQueryRepository {
         return 0;
       },
     );
-    fullCommentsToBlogger.slice(skip, limit);
+
+    const paginationFullCommentsToBlogger = fullCommentsToBlogger.slice(
+      skip,
+      skip + limit,
+    );
 
     const allCount: number = fullCommentsToBlogger.length;
 
@@ -359,7 +363,7 @@ export class BloggerQueryRepository {
       page: queryAll.pageNumber,
       pageSize: queryAll.pageSize,
       totalCount: allCount,
-      items: fullCommentsToBlogger,
+      items: paginationFullCommentsToBlogger,
     };
   }
 }
