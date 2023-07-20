@@ -339,11 +339,11 @@ export class BloggerQueryRepository {
 
     fullCommentsToBlogger
       .sort((a: GetAllCommentOfPostType, b: GetAllCommentOfPostType) => {
-        if (sortDirections === 'asc') {
+        if (sortDirections === 'desc') {
           return a[sortBy] - b[sortBy];
         }
 
-        if (sortDirections === 'desc') {
+        if (sortDirections === 'asc') {
           return b[sortBy] - a[sortBy];
         }
       })
