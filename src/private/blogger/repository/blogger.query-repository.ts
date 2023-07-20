@@ -339,13 +339,13 @@ export class BloggerQueryRepository {
 
     fullCommentsToBlogger
       .sort((a: GetAllCommentOfPostType, b: GetAllCommentOfPostType) => {
-        if (sortDirections === 'desc') {
-          return a[sortBy] - b[sortBy];
+        if (a[sortBy] < b[sortBy]) {
+          return sortDirections === 'asc' ? -1 : 1;
         }
-
-        if (sortDirections === 'asc') {
-          return b[sortBy] - a[sortBy];
+        if (a[sortBy] > b[sortBy]) {
+          return sortDirections === 'asc' ? 1 : -1;
         }
+        return 0;
       })
       .slice(skip, skip + limit);
 
