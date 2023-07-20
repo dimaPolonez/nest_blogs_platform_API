@@ -14,6 +14,7 @@ import {
 import { BasicAuthGuard } from '../../guards-handlers/guard';
 import { SuperAdminController } from './super-admin.controller';
 import {
+  BanBlogUseCase,
   BanUserUseCase,
   BindBlogUseCase,
   CreateUserUseCase,
@@ -39,6 +40,7 @@ const useCases = [
   BanUserUseCase,
   CreateUserUseCase,
   DeleteUserUseCase,
+  BanBlogUseCase,
 ];
 
 @Module({

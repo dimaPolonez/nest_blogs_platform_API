@@ -42,6 +42,20 @@ export class SuperAdminRepository {
     }
   }
 
+  async banedBlog(isBanned: boolean, blogID: string) {
+    await this.BlogModel.updateMany(
+      {
+        blogID: blogID,
+      },
+      { $set: { isBanned: isBanned } },
+    );
+
+    await this.PostModel.updateMany(
+      { blogId: blogID },
+      { $set: { isBanned: isBanned } },
+    );
+  }
+
   async updateAllPostsIsBanned(isBanned: boolean, userID: string) {
     await this.PostModel.updateMany(
       { 'extendedLikesInfo.newestLikes.userId': userID },

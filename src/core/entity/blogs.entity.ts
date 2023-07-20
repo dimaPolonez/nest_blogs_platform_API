@@ -34,6 +34,9 @@ export class BlogModel {
   @Prop({ default: false })
   isMembership: boolean;
 
+  @Prop({ default: false })
+  isBanned: boolean;
+
   @Prop({ default: () => ({}) })
   blogOwnerInfo: BlogOwnerInfo;
 

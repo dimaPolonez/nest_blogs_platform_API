@@ -13,7 +13,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { BasicAuthGuard } from '../../guards-handlers/guard';
-import { QueryBlogsDto } from '../../core/dto/blogs';
+import { BanBlogDto, QueryBlogsDto } from '../../core/dto/blogs';
 import {
   GetAllBlogsType,
   GetAllUsersAdminType,
@@ -21,6 +21,7 @@ import {
 } from '../../core/models';
 import { SuperAdminQueryRepository } from './repository/super-admin.query-repository';
 import {
+  BanBlogCommand,
   BanUserCommand,
   BindBlogCommand,
   CreateUserCommand,
@@ -40,6 +41,16 @@ export class SuperAdminController {
     protected commandBus: CommandBus,
     protected superAdminQueryRepository: SuperAdminQueryRepository,
   ) {}
+
+  @UseGuards(BasicAuthGuard)
+  @Put('blogs/:id/ban')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async banBlog(
+    @Body() banBlogDTO: BanBlogDto,
+    @Param('id', BlogIdPipe) blogID: string,
+  ) {
+    await this.commandBus.execute(new BanBlogCommand(banBlogDTO, blogID));
+  }
 
   @UseGuards(BasicAuthGuard)
   @Put('blogs/:id/bind-with-user/:userId')
@@ -71,6 +82,15 @@ export class SuperAdminController {
   }
 
   @UseGuards(BasicAuthGuard)
+  @Get('users')
+  @HttpCode(HttpStatus.OK)
+  async getAllUsersToAdmin(
+    @Query() queryAll: QueryUsersAdminDto,
+  ): Promise<GetAllUsersAdminType> {
+    return await this.superAdminQueryRepository.getAllUsersAdmin(queryAll);
+  }
+
+  @UseGuards(BasicAuthGuard)
   @Post('users')
   @HttpCode(HttpStatus.CREATED)
   async createUser(@Body() userDTO: CreateUserDto): Promise<GetUserAdminType> {
@@ -86,14 +106,5 @@ export class SuperAdminController {
   @HttpCode(HttpStatus.NO_CONTENT)
   async deleteUser(@Param('id') userID: string) {
     await this.commandBus.execute(new DeleteUserCommand(userID));
-  }
-
-  @UseGuards(BasicAuthGuard)
-  @Get('users')
-  @HttpCode(HttpStatus.OK)
-  async getAllUsersToAdmin(
-    @Query() queryAll: QueryUsersAdminDto,
-  ): Promise<GetAllUsersAdminType> {
-    return await this.superAdminQueryRepository.getAllUsersAdmin(queryAll);
   }
 }
