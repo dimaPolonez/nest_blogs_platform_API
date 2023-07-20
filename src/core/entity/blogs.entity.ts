@@ -14,7 +14,7 @@ export class BlogOwnerInfo {
 }
 
 @Schema()
-export class BanInfo {
+class BanInfo {
   @Prop({ default: false })
   isBanned: boolean;
 
