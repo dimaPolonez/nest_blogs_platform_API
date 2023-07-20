@@ -7,6 +7,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import {
   GetAllBlogsType,
+  GetAllCommentOfPostType,
   GetAllCommentsToBloggerType,
   GetAllCommentsType,
   GetAllPostsType,
@@ -300,10 +301,7 @@ export class BloggerQueryRepository {
             { postId: allPostsArray[i].id },
             { 'commentatorInfo.isBanned': false },
           ],
-        })
-          .skip(this.skippedObject(queryAll.pageNumber, queryAll.pageSize))
-          .limit(queryAll.pageSize)
-          .sort({ [queryAll.sortBy]: this.sortObject(queryAll.sortDirection) });
+        });
 
         allComments.map((v: CommentModelType) => {
           let userStatus = MyLikeStatus.None;
@@ -333,6 +331,23 @@ export class BloggerQueryRepository {
         });
       }
     }
+
+    const skip = this.skippedObject(queryAll.pageNumber, queryAll.pageSize);
+    const limit = queryAll.pageSize;
+    const sortBy = queryAll.sortBy;
+    const sortDirections = queryAll.sortDirection;
+
+    fullCommentsToBlogger
+      .sort((a: GetAllCommentOfPostType, b: GetAllCommentOfPostType) => {
+        if (sortDirections === 'asc') {
+          return a[sortBy] - b[sortBy];
+        }
+
+        if (sortDirections === 'desc') {
+          return b[sortBy] - a[sortBy];
+        }
+      })
+      .slice(skip, skip + limit);
 
     const allCount: number = fullCommentsToBlogger.length;
 

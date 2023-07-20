@@ -85,17 +85,17 @@ export type GetAllCommentsOfPostType = {
 };
 
 export type PostInfoType = {
-  id: string;
-  title: string;
   blogId: string;
   blogName: string;
+  title: string;
+  id: string;
 };
 
 export type GetAllCommentOfPostType = {
   id: string;
   content: string;
-  commentatorInfo: CommentatorInfoType;
   createdAt: string;
+  commentatorInfo: CommentatorInfoType;
   likesInfo: LikesInfoType;
   postInfo: PostInfoType;
 };
