@@ -282,10 +282,10 @@ export class BloggerQueryRepository {
 
         allPostsOfBlog.map((v) =>
           allPostsArray.push({
-            id: v.id,
-            title: v.title,
             blogId: v.blogId,
             blogName: v.blogName,
+            title: v.title,
+            id: v.id,
           }),
         );
       }
@@ -318,11 +318,11 @@ export class BloggerQueryRepository {
           fullCommentsToBlogger.push({
             id: v.id,
             content: v.content,
+            createdAt: v.createdAt,
             commentatorInfo: {
               userId: v.commentatorInfo.userId,
               userLogin: v.commentatorInfo.userLogin,
             },
-            createdAt: v.createdAt,
             likesInfo: {
               likesCount: v.likesInfo.likesCount,
               dislikesCount: v.likesInfo.dislikesCount,
