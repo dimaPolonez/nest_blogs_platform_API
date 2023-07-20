@@ -348,7 +348,7 @@ export class BloggerQueryRepository {
         return 0;
       },
     );
-    fullCommentsToBlogger.slice(skip, skip + limit);
+    fullCommentsToBlogger.slice(skip, limit);
 
     const allCount: number = fullCommentsToBlogger.length;
 
