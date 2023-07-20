@@ -4,6 +4,8 @@ import { MongooseModule } from '@nestjs/mongoose';
 import {
   BlogModel,
   BlogModelSchema,
+  CommentModel,
+  CommentModelSchema,
   PostModel,
   PostModelSchema,
 } from '../../core/entity';
@@ -35,6 +37,7 @@ const useCases = [
     MongooseModule.forFeature([
       { name: BlogModel.name, schema: BlogModelSchema },
       { name: PostModel.name, schema: PostModelSchema },
+      { name: CommentModel.name, schema: CommentModelSchema },
     ]),
     ...modules,
   ],

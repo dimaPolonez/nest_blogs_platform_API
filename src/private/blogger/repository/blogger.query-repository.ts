@@ -7,17 +7,24 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import {
   GetAllBlogsType,
+  GetAllCommentsToBloggerType,
+  GetAllCommentsType,
   GetAllPostsType,
   GetBlogType,
+  GetCommentType,
   GetPostType,
+  MinimalBlog,
   MyLikeStatus,
   NewestLikesType,
   QueryBlogType,
+  QueryCommentType,
   QueryPostType,
 } from '../../../core/models';
 import {
   BlogModel,
   BlogModelType,
+  CommentModel,
+  CommentModelType,
   PostModel,
   PostModelType,
 } from '../../../core/entity';
@@ -29,6 +36,8 @@ export class BloggerQueryRepository {
     private readonly BlogModel: Model<BlogModelType>,
     @InjectModel(PostModel.name)
     private readonly PostModel: Model<PostModelType>,
+    @InjectModel(CommentModel.name)
+    private readonly CommentModel: Model<CommentModelType>,
   ) {}
 
   sortObject(sortDir: string) {
@@ -167,6 +176,7 @@ export class BloggerQueryRepository {
     userID: string,
     queryAll: QueryPostType,
     blogID: string,
+    params?: string,
   ): Promise<GetAllPostsType> {
     const findBlogSmart: BlogModelType | null = await this.BlogModel.findById(
       blogID,
@@ -248,6 +258,92 @@ export class BloggerQueryRepository {
       pageSize: queryAll.pageSize,
       totalCount: allCount,
       items: allMapsPosts,
+    };
+  }
+  async getAllCommentsToBlogger(
+    userID: string,
+    queryAll: QueryCommentType,
+  ): Promise<GetAllCommentsToBloggerType> {
+    const allBlogs: BlogModelType[] = await this.BlogModel.find({
+      'blogOwnerInfo.userId': userID,
+    });
+
+    const blogIdArray = [];
+
+    allBlogs.map((v) => blogIdArray.push(v.id));
+
+    const allPostsArray = [];
+
+    if (blogIdArray) {
+      for (let i = 0; i < blogIdArray.length; i++) {
+        const allPostsOfBlog: PostModelType[] = await this.PostModel.find({
+          blogId: blogIdArray[i],
+        });
+
+        allPostsOfBlog.map((v) =>
+          allPostsArray.push({
+            id: v.id,
+            title: v.title,
+            blogId: v.blogId,
+            blogName: v.blogName,
+          }),
+        );
+      }
+    }
+
+    const fullCommentsToBlogger = [];
+
+    if (allPostsArray) {
+      for (let i = 0; i < allPostsArray.length; i++) {
+        const allComments: CommentModelType[] = await this.CommentModel.find({
+          $and: [
+            { postId: allPostsArray[i].id },
+            { 'commentatorInfo.isBanned': false },
+          ],
+        })
+          .skip(this.skippedObject(queryAll.pageNumber, queryAll.pageSize))
+          .limit(queryAll.pageSize)
+          .sort({ [queryAll.sortBy]: this.sortObject(queryAll.sortDirection) });
+
+        allComments.map((v: CommentModelType) => {
+          let userStatus = MyLikeStatus.None;
+
+          const findUserLike: null | NewestLikesType =
+            v.likesInfo.newestLikes.find((v) => v.userId === userID);
+
+          if (findUserLike) {
+            userStatus = findUserLike.myStatus;
+          }
+
+          fullCommentsToBlogger.push({
+            id: v.id,
+            content: v.content,
+            commentatorInfo: {
+              userId: v.commentatorInfo.userId,
+              userLogin: v.commentatorInfo.userLogin,
+            },
+            createdAt: v.createdAt,
+            likesInfo: {
+              likesCount: v.likesInfo.likesCount,
+              dislikesCount: v.likesInfo.dislikesCount,
+              myStatus: userStatus,
+            },
+            postInfo: allPostsArray[i],
+          });
+        });
+      }
+    }
+
+    const allCount: number = fullCommentsToBlogger.length;
+
+    const pagesCount: number = Math.ceil(allCount / queryAll.pageSize);
+
+    return {
+      pagesCount: pagesCount,
+      page: queryAll.pageNumber,
+      pageSize: queryAll.pageSize,
+      totalCount: allCount,
+      items: fullCommentsToBlogger,
     };
   }
 }

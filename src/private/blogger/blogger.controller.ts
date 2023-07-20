@@ -27,9 +27,12 @@ import {
 } from '../../core/dto/blogs';
 import {
   GetAllBlogsType,
+  GetAllCommentsOfPostType,
+  GetAllCommentsToBloggerType,
   GetAllPostsOfBlogType,
   GetBlogType,
   GetPostOfBlogType,
+  MinimalBlog,
 } from '../../core/models';
 import { BloggerQueryRepository } from './repository/blogger.query-repository';
 import {
@@ -40,6 +43,9 @@ import {
   UpdateBlogToBloggerCommand,
   UpdatePostOfBlogToBloggerCommand,
 } from './application/use-cases';
+import { QueryCommentDto } from '../../core/dto/posts';
+import { Min } from 'class-validator';
+import { Type } from 'class-transformer';
 
 @Controller('blogger')
 export class BloggerController {
@@ -47,6 +53,19 @@ export class BloggerController {
     protected commandBus: CommandBus,
     protected bloggerQueryRepository: BloggerQueryRepository,
   ) {}
+
+  @UseGuards(JwtAccessGuard)
+  @Get('blogs/comments')
+  @HttpCode(HttpStatus.OK)
+  async getAllCommentsToBlogger(
+    @Request() req,
+    @Query() queryAll: QueryCommentDto,
+  ): Promise<GetAllCommentsToBloggerType> {
+    return await this.bloggerQueryRepository.getAllCommentsToBlogger(
+      req.user.userID,
+      queryAll,
+    );
+  }
 
   @UseGuards(JwtAccessGuard)
   @Put('blogs/:id')

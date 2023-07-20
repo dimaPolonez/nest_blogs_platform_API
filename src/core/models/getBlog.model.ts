@@ -7,6 +7,10 @@ export type GetBlogType = {
   isMembership: boolean;
 };
 
+export type MinimalBlog = {
+  id: string;
+};
+
 type BlogOwnerType = {
   userId: string;
   userLogin: string;
