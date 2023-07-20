@@ -16,6 +16,11 @@ type BlogOwnerType = {
   userLogin: string;
 };
 
+type BanInfoType = {
+  isBanned: boolean;
+  banDate: string;
+};
+
 export type GetBlogAdminType = {
   id: string;
   name: string;
@@ -24,6 +29,7 @@ export type GetBlogAdminType = {
   createdAt: string;
   isMembership: boolean;
   blogOwnerInfo: BlogOwnerType;
+  banInfo: BanInfoType;
 };
 
 export type GetAllBlogsType = {
@@ -32,4 +38,12 @@ export type GetAllBlogsType = {
   pageSize: number;
   totalCount: number;
   items: GetBlogType[];
+};
+
+export type GetAllBlogsAdminType = {
+  pagesCount: number;
+  page: number;
+  pageSize: number;
+  totalCount: number;
+  items: GetBlogAdminType[];
 };

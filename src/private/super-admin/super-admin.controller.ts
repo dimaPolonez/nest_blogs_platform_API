@@ -15,8 +15,10 @@ import {
 import { BasicAuthGuard } from '../../guards-handlers/guard';
 import { BanBlogDto, QueryBlogsDto } from '../../core/dto/blogs';
 import {
+  GetAllBlogsAdminType,
   GetAllBlogsType,
   GetAllUsersAdminType,
+  GetBlogAdminType,
   GetUserAdminType,
 } from '../../core/models';
 import { SuperAdminQueryRepository } from './repository/super-admin.query-repository';
@@ -67,7 +69,7 @@ export class SuperAdminController {
   @HttpCode(HttpStatus.OK)
   async getAllBlogsToAdmin(
     @Query() queryAll: QueryBlogsDto,
-  ): Promise<GetAllBlogsType> {
+  ): Promise<GetAllBlogsAdminType> {
     return await this.superAdminQueryRepository.getAllBlogsToAdmin(queryAll);
   }
 
