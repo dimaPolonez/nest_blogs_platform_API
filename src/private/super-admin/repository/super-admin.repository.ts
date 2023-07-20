@@ -52,7 +52,7 @@ export class SuperAdminRepository {
 
     await this.PostModel.updateMany(
       { blogId: blogID },
-      { $set: { isBanned: isBanned } },
+      { $set: { blogIsBanned: isBanned } },
     );
   }
 
