@@ -44,9 +44,7 @@ export class SuperAdminRepository {
 
   async banedBlog(isBanned: boolean, blogID: string) {
     await this.BlogModel.updateMany(
-      {
-        blogID: blogID,
-      },
+      { blogID: blogID },
       { $set: { isBanned: isBanned } },
     );
 

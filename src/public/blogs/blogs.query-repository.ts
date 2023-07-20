@@ -21,7 +21,7 @@ export class BlogsQueryRepository {
       blogID,
     );
 
-    if (!findBlogSmart || findBlogSmart.isBanned === false) {
+    if (!findBlogSmart || findBlogSmart.isBanned === true) {
       throw new NotFoundException();
     }
 
