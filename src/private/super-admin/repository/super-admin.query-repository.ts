@@ -37,7 +37,6 @@ export class SuperAdminQueryRepository {
     queryAll: QueryBlogType,
   ): Promise<GetAllBlogsAdminType> {
     const allBlogs: BlogModelType[] = await this.BlogModel.find({
-      'banInfo.isBanned': false,
       name: new RegExp(queryAll.searchNameTerm, 'gi'),
     })
       .skip(this.skippedObject(queryAll.pageNumber, queryAll.pageSize))
@@ -66,7 +65,6 @@ export class SuperAdminQueryRepository {
     });
 
     const allCount: number = await this.BlogModel.countDocuments({
-      'banInfo.isBanned': false,
       name: new RegExp(queryAll.searchNameTerm, 'gi'),
     });
     const pagesCount: number = Math.ceil(allCount / queryAll.pageSize);
