@@ -21,7 +21,7 @@ export class BlogsQueryRepository {
       blogID,
     );
 
-    if (!findBlogSmart || findBlogSmart.isBanned === true) {
+    if (!findBlogSmart || findBlogSmart.banInfo.isBanned === true) {
       throw new NotFoundException();
     }
 
@@ -37,7 +37,7 @@ export class BlogsQueryRepository {
 
   async getAllBlogs(queryAll: QueryBlogType): Promise<GetAllBlogsType> {
     const allBlogs: BlogModelType[] = await this.BlogModel.find({
-      isBanned: false,
+      'banInfo.isBanned': false,
       name: new RegExp(queryAll.searchNameTerm, 'gi'),
     })
       .skip(this.skippedObject(queryAll.pageNumber, queryAll.pageSize))
@@ -58,6 +58,7 @@ export class BlogsQueryRepository {
     });
 
     const allCount: number = await this.BlogModel.countDocuments({
+      'banInfo.isBanned': false,
       name: new RegExp(queryAll.searchNameTerm, 'gi'),
     });
     const pagesCount: number = Math.ceil(allCount / queryAll.pageSize);

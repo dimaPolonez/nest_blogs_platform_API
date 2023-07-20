@@ -14,6 +14,15 @@ export class BlogOwnerInfo {
 }
 
 @Schema()
+export class BanInfo {
+  @Prop({ default: false })
+  isBanned: boolean;
+
+  @Prop({ default: null })
+  banDate: string;
+}
+
+@Schema()
 export class BlogModel {
   @Prop({ required: true })
   name: string;
@@ -34,11 +43,11 @@ export class BlogModel {
   @Prop({ default: false })
   isMembership: boolean;
 
-  @Prop({ default: false })
-  isBanned: boolean;
-
   @Prop({ default: () => ({}) })
   blogOwnerInfo: BlogOwnerInfo;
+
+  @Prop({ default: () => ({}) })
+  banInfo: BanInfo;
 
   async updateBlog(blogDTO: UpdateBlogType) {
     this.name = blogDTO.name;

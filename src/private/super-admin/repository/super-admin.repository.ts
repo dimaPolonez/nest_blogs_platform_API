@@ -43,9 +43,18 @@ export class SuperAdminRepository {
   }
 
   async banedBlog(isBanned: boolean, blogID: string) {
+    let banDate = null;
+    if (isBanned === true) {
+      banDate = new Date().toISOString();
+    }
     await this.BlogModel.updateMany(
       { blogID: blogID },
-      { $set: { isBanned: isBanned } },
+      {
+        $set: {
+          'banInfo.isBanned': isBanned,
+          'banInfo.banDate': banDate,
+        },
+      },
     );
 
     await this.PostModel.updateMany(

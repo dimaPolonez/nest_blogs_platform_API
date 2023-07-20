@@ -69,7 +69,7 @@ export class BloggerQueryRepository {
   async findPostById(postID: string, userID?: string): Promise<GetPostType> {
     const findPostSmart = await this.PostModel.findById(postID);
 
-    if (!findPostSmart) {
+    if (!findPostSmart || findPostSmart.blogIsBanned === true) {
       throw new NotFoundException('post not found');
     }
 
@@ -133,6 +133,7 @@ export class BloggerQueryRepository {
       $and: [
         {
           'blogOwnerInfo.userId': blogerId,
+          'banInfo.isBanned': false,
         },
         { name: new RegExp(queryAll.searchNameTerm, 'gi') },
       ],
@@ -158,6 +159,7 @@ export class BloggerQueryRepository {
       $and: [
         {
           'blogOwnerInfo.userId': blogerId,
+          'banInfo.isBanned': false,
         },
         { name: new RegExp(queryAll.searchNameTerm, 'gi') },
       ],
@@ -183,7 +185,7 @@ export class BloggerQueryRepository {
       blogID,
     );
 
-    if (!findBlogSmart) {
+    if (!findBlogSmart || findBlogSmart.banInfo.isBanned === true) {
       throw new NotFoundException();
     }
 
