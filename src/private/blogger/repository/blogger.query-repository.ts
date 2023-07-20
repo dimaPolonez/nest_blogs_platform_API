@@ -337,8 +337,8 @@ export class BloggerQueryRepository {
     const sortBy = queryAll.sortBy;
     const sortDirections = queryAll.sortDirection;
 
-    fullCommentsToBlogger
-      .sort((a: GetAllCommentOfPostType, b: GetAllCommentOfPostType) => {
+    fullCommentsToBlogger.sort(
+      (a: GetAllCommentOfPostType, b: GetAllCommentOfPostType) => {
         if (a[sortBy] < b[sortBy]) {
           return sortDirections === 'asc' ? -1 : 1;
         }
@@ -346,8 +346,9 @@ export class BloggerQueryRepository {
           return sortDirections === 'asc' ? 1 : -1;
         }
         return 0;
-      })
-      .slice(skip, skip + limit);
+      },
+    );
+    fullCommentsToBlogger.slice(skip, skip + limit);
 
     const allCount: number = fullCommentsToBlogger.length;
 
