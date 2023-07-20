@@ -17,12 +17,11 @@ export class BlogsQueryRepository {
     return (pageNum - 1) * pageSize;
   }
   async findBlogById(blogID: string): Promise<GetBlogType> {
-    const findBlogSmart: BlogModelType | null = await this.BlogModel.findById({
-      blogID: blogID,
-      isBanned: false,
-    });
+    const findBlogSmart: BlogModelType | null = await this.BlogModel.findById(
+      blogID,
+    );
 
-    if (!findBlogSmart) {
+    if (!findBlogSmart || findBlogSmart.isBanned === false) {
       throw new NotFoundException();
     }
 

@@ -36,12 +36,9 @@ export class PostsQueryRepository {
   }
 
   async findPostById(postID: string, userID?: string): Promise<GetPostType> {
-    const findPostSmart = await this.PostModel.findById({
-      postID: postID,
-      blogIsBanned: false,
-    });
+    const findPostSmart = await this.PostModel.findById(postID);
 
-    if (!findPostSmart) {
+    if (!findPostSmart || findPostSmart.blogIsBanned === false) {
       throw new NotFoundException('post not found');
     }
 
