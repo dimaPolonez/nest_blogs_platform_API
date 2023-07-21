@@ -198,8 +198,10 @@ export class BloggerController {
   async getBanAllUserOfBlog(
     @Param('id') blogID: string,
     @Query() queryAll: QueryBlogsDto,
+    @Request() req,
   ): Promise<getBanAllUserOfBlogType> {
     return await this.bloggerQueryRepository.getBanAllUserOfBlog(
+      req.user.userID,
       blogID,
       queryAll,
     );

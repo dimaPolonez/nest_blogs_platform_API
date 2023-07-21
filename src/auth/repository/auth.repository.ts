@@ -22,6 +22,7 @@ export class AuthRepository {
     return this.BlogModel.find({
       _id: blogID,
       'banAllUsersInfo.id': userID,
+      'banAllUsersInfo.banInfo.$.isBanned': true,
     });
   }
 

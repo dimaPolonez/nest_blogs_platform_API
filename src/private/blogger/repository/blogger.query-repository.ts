@@ -372,6 +372,7 @@ export class BloggerQueryRepository {
   }
 
   async getBanAllUserOfBlog(
+    userToken: string,
     blogID: string,
     queryAll: QueryBlogType,
   ): Promise<getBanAllUserOfBlogType> {
@@ -381,6 +382,10 @@ export class BloggerQueryRepository {
 
     if (!findBlogSmart) {
       throw new NotFoundException();
+    }
+
+    if (findBlogSmart.blogOwnerInfo.userId !== userToken) {
+      throw new ForbiddenException();
     }
 
     const banUserArraySearhLogin = findBlogSmart.banAllUsersInfo.filter(
