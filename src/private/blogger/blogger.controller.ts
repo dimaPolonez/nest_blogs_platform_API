@@ -49,6 +49,7 @@ import {
 import { QueryCommentDto } from '../../core/dto/posts';
 import { Min } from 'class-validator';
 import { Type } from 'class-transformer';
+import { UserIdPipe } from '../../validation/pipes/userId.pipe';
 
 @Controller('blogger')
 export class BloggerController {
@@ -183,7 +184,7 @@ export class BloggerController {
   @HttpCode(HttpStatus.NO_CONTENT)
   async banUserOfBlog(
     @Body() banUserOfBlogDTO: BanUserOfBlogDto,
-    @Param('id') userID: string,
+    @Param('id', UserIdPipe) userID: string,
   ) {
     await this.commandBus.execute(
       new BanUserOfBlogCommand(banUserOfBlogDTO, userID),

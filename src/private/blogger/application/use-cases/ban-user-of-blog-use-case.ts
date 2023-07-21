@@ -29,7 +29,9 @@ export class BanUserOfBlogUseCase
     const findBlogSmart: BlogModelType | null =
       await this.bloggerRepository.findBlogById(banUserOfBlogDTO.blogId);
 
-    const userLogin: string = await this.authService.findUserLogin(userID);
+    const userLogin: string = await this.authService.findUserLoginNotChecked(
+      userID,
+    );
 
     let banDate = null;
 
