@@ -48,7 +48,7 @@ export class SuperAdminRepository {
       banDate = new Date().toISOString();
     }
     await this.BlogModel.updateMany(
-      { blogID: blogID },
+      { _id: blogID },
       {
         $set: {
           'banInfo.isBanned': isBanned,
