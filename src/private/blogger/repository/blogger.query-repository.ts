@@ -379,8 +379,14 @@ export class BloggerQueryRepository {
       blogID,
     );
 
-    const banUserArraySearhLogin = findBlogSmart.banAllUsersInfo.filter((v) =>
-      new RegExp(queryAll.searchNameTerm, 'gi').test(v.login),
+    if (!findBlogSmart) {
+      throw new NotFoundException();
+    }
+
+    const banUserArraySearhLogin = findBlogSmart.banAllUsersInfo.filter(
+      (v) =>
+        new RegExp(queryAll.searchNameTerm, 'gi').test(v.login) &&
+        v.banInfo.isBanned === true,
     );
 
     const skip = this.skippedObject(queryAll.pageNumber, queryAll.pageSize);

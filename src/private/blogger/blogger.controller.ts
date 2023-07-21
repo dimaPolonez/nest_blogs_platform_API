@@ -10,6 +10,7 @@ import {
   Post,
   Put,
   Query,
+  Req,
   Request,
   UseGuards,
 } from '@nestjs/common';
@@ -185,9 +186,10 @@ export class BloggerController {
   async banUserOfBlog(
     @Body() banUserOfBlogDTO: BanUserOfBlogDto,
     @Param('id', UserIdPipe) userID: string,
+    @Request() req,
   ) {
     await this.commandBus.execute(
-      new BanUserOfBlogCommand(banUserOfBlogDTO, userID),
+      new BanUserOfBlogCommand(req.user.userID, banUserOfBlogDTO, userID),
     );
   }
   @UseGuards(JwtAccessGuard)
