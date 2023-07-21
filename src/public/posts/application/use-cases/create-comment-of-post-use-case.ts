@@ -50,14 +50,14 @@ export class CreateCommentOfPostUseCase
       throw new NotFoundException('post not found');
     }
 
-    const userBlockedToBlog: boolean = await this.authService.userBlockedToBlog(
+    /*    const userBlockedToBlog: boolean = await this.authService.userBlockedToBlog(
       userID,
       findPost.blogId,
     );
 
     if (userBlockedToBlog) {
       throw new ForbiddenException();
-    }
+    }*/
 
     const newCommentDTO: NewCommentObjectType = {
       content: commentDTO.content,
