@@ -27,7 +27,7 @@ export class AuthService {
       blogID,
     );
 
-    if (blockedUserArray) {
+    if (blockedUserArray && blockedUserArray[0].banInfo.isBanned === true) {
       return true;
     }
     return false;

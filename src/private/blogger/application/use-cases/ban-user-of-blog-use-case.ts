@@ -58,7 +58,19 @@ export class BanUserOfBlogUseCase
       },
     };
 
-    findBlogSmart.banAllUsersInfo.push(banUserDTO);
+    const userIsBannedArray = findBlogSmart.banAllUsersInfo.map((v) => {
+      if (v.id === userID) {
+        v.banInfo.isBanned = banUserOfBlogDTO.isBanned;
+        v.banInfo.banDate = banDate;
+        v.banInfo.banReason = banUserOfBlogDTO.banReason;
+        return false;
+      }
+      return true;
+    });
+
+    if (userIsBannedArray) {
+      findBlogSmart.banAllUsersInfo.push(banUserDTO);
+    }
 
     await this.bloggerRepository.save(findBlogSmart);
   }
