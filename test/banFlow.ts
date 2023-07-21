@@ -21,19 +21,19 @@ export function banFlow(testObject: TestObjectType) {
   });
 
   describe('BanFlow', () => {
-    const commentId1 = '';
-    const commentId2 = '';
-    const commentId3 = '';
-    let blogId1 = '';
-    let blogId2 = '';
-    let blogId3 = '';
-    let postId1 = '';
-    let postId2 = '';
-    let postId3 = '';
-    const postIdByBlogId = '';
+    let commentId1 = '';
+    let commentId2 = '';
+    let commentId3 = '';
+    const blogId1 = '';
+    const blogId2 = '';
+    const blogId3 = '';
+    const postId1 = '';
+    const postId2 = '';
+    const postId3 = '';
+    let postIdByBlogId = '';
     const notFound = '63f0e789e8f1762c4ba45f3e';
 
-    it('post new blog1 status 201 (POST /blogger/blogs)', () => {
+    /*   it('post new blog1 status 201 (POST /blogger/blogs)', () => {
       return request(app.getHttpServer())
         .post('/blogger/blogs')
         .set('Authorization', `Bearer ${testObject.accessToken}`)
@@ -209,9 +209,9 @@ export function banFlow(testObject: TestObjectType) {
         .get(`/blogs/${blogId2}`)
         .set('Authorization', `Bearer ${testObject.accessToken}`)
         .expect(404);
-    });
+    });*/
 
-    /*    it('post new post by id blog status 201 (POST /blogger/blogs/:id/posts)', () => {
+    it('post new post by id blog status 201 (POST /blogger/blogs/:id/posts)', () => {
       return request(app.getHttpServer())
         .post(`/blogger/blogs/${testObject.blogID}/posts`)
         .set('Authorization', `Bearer ${testObject.accessToken}`)
@@ -404,6 +404,6 @@ export function banFlow(testObject: TestObjectType) {
         .get(`/comments/${commentId1}`)
         .set('Authorization', `Bearer ${testObject.accessToken}`)
         .expect(200);
-    });;*/
+    });
   });
 }

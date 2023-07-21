@@ -1,7 +1,7 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { LoginType } from '../../core/models';
 import { BcryptAdapter } from '../../adapters';
-import { UserModel, UserModelType } from '../../core/entity';
+import { BlogModelType, UserModel, UserModelType } from '../../core/entity';
 import { AuthRepository } from '../repository/auth.repository';
 
 @Injectable()
@@ -22,15 +22,18 @@ export class AuthService {
   }
 
   async userBlockedToBlog(userID: string, blogID: string): Promise<boolean> {
-    const blockedUserArray = await this.authRepository.userBlockedToBlog(
-      userID,
-      blogID,
-    );
+    const blockedUserArray: BlogModelType | null =
+      await this.authRepository.userBlockedToBlog(userID, blogID);
 
-    if (blockedUserArray && blockedUserArray[0].banInfo.isBanned === true) {
-      return true;
-    }
-    return false;
+    let findBanUser = false;
+
+    blockedUserArray.banAllUsersInfo.map((v) => {
+      if (v.id === userID && v.banInfo.isBanned === true) {
+        findBanUser = true;
+      }
+    });
+
+    return findBanUser;
   }
 
   async checkedConfirmCode(codeConfirm: string): Promise<boolean> {

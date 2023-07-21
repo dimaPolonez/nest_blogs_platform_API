@@ -19,9 +19,8 @@ export class AuthRepository {
   ) {}
 
   async userBlockedToBlog(userID: string, blogID: string) {
-    return this.BlogModel.find({
+    return this.BlogModel.findById({
       _id: blogID,
-      'banAllUsersInfo.id': userID,
     });
   }
 
