@@ -8,11 +8,14 @@ import {
   CommentModelSchema,
   PostModel,
   PostModelSchema,
+  UserModel,
+  UserModelSchema,
 } from '../../core/entity';
 import { BloggerController } from './blogger.controller';
 import { BloggerRepository } from './repository/blogger.repository';
 import { BloggerQueryRepository } from './repository/blogger.query-repository';
 import {
+  BanUserOfBlogUseCase,
   CreateBlogToBloggerUseCase,
   CreatePostOfBlogToBloggerUseCase,
   DeleteBlogToBloggerUseCase,
@@ -31,6 +34,7 @@ const useCases = [
   CreatePostOfBlogToBloggerUseCase,
   UpdatePostOfBlogToBloggerUseCase,
   DeletePostOfBlogToBloggerUseCase,
+  BanUserOfBlogUseCase,
 ];
 @Module({
   imports: [

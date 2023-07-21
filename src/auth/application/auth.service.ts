@@ -21,6 +21,18 @@ export class AuthService {
     return true;
   }
 
+  async userBlockedToBlog(userID: string, blogID: string): Promise<boolean> {
+    const blockedUserArray = await this.authRepository.userBlockedToBlog(
+      userID,
+      blogID,
+    );
+
+    if (blockedUserArray) {
+      return true;
+    }
+    return false;
+  }
+
   async checkedConfirmCode(codeConfirm: string): Promise<boolean> {
     const findUserByCode: UserModelType | null =
       await this.authRepository.findUserByCode(codeConfirm);

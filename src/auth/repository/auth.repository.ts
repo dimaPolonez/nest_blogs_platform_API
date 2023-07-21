@@ -1,7 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { UserModel, UserModelType } from '../../core/entity';
+import {
+  BlogModel,
+  BlogModelType,
+  UserModel,
+  UserModelType,
+} from '../../core/entity';
 import { SessionUserType, SessionUserUpdateDTOType } from '../../core/models';
 
 @Injectable()
@@ -9,7 +14,16 @@ export class AuthRepository {
   constructor(
     @InjectModel(UserModel.name)
     private readonly UserModel: Model<UserModelType>,
+    @InjectModel(BlogModel.name)
+    private readonly BlogModel: Model<BlogModelType>,
   ) {}
+
+  async userBlockedToBlog(userID: string, blogID: string) {
+    return this.BlogModel.find({
+      _id: blogID,
+      'banAllUsersInfo.id': userID,
+    });
+  }
 
   async findUserById(userID: string): Promise<UserModelType | null> {
     return this.UserModel.findById({ _id: userID });

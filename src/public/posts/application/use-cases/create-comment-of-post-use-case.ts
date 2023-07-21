@@ -10,10 +10,11 @@ import {
   CommentModelType,
   PostModelType,
 } from '../../../../core/entity';
-import { NotFoundException } from '@nestjs/common';
+import { ForbiddenException, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { PostsQueryRepository } from '../../repository/posts.query-repository';
+import { AuthService } from '../../../../auth/application/auth.service';
 
 export class CreateCommentOfPostCommand {
   constructor(
@@ -33,6 +34,7 @@ export class CreateCommentOfPostUseCase
     private readonly CommentModel: Model<CommentModelType>,
     protected postRepository: PostsRepository,
     protected postQueryRepository: PostsQueryRepository,
+    protected authService: AuthService,
   ) {}
 
   async execute(
@@ -46,6 +48,15 @@ export class CreateCommentOfPostUseCase
 
     if (!findPost) {
       throw new NotFoundException('post not found');
+    }
+
+    const userBlockedToBlog: boolean = await this.authService.userBlockedToBlog(
+      userID,
+      findPost.blogId,
+    );
+
+    if (userBlockedToBlog) {
+      throw new ForbiddenException();
     }
 
     const newCommentDTO: NewCommentObjectType = {

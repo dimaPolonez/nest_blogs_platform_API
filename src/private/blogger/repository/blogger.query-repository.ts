@@ -6,11 +6,13 @@ import {
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import {
+  AllBanUsersInfoType,
   GetAllBlogsType,
   GetAllCommentOfPostType,
   GetAllCommentsToBloggerType,
   GetAllCommentsType,
   GetAllPostsType,
+  getBanAllUserOfBlogType,
   GetBlogType,
   GetCommentType,
   GetPostType,
@@ -366,6 +368,53 @@ export class BloggerQueryRepository {
       pageSize: queryAll.pageSize,
       totalCount: allCount,
       items: paginationFullCommentsToBlogger,
+    };
+  }
+
+  async getBanAllUserOfBlog(
+    blogID: string,
+    queryAll: QueryBlogType,
+  ): Promise<getBanAllUserOfBlogType> {
+    const findBlogSmart: BlogModelType | null = await this.BlogModel.findById(
+      blogID,
+    );
+
+    const banUserArraySearhLogin = findBlogSmart.banAllUsersInfo.filter((v) =>
+      new RegExp(queryAll.searchNameTerm, 'gi').test(v.login),
+    );
+
+    const skip = this.skippedObject(queryAll.pageNumber, queryAll.pageSize);
+    const limit = queryAll.pageSize;
+    const sortBy = queryAll.sortBy;
+    const sortDirections = queryAll.sortDirection;
+
+    banUserArraySearhLogin.sort(
+      (a: AllBanUsersInfoType, b: AllBanUsersInfoType) => {
+        if (a[sortBy] < b[sortBy]) {
+          return sortDirections === 'asc' ? -1 : 1;
+        }
+        if (a[sortBy] > b[sortBy]) {
+          return sortDirections === 'asc' ? 1 : -1;
+        }
+        return 0;
+      },
+    );
+
+    const paginationBanUserArray = banUserArraySearhLogin.slice(
+      skip,
+      skip + limit,
+    );
+
+    const allCount: number = banUserArraySearhLogin.length;
+
+    const pagesCount: number = Math.ceil(allCount / queryAll.pageSize);
+
+    return {
+      pagesCount: pagesCount,
+      page: queryAll.pageNumber,
+      pageSize: queryAll.pageSize,
+      totalCount: allCount,
+      items: paginationBanUserArray,
     };
   }
 }

@@ -18,6 +18,7 @@ import {
   QuestJwtAccessGuard,
 } from '../../guards-handlers/guard';
 import {
+  BanUserOfBlogDto,
   CreateBlogDto,
   CreatePostOfBlogDto,
   QueryBlogsDto,
@@ -30,12 +31,14 @@ import {
   GetAllCommentsOfPostType,
   GetAllCommentsToBloggerType,
   GetAllPostsOfBlogType,
+  getBanAllUserOfBlogType,
   GetBlogType,
   GetPostOfBlogType,
   MinimalBlog,
 } from '../../core/models';
 import { BloggerQueryRepository } from './repository/blogger.query-repository';
 import {
+  BanUserOfBlogCommand,
   CreateBlogToBloggerCommand,
   CreatePostOfBlogToBloggerCommand,
   DeleteBlogToBloggerCommand,
@@ -173,6 +176,29 @@ export class BloggerController {
   ) {
     await this.commandBus.execute(
       new DeletePostOfBlogToBloggerCommand(req.user.userID, blogID, postID),
+    );
+  }
+  @UseGuards(JwtAccessGuard)
+  @Put('users/:id/ban')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async banUserOfBlog(
+    @Body() banUserOfBlogDTO: BanUserOfBlogDto,
+    @Param('id') userID: string,
+  ) {
+    await this.commandBus.execute(
+      new BanUserOfBlogCommand(banUserOfBlogDTO, userID),
+    );
+  }
+  @UseGuards(JwtAccessGuard)
+  @Get('users/blog/:id')
+  @HttpCode(HttpStatus.OK)
+  async getBanAllUserOfBlog(
+    @Param('id') blogID: string,
+    @Query() queryAll: QueryBlogsDto,
+  ): Promise<getBanAllUserOfBlogType> {
+    return await this.bloggerQueryRepository.getBanAllUserOfBlog(
+      blogID,
+      queryAll,
     );
   }
 }
