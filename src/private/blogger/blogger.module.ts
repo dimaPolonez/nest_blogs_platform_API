@@ -47,11 +47,6 @@ const useCases = [
     ...modules,
   ],
   controllers: [BloggerController],
-  providers: [
-    BloggerRepository,
-    BloggerQueryRepository,
-    ...useCases,
-    UserIdPipe,
-  ],
+  providers: [BloggerRepository, BloggerQueryRepository, ...useCases],
 })
 export class BloggerModule {}

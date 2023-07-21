@@ -86,9 +86,13 @@ export class AuthService {
     return true;
   }
 
-  async findUserLoginNotChecked(userID: string): Promise<string> {
+  async findUserLoginNotChecked(userID: string): Promise<string | null> {
     const findUser: UserModelType | null =
       await this.authRepository.findUserById(userID);
+
+    if (!findUser) {
+      return null;
+    }
 
     return findUser.login;
   }

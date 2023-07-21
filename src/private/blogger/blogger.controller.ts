@@ -185,7 +185,7 @@ export class BloggerController {
   @HttpCode(HttpStatus.NO_CONTENT)
   async banUserOfBlog(
     @Body() banUserOfBlogDTO: BanUserOfBlogDto,
-    @Param('id', UserIdPipe) userID: string,
+    @Param('id') userID: string,
     @Request() req,
   ) {
     await this.commandBus.execute(

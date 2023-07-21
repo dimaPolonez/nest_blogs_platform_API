@@ -6,7 +6,7 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { BloggerRepository } from '../../repository/blogger.repository';
 import { BlogModelType } from '../../../../core/entity';
 import { AuthService } from '../../../../auth/application/auth.service';
-import { ForbiddenException } from '@nestjs/common';
+import { ForbiddenException, NotFoundException } from '@nestjs/common';
 
 export class BanUserOfBlogCommand {
   constructor(
@@ -31,9 +31,12 @@ export class BanUserOfBlogUseCase
     const findBlogSmart: BlogModelType | null =
       await this.bloggerRepository.findBlogById(banUserOfBlogDTO.blogId);
 
-    const userLogin: string = await this.authService.findUserLoginNotChecked(
-      userID,
-    );
+    const userLogin: string | null =
+      await this.authService.findUserLoginNotChecked(userID);
+
+    if (!userLogin) {
+      throw new NotFoundException();
+    }
 
     if (findBlogSmart.blogOwnerInfo.userId !== userToken) {
       throw new ForbiddenException();
