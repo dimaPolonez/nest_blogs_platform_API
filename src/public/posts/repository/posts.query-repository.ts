@@ -38,7 +38,7 @@ export class PostsQueryRepository {
   async findPostById(postID: string, userID?: string): Promise<GetPostType> {
     const findPostSmart = await this.PostModel.findById(postID);
 
-    if (!findPostSmart) {
+    if (!findPostSmart || findPostSmart.blogIsBanned === true) {
       throw new NotFoundException('post not found');
     }
 
@@ -99,10 +99,10 @@ export class PostsQueryRepository {
     queryAll: QueryPostType,
     blogID?: string,
   ): Promise<GetAllPostsType> {
-    let findObject: object = {};
+    let findObject: object = { blogIsBanned: false };
 
     if (blogID) {
-      findObject = { blogId: blogID };
+      findObject = { blogId: blogID, blogIsBanned: false };
     }
 
     const allPosts: PostModelType[] = await this.PostModel.find(findObject)

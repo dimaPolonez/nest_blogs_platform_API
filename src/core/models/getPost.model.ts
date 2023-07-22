@@ -83,3 +83,27 @@ export type GetAllCommentsOfPostType = {
   totalCount: number;
   items: GetCommentOfPostType[];
 };
+
+export type PostInfoType = {
+  blogId: string;
+  blogName: string;
+  title: string;
+  id: string;
+};
+
+export type GetAllCommentOfPostType = {
+  id: string;
+  content: string;
+  createdAt: string;
+  commentatorInfo: CommentatorInfoType;
+  likesInfo: LikesInfoType;
+  postInfo: PostInfoType;
+};
+
+export type GetAllCommentsToBloggerType = {
+  pagesCount: number;
+  page: number;
+  pageSize: number;
+  totalCount: number;
+  items: GetAllCommentOfPostType[];
+};

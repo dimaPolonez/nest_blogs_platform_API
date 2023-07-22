@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import {
+  GetAllBlogsAdminType,
   GetAllBlogsType,
   GetAllUsersAdminType,
   GetBlogAdminType,
@@ -32,7 +33,9 @@ export class SuperAdminQueryRepository {
     return (pageNum - 1) * pageSize;
   }
 
-  async getAllBlogsToAdmin(queryAll: QueryBlogType): Promise<GetAllBlogsType> {
+  async getAllBlogsToAdmin(
+    queryAll: QueryBlogType,
+  ): Promise<GetAllBlogsAdminType> {
     const allBlogs: BlogModelType[] = await this.BlogModel.find({
       name: new RegExp(queryAll.searchNameTerm, 'gi'),
     })
@@ -53,6 +56,10 @@ export class SuperAdminQueryRepository {
         blogOwnerInfo: {
           userId: field.blogOwnerInfo.userId,
           userLogin: field.blogOwnerInfo.userLogin,
+        },
+        banInfo: {
+          isBanned: field.banInfo.isBanned,
+          banDate: field.banInfo.banDate,
         },
       };
     });

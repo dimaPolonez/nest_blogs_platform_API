@@ -10,24 +10,36 @@ import {
   Post,
   Put,
   Query,
+  Req,
   Request,
   UseGuards,
 } from '@nestjs/common';
-import { JwtAccessGuard } from '../../guards-handlers/guard';
 import {
+  JwtAccessGuard,
+  QuestJwtAccessGuard,
+} from '../../guards-handlers/guard';
+import {
+  BanUserOfBlogDto,
   CreateBlogDto,
   CreatePostOfBlogDto,
   QueryBlogsDto,
+  QueryPostOfBlogDto,
   UpdateBlogDto,
   UpdatePostOfBlogDto,
 } from '../../core/dto/blogs';
 import {
   GetAllBlogsType,
+  GetAllCommentsOfPostType,
+  GetAllCommentsToBloggerType,
+  GetAllPostsOfBlogType,
+  getBanAllUserOfBlogType,
   GetBlogType,
   GetPostOfBlogType,
+  MinimalBlog,
 } from '../../core/models';
 import { BloggerQueryRepository } from './repository/blogger.query-repository';
 import {
+  BanUserOfBlogCommand,
   CreateBlogToBloggerCommand,
   CreatePostOfBlogToBloggerCommand,
   DeleteBlogToBloggerCommand,
@@ -35,6 +47,10 @@ import {
   UpdateBlogToBloggerCommand,
   UpdatePostOfBlogToBloggerCommand,
 } from './application/use-cases';
+import { QueryCommentDto } from '../../core/dto/posts';
+import { Min } from 'class-validator';
+import { Type } from 'class-transformer';
+import { UserIdPipe } from '../../validation/pipes/userId.pipe';
 
 @Controller('blogger')
 export class BloggerController {
@@ -44,16 +60,16 @@ export class BloggerController {
   ) {}
 
   @UseGuards(JwtAccessGuard)
-  @Post('blogs')
-  @HttpCode(HttpStatus.CREATED)
-  async createBlog(
-    @Body() blogDTO: CreateBlogDto,
+  @Get('blogs/comments')
+  @HttpCode(HttpStatus.OK)
+  async getAllCommentsToBlogger(
     @Request() req,
-  ): Promise<GetBlogType> {
-    const newBlogID: string = await this.commandBus.execute(
-      new CreateBlogToBloggerCommand(req.user.userID, req.user.login, blogDTO),
+    @Query() queryAll: QueryCommentDto,
+  ): Promise<GetAllCommentsToBloggerType> {
+    return await this.bloggerQueryRepository.getAllCommentsToBlogger(
+      req.user.userID,
+      queryAll,
     );
-    return await this.bloggerQueryRepository.findBlogById(newBlogID);
   }
 
   @UseGuards(JwtAccessGuard)
@@ -76,6 +92,19 @@ export class BloggerController {
     await this.commandBus.execute(
       new DeleteBlogToBloggerCommand(req.user.userID, blogID),
     );
+  }
+
+  @UseGuards(JwtAccessGuard)
+  @Post('blogs')
+  @HttpCode(HttpStatus.CREATED)
+  async createBlog(
+    @Body() blogDTO: CreateBlogDto,
+    @Request() req,
+  ): Promise<GetBlogType> {
+    const newBlogID: string = await this.commandBus.execute(
+      new CreateBlogToBloggerCommand(req.user.userID, req.user.login, blogDTO),
+    );
+    return await this.bloggerQueryRepository.findBlogById(newBlogID);
   }
   @UseGuards(JwtAccessGuard)
   @Get('blogs')
@@ -103,6 +132,21 @@ export class BloggerController {
     );
 
     return await this.bloggerQueryRepository.findPostById(newPostOfBlogID);
+  }
+
+  @UseGuards(JwtAccessGuard)
+  @Get('blogs/:id/posts')
+  @HttpCode(HttpStatus.OK)
+  async getAllPostsOfBlogToBlogger(
+    @Request() req,
+    @Param('id') blogID: string,
+    @Query() queryAll: QueryPostOfBlogDto,
+  ): Promise<GetAllPostsOfBlogType> {
+    return await this.bloggerQueryRepository.getAllPostsOfBlogToBlogger(
+      req.user.userID,
+      queryAll,
+      blogID,
+    );
   }
 
   @UseGuards(JwtAccessGuard)
@@ -134,6 +178,32 @@ export class BloggerController {
   ) {
     await this.commandBus.execute(
       new DeletePostOfBlogToBloggerCommand(req.user.userID, blogID, postID),
+    );
+  }
+  @UseGuards(JwtAccessGuard)
+  @Put('users/:id/ban')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async banUserOfBlog(
+    @Body() banUserOfBlogDTO: BanUserOfBlogDto,
+    @Param('id') userID: string,
+    @Request() req,
+  ) {
+    await this.commandBus.execute(
+      new BanUserOfBlogCommand(req.user.userID, banUserOfBlogDTO, userID),
+    );
+  }
+  @UseGuards(JwtAccessGuard)
+  @Get('users/blog/:id')
+  @HttpCode(HttpStatus.OK)
+  async getBanAllUserOfBlog(
+    @Param('id') blogID: string,
+    @Query() queryAll: QueryBlogsDto,
+    @Request() req,
+  ): Promise<getBanAllUserOfBlogType> {
+    return await this.bloggerQueryRepository.getBanAllUserOfBlog(
+      req.user.userID,
+      blogID,
+      queryAll,
     );
   }
 }

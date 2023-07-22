@@ -36,6 +36,9 @@ export class PostModel {
   @Prop({ required: true })
   blogName: string;
 
+  @Prop({ default: false })
+  blogIsBanned: boolean;
+
   @Prop({
     default: () => {
       return new Date().toISOString();

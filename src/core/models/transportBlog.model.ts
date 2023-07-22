@@ -41,3 +41,7 @@ export type QueryPostOfBlogType = {
   pageNumber: number;
   pageSize: number;
 };
+
+export type BanBlogType = {
+  isBanned: boolean;
+};

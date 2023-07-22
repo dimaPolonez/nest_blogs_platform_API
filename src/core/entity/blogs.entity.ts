@@ -1,6 +1,6 @@
 import { HydratedDocument } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { BindBlogType, UpdateBlogType } from '../models';
+import { AllBanUsersInfoType, BindBlogType, UpdateBlogType } from '../models';
 
 export type BlogModelType = HydratedDocument<BlogModel>;
 
@@ -11,6 +11,15 @@ export class BlogOwnerInfo {
 
   @Prop({ required: true })
   userLogin: string;
+}
+
+@Schema()
+class BanInfo {
+  @Prop({ default: false })
+  isBanned: boolean;
+
+  @Prop({ default: null })
+  banDate: string;
 }
 
 @Schema()
@@ -36,6 +45,12 @@ export class BlogModel {
 
   @Prop({ default: () => ({}) })
   blogOwnerInfo: BlogOwnerInfo;
+
+  @Prop({ default: () => ({}) })
+  banInfo: BanInfo;
+
+  @Prop({ default: () => [] })
+  banAllUsersInfo: AllBanUsersInfoType[];
 
   async updateBlog(blogDTO: UpdateBlogType) {
     this.name = blogDTO.name;
