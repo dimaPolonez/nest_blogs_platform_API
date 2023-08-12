@@ -1,73 +1,49 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# Проект: NestBlogPlatform API
+## Ссылка: [nest-blogs-platform-api.vercel.app/](https://nest-blogs-platform-api.vercel.app/)
+### О проекте
+Реализация API Блогера, со следующим функционалом:
+<ol>
+<li>Полноценная авторизация и регистрация. Работа с почтовыми ящиками(nodeMailer) и кодами активации учетной записи(uuid). Работа с шифрованием паролей пользователя(bcrypt). Работа с различными сессиями пользователя. Работа с Access и Refresh токенами(jwt)</li>
+<li>Реализованы роли superAdmin и blogger, а также публичная часть</li>
+<ul>
+<li>superAdmin может - банить/разбанить блог(все посты такого блога не отображаются в публичной части)</li>
+<li>superAdmin может - привязать юзера к блогу(если у блога нету владельца)</li>
+<li>superAdmin может - банить/разбанить юзера(забаненный не может логинится, все сессии становятся не валидными, все посты, комментарии и лайки не видны и не подсчитываются)</li>
+<li>superAdmin может - создавать и удалять юзеров</li>
+<li>superAdmin может - получать расширенную информацию о всех блогах и юзерах</li>
+</ul>
+<ul>
+<li>blogger может - CRUD блога и постов</li>
+<li>blogger может - банить/разбанить любого пользователя для каждого из своих блогов(забаненный не может комментировать посты того блога для которого он забанен)</li>
+<li>blogger может - получать информацию о забаненных пользователях, для каждого из своих блогов</li>
+<li>blogger может - получать информацию о своих блогах и постах, а также одним запросов получать все комментарии которые относятся к его блогам и постам</li>
+</ul>
+<ul>
+<li>Публичная часть - CRUD комментариев</li>
+<li>Публичная часть - Возможность ставить лайки и дизлайки комментариям, а также отменять их</li>
+<li>Публичная часть - Возможность получать все комментарии и если пользователь авторизован видеть свою реакцию на них</li>
+<li>Публичная часть - Возможность ставить лайки и дизлайки постам, а также отменять их</li>
+<li>Публичная часть - Возможность получать все посты и если пользователь авторизован видеть свою реакцию на них, а также последних 3 пользователей поставивших Like</li>
+<li>Публичная часть - Возможность получать информацию о всех блогах, о себе и своих сессиях(если авторизован)</li>
+</ul>
+<li>Все GET запросы на получение массива данных, поддерживают пагинацию, которую можно задавать через URI параметры</li>
+<li>Весь проект, на всех стадиях проводит валидацию входящих данных(dto, class-validator) и запрограммированы исключения в случае если данные неправильные(400), не найдены(404), защищены(401), или пользователь пытается работать не со своими данными(403)</li>
+</ol>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
-
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
-
-## Description
-
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
-
-## Installation
-
-```bash
-$ yarn install
-```
-
-## Running the app
-
-```bash
-# development
-$ yarn run start
-
-# watch mode
-$ yarn run start:dev
-
-# production mode
-$ yarn run start:prod
-```
-
-## Test
-
-```bash
-# unit tests
-$ yarn run test
-
-# e2e tests
-$ yarn run test:e2e
-
-# test coverage
-$ yarn run test:cov
-```
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
+### Стек технологий:
+Nest, mongoDB, mongoose, typeScript, cqrs, jwt, bcrypt, jest, supertest
+### Заметки разработчика:
+1. Весь проект реализован на Nest и TypeScript(причем any в коде вы скорее всего не найдете)
+2. Авторизация и регистрация сделана через nodemailer, через gmail transport со всем стеком восстановления пароля и почты, повторной отправки кода и проверкой на уникальности логина и почты при регистрации
+3. Исключения улетают на фронт, определенного вида, реализовал с помощью настройки exception фильтра
+4. Весь проект реализован в логически выстроенных раздельных модулях с минимальной завязкой между собой, никаких циклических зависимостей или избыточнх модулей
+5. Все сервисы раздроблены на отдельные use-cases, через commandBus
+6. Защищенность ендпоинтов, реализована через локальные стратегии Nest, Local(для начальной авторизации), Access, Refresh, Basic(для superAdmin). Также есть Quest, это мой самодельный костыль для реализации логики получения реакции на пост или коммент пользователя зашедшего с токеном на незащещенный ендпоинт. Таким образом если у пользователя есть токен, то покажется его реакция, если пользователь не авторизован, то покажется None. Мне просто хотелось, чтобы все было реализовано через стратегии
+7. Access токен отдается в качестве response, а Refresh зашивается в Cookie not only, время жизни 10 минут и 10 часов соответственно
+8. Защита от DDOS, реализована через встроенный throttler от Nest, не больше 5 запросов за 10 секунд и стоит только на ендпоинтах связанными с почтой и отправкой писем
+9. Работа со скрытыми данными, настройками и паролями, реализована через файл config и env файл локально и удаленно
+10. Есть тесты покрывающие часть логики в основном e2e
+11. Работа над проектом велась, по предоставленной Swagger документации из которой взяты все требования к входящим данным и эти требования проверяются на уровне dto(с помощью стандартных декораторов, а также самописных валидирующих классах) и на уровне БД
+12. В проекте реализован обычный repository, для внутренней работы связанной больше с CRUD операциями, а также реализован queryRepository для более быстрой работы GET запросов напрямую, обходя дополнительную логику сервисов и use-cases.
+13. Так как это Mongoose, работа организована со всеми плюсами данного подхода, работа с моделями mongoose, работа с entity и методами entity. Все коллекции разбиты логически, лишних коллекций практически нету. К примеру в постах, все лайки хранятся в массиве с привязкой к конкретному посту, а дальше берутся оттуда и обрабатываются. Сессии юзера, привязаны непосредственно к юзеру. Если необходимо в одном модуле работать с разными моделями, во избежании циклических зависимостей, запросы проходят через Auth модуль, репозиторий которого имеет доступ ко всем коллекциям. Сложные запросы, очень тяжело обрабатывать, так как приходится писать много лишнего кода, для обработки информации в основном методами массивов JS.
+14. Код полностью асинхронный(async/await) и легкочитаемый, структура папок выбрана мной исходя из практик подобных проектов других более опытных разработчиков.
