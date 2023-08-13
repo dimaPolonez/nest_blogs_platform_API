@@ -18,7 +18,10 @@ export class AuthRepository {
     private readonly BlogModel: Model<BlogModelType>,
   ) {}
 
-  async userBlockedToBlog(userID: string, blogID: string) {
+  async userBlockedToBlog(
+    userID: string,
+    blogID: string,
+  ): Promise<BlogModelType | null> {
     return this.BlogModel.findById({
       _id: blogID,
     });

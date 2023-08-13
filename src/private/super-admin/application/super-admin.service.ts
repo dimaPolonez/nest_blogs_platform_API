@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { BlogModel, BlogModelType } from '../../../core/entity';
+import { BlogModelType } from '../../../core/entity';
 import { SuperAdminRepository } from '../repository/super-admin.repository';
 
 @Injectable()

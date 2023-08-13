@@ -11,7 +11,6 @@ import {
   UserModel,
   UserModelSchema,
 } from '../../core/entity';
-import { BasicAuthGuard } from '../../guards-handlers/guard';
 import { SuperAdminController } from './super-admin.controller';
 import {
   BanBlogUseCase,
