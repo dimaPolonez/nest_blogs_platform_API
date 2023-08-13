@@ -3,7 +3,6 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import {
   GetAllBlogsAdminType,
-  GetAllBlogsType,
   GetAllUsersAdminType,
   GetBlogAdminType,
   GetUserAdminType,

@@ -1,10 +1,4 @@
-import {
-  IsBoolean,
-  IsMongoId,
-  IsNotEmpty,
-  Length,
-  Validate,
-} from 'class-validator';
+import { IsBoolean, IsNotEmpty, Length, Validate } from 'class-validator';
 import { BanUserOfBlogType } from '../../models';
 import { TrimDecorator } from '../../../validation/decorators/trim.decorator';
 import { BlogIdPipe } from '../../../validation/pipes/blogId.pipe';

@@ -10,13 +10,10 @@ import {
   GetAllBlogsType,
   GetAllCommentOfPostType,
   GetAllCommentsToBloggerType,
-  GetAllCommentsType,
   GetAllPostsType,
   getBanAllUserOfBlogType,
   GetBlogType,
-  GetCommentType,
   GetPostType,
-  MinimalBlog,
   MyLikeStatus,
   NewestLikesType,
   QueryBlogType,
@@ -181,7 +178,6 @@ export class BloggerQueryRepository {
     userID: string,
     queryAll: QueryPostType,
     blogID: string,
-    params?: string,
   ): Promise<GetAllPostsType> {
     const findBlogSmart: BlogModelType | null = await this.BlogModel.findById(
       blogID,

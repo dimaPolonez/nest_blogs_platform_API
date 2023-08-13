@@ -63,7 +63,10 @@ export class SuperAdminRepository {
     );
   }
 
-  async updateAllPostsIsBanned(isBanned: boolean, userID: string) {
+  async updateAllPostsIsBanned(
+    isBanned: boolean,
+    userID: string,
+  ): Promise<PostModelType[]> {
     await this.PostModel.updateMany(
       { 'extendedLikesInfo.newestLikes.userId': userID },
       { $set: { 'extendedLikesInfo.newestLikes.$.isBanned': isBanned } },
@@ -72,7 +75,10 @@ export class SuperAdminRepository {
     return this.PostModel.find({});
   }
 
-  async updateAllCommentIsBanned(isBanned: boolean, userID: string) {
+  async updateAllCommentIsBanned(
+    isBanned: boolean,
+    userID: string,
+  ): Promise<CommentModelType[]> {
     await this.CommentModel.updateMany(
       { 'likesInfo.newestLikes.userId': userID },
       { $set: { 'likesInfo.newestLikes.$.isBanned': isBanned } },

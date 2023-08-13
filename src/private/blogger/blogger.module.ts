@@ -8,8 +8,6 @@ import {
   CommentModelSchema,
   PostModel,
   PostModelSchema,
-  UserModel,
-  UserModelSchema,
 } from '../../core/entity';
 import { BloggerController } from './blogger.controller';
 import { BloggerRepository } from './repository/blogger.repository';
@@ -24,7 +22,6 @@ import {
   UpdatePostOfBlogToBloggerUseCase,
 } from './application/use-cases';
 import { AuthModule } from '../../auth/auth.module';
-import { UserIdPipe } from '../../validation/pipes/userId.pipe';
 
 const modules = [CqrsModule, AuthModule];
 
